@@ -1,0 +1,9 @@
+﻿w1=B3_Demo_Refresh.xlsx  -  1 w2=B3_Demo_Refresh.xlsx  -  2
+
+True
+True
+B3_Demo_Refresh.xlsx  -  1 -2,-2-678,278
+B3_Demo_Refresh.xlsx  -  2 682,-2-1362,278
+snap S12a_full.png orange=154
+
+DONE

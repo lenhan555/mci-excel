@@ -1,0 +1,9 @@
+﻿ERROR: Method invocation failed because [System.Boolean] does not contain a method named 'Range'.
+At line:2 char:1
++ $ws.Range('D:D').NumberFormat = 'dd/mm/yyyy'
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+
+DONE

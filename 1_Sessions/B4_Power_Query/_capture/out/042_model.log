@@ -1,0 +1,12 @@
+﻿deleted Query - DoiSoat_T1
+deleted Query - Sales_T1
+deleted Query - Data_Sales
+model Product ok
+model Store ok
+model Customer ok
+model Target ok
+model Calendar ok
+conns after: Query - Calendar, Query - Customer, Query - Parameter1, Query - Product, Query - Sample File, Query - Store, Query - Target, Query - Transform File, Query - Transform Sample File, ThisWorkbookDataModel
+model tables: Product=40, Store=12, Customer=1500, Target=144, Calendar=731
+
+DONE

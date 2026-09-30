@@ -1,0 +1,16 @@
+﻿opened B3_Demo_Refresh.xlsx ro=True active=PV_Table
+Sales_Vung: used=$A$1:$I$6188 lo=0 pivots=[]
+Sales_Table: used=$A$1:$I$6188 lo=1 pivots=[]
+PV_Vung: used=$A$1:$B$7 lo=0 pivots=[pvtVung@$A$3:$B$7 src=Sales_Vung!R1C1:R6188C9]
+PV_Table: used=$A$1:$B$7 lo=0 pivots=[pvtTable@$A$3:$B$7 src=tblSales]
+Them_dong: used=$A$1:$H$13 lo=0 pivots=[]
+Huong_dan: used=$A$1:$C$9 lo=0 pivots=[]
+10 DÒNG THÁNG 4/2025 ĐỂ DÁN THÊM — copy A4:H13, dán vào dòng trống đầu tiên dưới dữ liệu của Sales_Vung và Sales_Table |  |  |  | 
+ |  |  |  | 
+Region | Order_ID | Order_Date | Unit_Price | 
+Bắc | HD2504-00001 | 1/4/2025 | 185,000 | 
+Bắc | HD2504-00001 | 1/4/2025 | 25,000 | 
+Vung I2 formula: =G2*H2  I6188: =G6188*H6188 A6188=Nam A6189=
+regions order sample: Bắc Bắc Bắc Trung Nam Nam Nam
+
+DONE

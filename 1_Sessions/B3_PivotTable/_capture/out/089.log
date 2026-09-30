@@ -1,0 +1,10 @@
+﻿opened B3_Demo_Loi_Du_lieu.xlsx ro=True sheets=Sales_Loi,Huong_dan
+lo tblSalesLoi $A$1:$I$6188
+row 1372 rev=[] date=[45712] type=Double
+row 4674 rev=[] date=[45693] type=Double
+row 5183 rev=[] date=[45711] type=Double
+row 1913 rev=[] date=[23/03/2025] type=String
+row 2274 rev=[] date=[11/01/2025] type=String
+row 3926 rev=[] date=[15/01/2025] type=String
+
+DONE

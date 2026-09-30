@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem \"2_Dataset\\\\_generator\" -File | Select-Object Name, Length; \"---\"; Get-ChildItem \"1_Sessions\" -Recurse -File | Where-Object { $_.FullName -notmatch '_capture' } | ForEach-Object { $_.FullName.Replace\\(\\(Get-Location\\).Path + '\\\\1_Sessions\\\\',''\\) }; \"---\"; Get-ChildItem \".claude\" -Recurse -File | Select-Object -ExpandProperty Name; Get-ChildItem \"3_Design_Reviews\",\"4_Reference\",\"Materials\\\\Design\" -File | Select-Object -ExpandProperty Name)",
+      "PowerShell(python -c \"import importlib.util as u; [print\\(m, 'OK' if u.find_spec\\(m\\) else 'MISSING'\\) for m in ['openpyxl','pandas','numpy','docx','pptx','win32com','PIL']]\")",
+      "PowerShell(python \"C:\\\\Users\\\\Admin\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\d--Onedrive-MCI-Excel\\\\58bcb5ab-bba5-40fc-9013-180fef4f2828\\\\scratchpad\\\\fix_root.py\")"
+    ]
+  }
+}

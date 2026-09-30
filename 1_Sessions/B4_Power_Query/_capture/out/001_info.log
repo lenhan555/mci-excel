@@ -1,0 +1,18 @@
+﻿culture: en-US / ui: en-US / sysloc: en-US
+shortdate: d/M/yyyy decimal: . group: ,
+screen: 1920x1200  screens=1
+UI Theme: 6
+excel procs: 
+657670|26160|-7,98,1473,1100|Claude
+5049288|2388|260,260,1253,779|Administrator: Windows PowerShell
+197578|8748|-8,-8,1928,1160|Cleanshot - Antigravity IDE - TrayIcon.ico
+526844|11812|856,154,1892,831|Cleanshot - File Explorer
+4457068|11812|774,324,1810,1001|B4_Power_Query - File Explorer
+1970430|18324|-8,-8,1928,1160|CLAUDE.md Windows 11 set… - MCI Excel - Visual Studio Code
+133280|24228|-8,-8,1928,1160|GitHub - hueanmy/claude-roadmap: Hands-on roadmap for learning Claude — from API basics to MCP and production agents. 7 phases, working examples, VI primary docs. · GitHub - Brave
+922078|8720|-8,-8,1928,1160|Settings
+2034422|10772|-32000,-32000,-31840,-31972|Settings
+66470|16720|0,0,1920,1200|Windows Input Experience
+66004|11812|0,0,1920,1200|Program Manager
+
+DONE

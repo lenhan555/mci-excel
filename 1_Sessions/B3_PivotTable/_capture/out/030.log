@@ -1,0 +1,7 @@
+﻿RECT 32 278 601 638
+outline tr=$A$3:$F$20
+snap S15b_full.png orange=1
+tabular tr=$A$3:$F$20
+snap S15c_full.png orange=1
+
+DONE

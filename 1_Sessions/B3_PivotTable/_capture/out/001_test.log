@@ -1,0 +1,9 @@
+﻿ERROR: Get-ItemProperty : A positional parameter cannot be found that accepts argument 'Theme'.
+At line:4 char:1
++ Get-ItemProperty 'HKCU:\Software\Microsoft\Office\16.0\Common' -Name  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Get-ItemProperty], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.GetItemPropertyCommand
+ 
+
+DONE

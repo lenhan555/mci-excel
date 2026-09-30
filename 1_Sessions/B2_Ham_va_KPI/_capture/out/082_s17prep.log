@@ -1,0 +1,9 @@
+﻿ERROR: Call was rejected by callee. (Exception from HRESULT: 0x80010001 (RPC_E_CALL_REJECTED))
+At line:6 char:50
++ ... Wb($rel) { $p = Join-Path $S $rel; $xl.Workbooks.Open($p, 0, $true) }
++                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], COMException
+    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException
+ 
+
+DONE

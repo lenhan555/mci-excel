@@ -1,0 +1,10 @@
+﻿PATH cmds: C:\Python314\python.exe ; C:\Users\Admin\AppData\Local\Microsoft\WindowsApps\python.exe ; C:\Users\Admin\AppData\Local\Microsoft\WindowsApps\python3.exe ; C:\WINDOWS\py.exe
+C:\Users\Admin\anaconda3\python.exe => 3.12.7 pandas 2.2.2 openpyxl 3.1.5
+C:\Python314\python.exe => 3.14.3 pandas 3.0.6 openpyxl 3.1.5
+C:\Users\Admin\AppData\Local\Microsoft\WindowsApps\python.exe => Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+C:\Users\Admin\AppData\Local\Microsoft\WindowsApps\python3.exe => Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+C:\WINDOWS\py.exe => 3.14.3 pandas 3.0.6 openpyxl 3.1.5
+powershell 5.1.26100.9444
+temp C:\Users\Admin\AppData\Local\Temp
+
+DONE

@@ -1,0 +1,9 @@
+﻿ERROR: Method invocation failed because [System.Boolean] does not contain a method named 'Rows'.
+At line:2 char:1
++ $ws.Rows('1:60').Hidden = $false; $ws.Columns('A:L').Hidden = $false
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+
+DONE

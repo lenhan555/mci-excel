@@ -1,0 +1,8 @@
+﻿sheet=Product table=$A$1:$G$41 F1=SEARCH_hop
+t1 ok FALSE
+t2 ok FALSE
+t3 fail Exception from HRESULT: 0x800A03EC
+t4 fail Exception from HRESULT: 0x800A03EC
+sep=, dec=.
+
+DONE

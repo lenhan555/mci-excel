@@ -1,0 +1,9 @@
+﻿A1=Region name=B3_Demo_Loi_Du_lieu.xlsx
+Demo\B3_Demo_Loi_Du_lieu.xlsx $C$7: Excel báo “Cannot group that selection.” Cuối danh sách ngày có 3 dòng chữ: 23/03/2025, 11/01/2025, 15/01/2025.
+Demo\B3_Demo_Loi_Du_lieu.xlsx $B$8: Tìm ô ngày dạng chữ: lọc cột Order_Date (các giá trị chữ nằm cuối danh sách lọc), dòng 1913, 2274, 3926. Gõ lại thành ngày thật (hoặc =DATEVALUE(…)). Refresh.
+sheets order: Sales_Loi,Huong_dan active=Sales_Loi
+Demo\B3_Demo_Loi_Du_lieu_HocVien.xlsx $C$7: Excel báo “Cannot group that selection.” Cuối danh sách ngày có 3 dòng chữ: 23/03/2025, 11/01/2025, 15/01/2025.
+Demo\B3_Demo_Loi_Du_lieu_HocVien.xlsx $B$8: Tìm ô ngày dạng chữ: lọc cột Order_Date (các giá trị chữ nằm cuối danh sách lọc), dòng 1913, 2274, 3926. Gõ lại thành ngày thật (hoặc =DATEVALUE(…)). Refresh.
+sheets order: Huong_dan,Sales_Loi active=Huong_dan
+
+DONE

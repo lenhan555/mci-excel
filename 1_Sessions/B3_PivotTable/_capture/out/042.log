@@ -1,0 +1,17 @@
+﻿opened B3_MCI_Mart_Q1_2025_Answer.xlsx ro=True active=PV_MienThang
+Sales: pivots=[] charts=0 shapes=0
+Product: pivots=[] charts=0 shapes=0
+Store: pivots=[] charts=0 shapes=0
+KPI_SUMIFS: pivots=[] charts=0 shapes=0
+KPI_Card: pivots=[] charts=0 shapes=0
+PV_MienThang: pivots=[pvtMienThang@$A$4:$E$9] charts=0 shapes=1
+PV_NganhHang: pivots=[pvtNganhHang@$A$4:$E$12] charts=1 shapes=1
+PV_Thang: pivots=[pvtThang@$A$4:$G$9] charts=0 shapes=0
+PV_Ngay: pivots=[pvtNgay@$A$4:$B$95] charts=1 shapes=2
+PV_Thu: pivots=[pvtThu@$A$4:$B$12] charts=1 shapes=1
+PV_CuaHang: pivots=[pvtCuaHangPct@$H$4:$K$18; pvtCuaHang@$A$4:$E$18] charts=0 shapes=0
+ST07_T3_ChiTiet: pivots=[] charts=0 shapes=0
+Kiem_tra: pivots=[] charts=0 shapes=0
+slicercaches: Slicer_Store_Code[1], NativeTimeline_Order_Date[2]
+
+DONE

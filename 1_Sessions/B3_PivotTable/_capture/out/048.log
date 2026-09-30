@@ -1,0 +1,5 @@
+﻿slicer name=Store_Code caption=Store_Code cols=2 w=62.25 h=240 btnW=23.25 btnH=19 style=System.__ComObject
+pivots connected: PV_MienThang!pvtMienThang, PV_NganhHang!pvtNganhHang, PV_Thang!pvtThang
+selected items: ST01,ST02,ST03,ST04,ST05,ST06,ST07,ST08,ST09,ST10,ST11,ST12
+
+DONE

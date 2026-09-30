@@ -1,0 +1,16 @@
+﻿tbl tblSales $A$1:$I$6188 I2==[@Quantity]*[@[Unit_Price]]
+tbl after paste $A$1:$I$6198 I6189=
+filled I
+PV_Table total: 942,937,000  PV_Vung total: 941,454,000
+PV_Table 3 Region | Doanh thu
+PV_Table 4 Bắc | 325,461,000
+PV_Table 5 Trung | 189,813,000
+PV_Table 6 Nam | 427,663,000
+PV_Table 7 Grand Total | 942,937,000
+PV_Vung 3 Region | Doanh thu
+PV_Vung 4 Bắc | 323,978,000
+PV_Vung 5 Trung | 189,813,000
+PV_Vung 6 Nam | 427,663,000
+PV_Vung 7 Grand Total | 941,454,000
+
+DONE

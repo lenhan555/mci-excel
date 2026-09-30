@@ -1,0 +1,5 @@
+﻿snap test_full.png orange=1
+screen \\.\DISPLAY1 {X=0,Y=0,Width=1920,Height=1200} primary=True
+system dpi = 96
+
+DONE

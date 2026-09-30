@@ -1,0 +1,13 @@
+﻿ERROR: Exception calling "Create" with "1" argument(s): "At line:2 char:117
++ ... ,'D','E','F','G'){ $line += $ws.Range("$c$r").Formula }; "$r: " + ($l ...
++                                                               ~~~
+Variable reference is not valid. ':' was not followed by a valid variable name character. Consider using ${} to 
+delimit the name."
+At D:\Onedrive\MCI Excel\1_Sessions\B3_PivotTable\_capture\watcher.ps1:39 char:11
++     try { $res = . ([ScriptBlock]::Create($code)) 2>&1 | Out-String - ...
++           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodInvocationException
+    + FullyQualifiedErrorId : ParseException
+ 
+
+DONE

@@ -1,0 +1,96 @@
+﻿requirement_id,requirement_text,covered_by,bands,evidence_strength,notes
+MO-01,Copy macros between workbooks,—,—,none,Macro/VBA ngoài phạm vi khóa BI.
+MO-02,Reference data in other workbooks,B4 Power Query kết nối file,B4,indirect,Dùng PQ thay cho tham chiếu ngoài ('[Book]Sheet!A1'); tham chiếu ngoài không được dạy.
+MO-03,Enable macros in a workbook,—,—,none,Macro ngoài phạm vi.
+MO-04,Manage workbook versions,—,—,none,Version history (OneDrive) không có trong plan.
+MO-05,Restrict editing,B6 Phát hành: Protect Sheet,B6,partial,Chỉ có Protect Sheet; không có Restrict Editing/Mark as Final.
+MO-06,Protect worksheets and cell ranges,B6 Phát hành: Protect Sheet,B6,direct,Cell ranges (Allow Edit Ranges) không nêu riêng.
+MO-07,Protect workbook structure,B6 Phát hành: ẩn sheet kỹ thuật,B6,partial,"Ẩn sheet có, Protect Workbook Structure chưa nêu."
+MO-08,Configure formula calculation options,B2 PRO TIP Calculation modes,B2,partial,Chỉ ở tầng Nâng cao.
+MO-09,Fill cells by using Flash Fill,B1 Pro Tips (Productivity) — chung chung,B1,indirect,Plan không nêu Flash Fill cụ thể.
+MO-10,Fill cells by using advanced Fill Series options,—,—,none,Formulas PDF p59 có Fill Series nhưng plan không dùng.
+MO-11,Generate numeric data by using RANDARRAY(),B2 Handout RAND,B2,indirect,RANDARRAY (Formulas PDF p92) không có trong plan.
+MO-12,Create custom number formats,B6 PRO TIP custom number formats,B6,partial,Chỉ ở tầng Nâng cao.
+MO-13,Configure data validation,B1 Data Validation,B1,direct,
+MO-14,Group and ungroup data (outline),B3 Group trong Pivot,B3,indirect,Pivot grouping khác Data → Group (outline).
+MO-15,Calculate data by inserting subtotals and totals,B3 Pivot totals,B3,indirect,Tính năng Subtotal / Table Total Row chưa có.
+MO-16,Remove duplicate records,B2 PRO TIP Uniques & Duplicates,B2,partial,Nên có ở lõi B4 (Remove Duplicates trong PQ).
+MO-17,Create custom conditional formatting rules,B6 RAG bằng conditional formatting; B3 PRO TIP,"B3, B6",direct,
+MO-18,Create conditional formatting rules that use formulas,B2 Handout formula-based formatting,B2,partial,Chỉ ở Handout.
+MO-19,Manage conditional formatting rules,B6 RAG,B6,indirect,Rules Manager không nêu.
+MO-20,"Logical operations with nested IF, IFS, SWITCH, *IF(S), MAXIFS, MINIFS, AND, OR, NOT, LET",B2 Logic + COUNTIFS/SUMIFS/AVERAGEIFS; LET ở Nâng cao,B2,direct,"SWITCH, MAXIFS/MINIFS chưa nêu; LET chỉ ở Nâng cao."
+MO-21,"Look up data with XLOOKUP, VLOOKUP, HLOOKUP, MATCH, INDEX",B2 VLOOKUP → INDEX/MATCH → XLOOKUP,B2,direct,HLOOKUP ở Handout.
+MO-22,Reference date and time with NOW() and TODAY(),B2 Handout,B2,partial,Date lõi B2 không liệt kê TODAY/NOW.
+MO-23,Calculate dates with WEEKDAY() and WORKDAY(),B2 Date lõi: NETWORKDAYS,B2,partial,WEEKDAY/WORKDAY không ở lõi.
+MO-24,Summarize data from multiple ranges with Consolidate,—,—,none,Thay bằng Append trong PQ (B4) — có thể ghi rõ là thay thế.
+MO-25,What-if analysis with Goal Seek and Scenario Manager,Bonus (Pro Tips – Analytics),Bonus,indirect,Ngoài 7 buổi.
+MO-26,"Forecast data with AND(), IF(), NPER()",—,—,none,Hàm tài chính ngoài phạm vi.
+MO-27,Calculate financial data with PMT(),—,—,none,Hàm tài chính ngoài phạm vi.
+MO-28,Filter data by using FILTER(),B2 Nâng cao Dynamic Arrays,B2,partial,Chỉ ở tầng Nâng cao.
+MO-29,Sort data by using SORTBY(),B2 Nâng cao Dynamic Arrays,B2,partial,Chỉ ở tầng Nâng cao.
+MO-30,Trace precedence and dependence,B1 Auditing,B1,direct,
+MO-31,Monitor cells and formulas with the Watch Window,—,—,none,Chưa có; dễ thêm vào mục Auditing B1.
+MO-32,Validate formulas by using error checking rules,B1 Error Checking,B1,direct,
+MO-33,Evaluate formulas,B1 Evaluate Formula,B1,direct,
+MO-34,Record simple macros,—,—,none,Macro ngoài phạm vi.
+MO-35,Name simple macros,—,—,none,Macro ngoài phạm vi.
+MO-36,Edit simple macros,—,—,none,Macro ngoài phạm vi.
+MO-37,Create and modify dual-axis charts,—,—,none,Chưa có; combo Revenue (cột) + Margin % (đường) rất sát BI.
+MO-38,"Box & Whisker, Combo, Funnel, Histogram, Sunburst, Waterfall charts","B6 lõi: Box, Histogram, Waterfall; Handout: Funnel, Sunburst",B6,partial,Combo chưa có.
+MO-39,Create PivotTables,B3,B3,direct,
+MO-40,Modify field selections and options,"B3 Field List, Analyze/Design",B3,direct,
+MO-41,Create slicers,B3 Slicer & Timeline,B3,direct,
+MO-42,Group PivotTable data,B3 Group,B3,direct,
+MO-43,Add calculated fields,B3 Calculated Field,B3,direct,
+MO-44,Configure value field settings,"B3 Summarize Values By, Show Values As",B3,direct,
+MO-45,Create PivotCharts,B3 PivotChart,B3,direct,
+MO-46,Manipulate options in existing PivotCharts,B3 PivotChart (Pivot PDF p34–36),B3,direct,
+MO-47,Apply styles to PivotCharts,B3 PivotChart layouts & styles,B3,direct,
+MO-48,Drill down into PivotChart details,B3 Handout field buttons,B3,partial,Chỉ ở Handout.
+PL-01,Identify and connect to data sources,"B4 Connections, Folder, CSV",B4,direct,Shared semantic model: loại trừ (Power BI).
+PL-02,"Change data source settings, credentials and privacy levels",—,—,none,Privacy levels gây lỗi Formula.Firewall khi Merge nhiều nguồn — nên có trong B4 handout.
+PL-03,Create and modify parameters,B4 PRO TIP tham số hóa folder,B4,partial,Chỉ ở tầng Nâng cao.
+PL-04,"Evaluate data, including data statistics and column properties",B2 thống kê mô tả,B2,partial,Column quality/distribution/profile trong PQ chưa có.
+PL-05,"Resolve inconsistencies, unexpected or null values, data quality issues",B4 Transform + đối soát,B4,direct,
+PL-06,Resolve data import errors,B1 Common Errors (lỗi công thức),B1,indirect,Lỗi import trong PQ (Keep/Remove Errors) chưa có.
+PL-07,Select appropriate column data types,B4 data type,B4,direct,
+PL-08,Create and transform columns,"B4 text/date tools, conditional column",B4,direct,
+PL-09,Group and aggregate rows,B4 Group By,B4,direct,
+PL-10,"Pivot, unpivot, and transpose data",B4 Unpivot Target,B4,partial,Pivot column và Transpose chưa nêu.
+PL-11,Convert semi-structured data to a table,—,—,none,JSON/nested chưa có.
+PL-12,Create fact tables and dimension tables,B4 load lookup riêng; B5 star schema,"B4, B5",direct,
+PL-13,Reference vs duplicate queries and the impact,—,—,none,Chưa có.
+PL-14,Merge and append queries,"B4 Append Folder, Merge",B4,direct,
+PL-15,Identify and create appropriate keys for relationships,B2 Laws of Lookups; B5 Primary/Foreign key,"B2, B5",direct,
+PL-16,Configure data loading for queries,B4 Load options,B4,direct,
+PL-17,Configure table and column properties,B5 Handout hide fields,B5,partial,Chỉ ở Handout.
+PL-18,Implement role-playing dimensions,B5 PRO TIP active/inactive relationship,B5,partial,Chỉ ở tầng Nâng cao; USERELATIONSHIP chưa nêu.
+PL-19,Define cardinality and cross-filter direction,B5 Relationship,B5,direct,
+PL-20,Create a common date table,B4 Calendar; B5,"B4, B5",direct,
+PL-21,Use cases for calculated columns and calculated tables,B5 Calculated Column vs Measure,B5,direct,Calculated tables không có trong Power Pivot Excel.
+PL-22,Create single aggregation measures,B5 explicit measure,B5,direct,
+PL-23,Use the CALCULATE function,B5 CALCULATE,B5,direct,
+PL-24,Implement time intelligence measures,"B5 YTD, YoY",B5,direct,
+PL-25,Use basic statistical functions (DAX),B2 thống kê (Excel),B2,partial,DAX stats (PQ PDF p82–85) không ở lõi B5.
+PL-26,Create semi-additive measures,—,—,none,"Chưa có (số dư tồn kho, số dư tài khoản)."
+PL-27,Remove unnecessary rows and columns for performance,B5 Handout performance,B5,partial,Chỉ ở Handout.
+PL-28,Improve performance by reducing granularity,B4 Group By,B4,indirect,Không được trình bày như kỹ thuật hiệu năng.
+PL-29,Select an appropriate visual,B3 preview; B6 3 Key Questions + chart matrix,"B3, B6",direct,
+PL-30,Format and configure visuals,B3 PivotChart; B6,"B3, B6",direct,
+PL-31,Apply and customize a theme,B1 Handout tab Page Layout,B1,indirect,Theme cho dashboard chưa nêu.
+PL-32,Apply conditional formatting,B6 RAG; B3 PRO TIP,"B3, B6",direct,
+PL-33,Apply slicing and filtering,B3 Slicer/Timeline; B6,"B3, B6",direct,
+PL-34,Configure the report page,B6 layout hierarchy,B6,partial,Page setup/print area cho dashboard chưa nêu.
+PL-35,Apply sorting to visuals,B3 Sort,B3,direct,
+PL-36,Configure sync slicers,B6 Slicer kết nối nhiều Pivot,B6,direct,Tương đương Report Connections trong Excel.
+PL-37,Edit and configure interactions between visuals,B6 Slicer connections,B6,partial,Chỉ qua slicer; chưa bàn chủ động chọn visual nào bị lọc.
+PL-38,Configure drillthrough navigation,Rubric C6 drill-down,B7,indirect,Show Details / drill-down trong Pivot chưa dạy tường minh.
+PL-39,Configure export settings,B6 xuất PDF,B6,direct,
+PL-40,Design reports for accessibility,—,—,none,"Alt text, bảng màu an toàn cho mù màu (RAG đỏ-xanh) chưa có."
+PL-41,"Use grouping, binning, and clustering",B3 Group theo giá trị,B3,partial,Clustering chưa có.
+PL-42,"Use reference lines, error bars, and forecasting",B6 scatter + trendline,B6,partial,Target line có qua KPI card; Forecast Sheet chưa có.
+PL-43,Detect outliers and anomalies,B2 outlier; B6 Box plot,"B2, B6",direct,
+PL-44,Create dashboards,B6,B6,direct,
+PL-45,Choose a distribution method,"B6 OneDrive/SharePoint, PDF",B6,direct,
+PL-46,Configure a semantic model scheduled refresh,B6 Refresh on open,B6,partial,Excel không có scheduled refresh trên desktop; nêu giới hạn và hướng Power BI.
+PL-47,Apply sensitivity labels,B6 lưu ý dữ liệu khách hàng,B6,indirect,Sensitivity label (Microsoft Purview) chưa nêu.

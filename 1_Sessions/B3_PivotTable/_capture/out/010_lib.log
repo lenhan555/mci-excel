@@ -1,0 +1,10 @@
+﻿lib ok, wbs=2
+opened B3_Demo_Pivot.xlsx readonly=True sheets=5 active=Sales
+Sales pivots=0 lo=1
+Product pivots=0 lo=1
+Store pivots=0 lo=1
+KPI_SUMIFS pivots=0 lo=0
+Huong_dan pivots=0 lo=0
+-4137
+
+DONE

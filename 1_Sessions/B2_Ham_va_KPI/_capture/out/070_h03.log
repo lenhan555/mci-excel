@@ -1,0 +1,9 @@
+﻿ERROR: Exception from HRESULT: 0x800A03EC
+At line:7 char:1
++ $ws.Range('F2').Formula = '=ISNUMBER(SEARCH("hộp",tblProduct[@Product ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], COMException
+    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException
+ 
+
+DONE

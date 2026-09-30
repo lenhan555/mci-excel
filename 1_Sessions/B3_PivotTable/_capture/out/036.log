@@ -1,0 +1,14 @@
+﻿Row Labels | Doanh thu
+1 | 425,850,000
+2 | 245,996,000
+3 | 269,608,000
+Grand Total | 941,454,000
+ | 
+chart pivot? True
+True
+RECT 32 278 203 398
+CHART 32 403 472 710
+snap S28a_full.png orange=1
+snap S28b_full.png orange=1
+
+DONE

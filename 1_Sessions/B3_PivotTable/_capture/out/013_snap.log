@@ -1,0 +1,26 @@
+﻿t0  x20=(240,240,240) x100=(255,255,255) bottom=(245,245,245)
+t1  x20=(233,196,185) x100=(253,249,248) bottom=(241,222,216)
+t2  x20=(234,207,198) x100=(255,253,252) bottom=(241,230,227)
+t3  x20=(234,207,198) x100=(255,253,252) bottom=(241,230,227)
+t4  x20=(240,240,240) x100=(255,255,255) bottom=(245,245,245)
+t5  x20=(235,213,205) x100=(255,253,253) bottom=(242,233,231)
+t6  x20=(232,200,189) x100=(253,250,249) bottom=(241,225,221)
+t7  x20=(232,200,189) x100=(253,250,249) bottom=(241,225,221)
+
+ProcessName             Id MainWindowTitle                              
+-----------             -- ---------------                              
+Antigravity IDE       8748 Cleanshot - Antigravity IDE - SnapShotPro.exe
+ApplicationFrameHost  8720 Settings                                     
+brave                24228 Zalo - Leo Pham - Brave                      
+claude               28060 Claude                                       
+Code                 18324 README.md - Visual Studio Code               
+EXCEL                12208 Book3 - Excel                                
+explorer             26844 Downloads - File Explorer                    
+msedgewebview2       39356 PreWarm Empty Addin                          
+SystemSettings       10772 Settings                                     
+TextInputHost        16720 Windows Input Experience                     
+
+
+
+
+DONE

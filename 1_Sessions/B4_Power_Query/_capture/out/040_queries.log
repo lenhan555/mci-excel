@@ -1,0 +1,23 @@
+﻿queries: Sales, Sample File, Parameter1, Transform Sample File, Transform File, Product, Store, Customer, Target, Calendar
+--- Sales M ---
+let
+    Source = Folder.Files("D:\Onedrive\MCI Excel\1_Sessions\B4_Power_Query\Practice\Data_Sales"),
+    #"Filtered Hidden Files1" = Table.SelectRows(Source, each [Attributes]?[Hidden]? <> true),
+    #"Invoke Custom Function1" = Table.AddColumn(#"Filtered Hidden Files1", "Transform File", each #"Transform File"([Content])),
+    #"Renamed Columns1" = Table.RenameColumns(#"Invoke Custom Function1", {"Name", "Source.Name"}),
+    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns1", {"Source.Name", "Transform File"}),
+    #"Expanded Table Column1" = Table.ExpandTableColumn(#"Removed Other Columns1", "Transform File", Table.ColumnNames(#"Transform File"(#"Sample File"))),
+    #"Removed Columns" = Table.RemoveColumns(#"Expanded Table Column1",{"Source.Name"}),
+    #"Trimmed Text" = Table.TransformColumns(#"Removed Columns",{{"Store_Code", Text.Trim, type text}}),
+    #"Changed Type with Locale" = Table.TransformColumnTypes(#"Trimmed Text", {{"Order_Date", type date}}, "vi-VN"),
+    #"Changed Type with Locale1" = Table.TransformColumnTypes(#"Changed Type with Locale", {{"Unit_Price", Int64.Type}}, "vi-VN"),
+    #"Changed Type" = Table.TransformColumnTypes(#"Changed Type with Locale1",{{"Line_No", Int64.Type}, {"Quantity", Int64.Type}, {"Order_ID", type text}, {"Customer_ID", type text}, {"Product_Code", type text}}),
+    #"Removed Duplicates" = Table.Distinct(#"Changed Type"),
+    #"Added Custom" = Table.AddColumn(#"Removed Duplicates", "Revenue", each [Quantity] * [Unit_Price]),
+    #"Changed Type1" = Table.TransformColumnTypes(#"Added Custom",{{"Revenue", Int64.Type}}),
+    #"Inserted Year" = Table.AddColumn(#"Changed Type1", "Nam", each Date.Year([Order_Date]), Int64.Type),
+    #"Inserted Month" = Table.AddColumn(#"Inserted Year", "Thang", each Date.Month([Order_Date]), Int64.Type)
+in
+    #"Inserted Month"
+
+DONE

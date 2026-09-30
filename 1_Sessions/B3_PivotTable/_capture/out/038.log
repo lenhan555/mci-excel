@@ -1,0 +1,9 @@
+﻿ERROR: Exception from HRESULT: 0x800A03EC
+At line:4 char:45
++ ... ); $c.Name='So_don'; $c.DataBodyRange.Formula='=IF([@Line_No]=1,1,0)'
++                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], COMException
+    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException
+ 
+
+DONE

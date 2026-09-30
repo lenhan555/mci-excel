@@ -1,0 +1,6 @@
+﻿Region, Order_ID, Line_No, Order_Date, Store_Code, Customer_ID, Product_Code, Product_Name, Quantity, Unit_Price, Revenue, Pct_Share, Category, Unit_Cost, COGS, Gross_Margin, Thang, Quy, Thu, Phan_khuc, So_don
+last: So_don
+ok1
+sum=3144
+
+DONE

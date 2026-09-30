@@ -1,0 +1,9 @@
+﻿conns before: Query - Data_Sales, Query - DoiSoat_T1, Query - Parameter1, Query - Sales_T1, Query - Sample File, Query - Transform File, Query - Transform Sample File
+model Product ERR We can't find table 'SELECT * FROM [Product]'.
+model Store ERR We can't find table 'SELECT * FROM [Store]'.
+model Customer ERR We can't find table 'SELECT * FROM [Customer]'.
+model Target ERR We can't find table 'SELECT * FROM [Target]'.
+model Calendar ERR We can't find table 'SELECT * FROM [Calendar]'.
+conns after: Query - Data_Sales, Query - DoiSoat_T1, Query - Parameter1, Query - Sales_T1, Query - Sample File, Query - Transform File, Query - Transform Sample File, ThisWorkbookDataModel
+
+DONE

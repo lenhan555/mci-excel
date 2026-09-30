@@ -1,0 +1,6 @@
+﻿F formula now: =ISNUMBER(SEARCH("hộp",[@[Product_Name]]))
+countS=8 countF=6
+A1:G41 => 26,259,911,439
+snap D:\Onedrive\MCI Excel\1_Sessions\B2_Ham_va_KPI\_capture\out\H03.png tries=1 clean=True
+
+DONE

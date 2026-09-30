@@ -1,0 +1,25 @@
+﻿True
+1: DOANH THU THEO MIỀN × THÁNG — PIVOT (đối chiếu với KPI_SUMIFS của Buổi 2) |  |  |  |  |  | 
+2: Câu hỏi: Doanh thu từng miền, từng tháng Quý 1/2025 là bao nhiêu? Có khớp bảng SUMIFS Buổi 2 không? |  |  |  |  |  | 
+3:  |  |  |  |  |  | 
+4: Doanh thu | Thang |  |  |  |  | 
+5: Region | 1 | 2 | 3 | Grand Total |  | 
+6: Bắc | 145814000 | 87954000 | 90210000 | 323978000 |  | 
+7: Trung | 85599000 | 54254000 | 49960000 | 189813000 |  | 
+8: Nam | 194437000 | 103788000 | 129438000 | 427663000 |  | 
+9: Grand Total | 425850000 | 245996000 | 269608000 | 941454000 |  | 
+10:  |  |  |  |  |  | 
+11: ĐỐI SOÁT PIVOT ↔ SUMIFS (Buổi 2) |  |  |  |  |  | 
+12: Ô cần đối chiếu | Pivot (GETPIVOTDATA) | SUMIFS B2 | Chênh lệch |  |  | 
+13: Bắc – Tháng 3 | =GETPIVOTDATA("Doanh thu",$A$4,"Region","Bắc","Thang",3) | =KPI_SUMIFS!D6 | =B13-C13 |  |  | 
+14: Nam – Tháng 1 | =GETPIVOTDATA("Doanh thu",$A$4,"Region","Nam","Thang",1) | =KPI_SUMIFS!B8 | =B14-C14 |  |  | 
+15: Tổng Quý 1 | =GETPIVOTDATA("Doanh thu",$A$4) | =KPI_SUMIFS!E9 | =B15-C15 |  |  | 
+16:  |  |  |  |  |  | 
+17: Chênh lệch phải bằng 0. Bỏ chọn mọi mục trên Slicer trước khi đối chiếu (Slicer lọc cả Pivot). |  |  |  |  |  | 
+18:  |  |  |  |  |  | 
+19:  |  |  |  |  |  | 
+20:  |  |  |  |  |  | 
+shape Store_Code type=25 L=366.75 T=48 W=62.25 H=240
+snap view_full.png orange=1
+
+DONE

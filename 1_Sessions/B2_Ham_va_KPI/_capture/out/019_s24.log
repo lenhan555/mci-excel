@@ -1,0 +1,9 @@
+﻿ERROR: Method invocation failed because [System.Boolean] does not contain a method named 'Range'.
+At line:2 char:1
++ $ws.Range('F11').Formula = '=LEN(A11)'
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+
+DONE

@@ -1,0 +1,10 @@
+﻿ERROR: Method invocation failed because [System.Management.Automation.PSParameterizedProperty] does not contain a method 
+named 'Item'.
+At line:8 char:42
++ ... range $($pt.TableRange1.Address()) df=$($pt.DataFields.Item(1).Name)"
++                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : MethodNotFound
+ 
+
+DONE

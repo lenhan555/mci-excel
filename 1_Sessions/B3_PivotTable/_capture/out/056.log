@@ -1,0 +1,24 @@
+﻿used $A$1:$E$18
+Kiem_tra on Windows: ok=14 bad=0 errors=0
+1: KIỂM TRA / ĐỐI SOÁT — Brick output B3 |  |  |  |  | 
+2: Cột C = công thức (GETPIVOTDATA đọc thẳng từ Pivot); cột D = đáp án tính từ dataset; cột E = khớp? C5 là ô tổng doanh thu mà cột Pct_Share tham chiếu ($C$5). Bỏ chọn Slicer/Timeline trước khi kiểm tra. |  |  |  |  | 
+3:  |  |  |  |  | 
+4: Chỉ tiêu |  | Kết quả (công thức) | Đáp án | Khớp? | 
+5: Tổng doanh thu Q1/2025 (VNĐ) |  | 941,454,000 | 941,454,000 | ✔ | 
+6: Số dòng dữ liệu |  | 6,187 | 6,187 | ✔ | 
+7: Số đơn = tổng cột So_don |  | 3,144 | 3,144 | ✔ | 
+8: Tổng Pivot Miền × Tháng = tổng cột Revenue |  | 941,454,000 | 941,454,000 | ✔ | 
+9: Ô Pivot Bắc–T3 − ô SUMIFS Bắc–T3 (Buổi 2) |  | 0 | 0 | ✔ | 
+10: Tỷ trọng Bánh kẹo trong tháng 1 (% of Column Total) |  | 45.6% | 45.6% | ✔ | 
+11: MoM tháng 2 so với tháng 1 (% Difference From) |  | -42.2% | -42.2% | ✔ | 
+12: Lũy kế đến tháng 2 (Running Total) |  | 671,846,000 | 671,846,000 | ✔ | 
+13: AOV Quý 1 (Calculated Field = Revenue / So_don) |  | 299,445 | 299,445 | ✔ | 
+14: Gross Margin % Quý 1 (Calculated Field) |  | 34.2% | 34.2% | ✔ | 
+15: Doanh thu ST07 tháng 3 |  | 8,539,000 | 8,539,000 | ✔ | 
+16: ST07 tháng 3 so với tháng 2 (% Difference From) |  | -52.4% | -52.4% | ✔ | 
+17: Dòng đầu Pivot theo Thứ (sắp xếp giảm dần) |  | 159,845,000 | 159,845,000 | ✔ | 
+18: Số dòng Show Details ST07 – tháng 3 |  | 55 | 55 | ✔ | 
+19:  |  |  |  |  | 
+20:  |  |  |  |  | 
+
+DONE

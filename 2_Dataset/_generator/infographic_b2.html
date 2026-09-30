@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>Tóm tắt Buổi 2</title>
+<!-- Infographic tóm tắt B2. Dựng PNG: python3 build_infographic.py B2
+     Khung A4 dọc 1240 × 1754 px, xuất ở 2x (2480 × 3508 px ≈ 300 dpi).
+     Màu và chữ theo Materials/Design/MCI_Excel_BI_Design_System.md. Bố cục theo infographic_b1.html.
+     Số liệu viết dạng ngoặc nhọn kép (khóa|kiểu), build_infographic.py điền từ build_b2_meta.json (do build_b2.py sinh ra). Không gõ tay con số. -->
+<style>
+:root {
+  --surface: #FFFFFF; --surface-alt: #F3F5F9; --hairline: #D9DEE8;
+  --ink: #1B2230; --ink-secondary: #585858; --ink-muted: #6B6F76;
+  --navy: #203864; --on-navy: #FFFFFF; --tool-red: #C00000;
+  --protip-gold: #FFC000; --on-gold: #1B2230; --accent: #3398DA; --link: #1F6FB2;
+  --status-good: #0CA30C; --status-critical: #D03B3B;
+  --navy-tint: #DCE3EF; --navy-light: #9DB4E0; /* navy (dark theme): nhãn chữ trên nền navy */
+  --radius-sm: 4px; --radius-md: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1240px; height: 1754px; background: var(--surface); }
+body { font-family: Arial, "Helvetica Neue", Helvetica, sans-serif; color: var(--ink); font-size: 16.5px; line-height: 1.4; }
+.page { width: 1240px; height: 1754px; display: flex; flex-direction: column; }
+.wrap { padding: 20px 48px 22px; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+b, strong { font-weight: 700; }
+.tool { color: var(--tool-red); font-weight: 700; }
+code { font-family: Consolas, Menlo, "Courier New", monospace; font-size: 0.93em; background: var(--surface-alt); padding: 1px 5px; border: 1px solid var(--hairline); white-space: nowrap; }
+.muted { color: var(--ink-muted); }
+.sec-title { font-size: 15px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--navy); margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
+.sec-title::after { content: ""; flex: 1; height: 1px; background: var(--hairline); }
+
+/* ---------- Hero ---------- */
+.hero { background: var(--navy); color: var(--on-navy); padding: 24px 48px 22px; display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: end; }
+.brand { font-size: 15px; letter-spacing: .06em; opacity: .9; display: flex; gap: 14px; align-items: baseline; }
+.brand b { font-size: 26px; letter-spacing: .02em; opacity: 1; }
+.kicker { margin-top: 14px; font-size: 16px; font-weight: 700; letter-spacing: .12em; color: var(--navy-light); }
+.hero h1 { font-size: 44px; line-height: 1.1; margin-top: 8px; font-weight: 700; }
+.hero .sub { font-size: 18px; margin-top: 10px; opacity: .92; }
+.qbox { border: 1px solid rgba(255,255,255,.35); padding: 18px 20px; }
+.qbox .lbl { font-size: 13px; letter-spacing: .1em; text-transform: uppercase; opacity: .85; }
+.qbox .q { font-size: 20px; line-height: 1.35; font-weight: 700; margin-top: 8px; }
+.chip-tier { display: inline-block; margin-top: 12px; background: var(--protip-gold); color: var(--on-gold); font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: var(--radius-sm); }
+
+/* ---------- Big picture ---------- */
+.big { display: grid; grid-template-columns: 1fr 372px; gap: 36px; }
+.steps { display: flex; gap: 0; }
+.step { flex: 1; }
+.chev { height: 62px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; color: var(--navy); background: var(--navy-tint);
+  clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%, 18px 50%); margin-right: -8px; padding-left: 14px; }
+.step:first-child .chev { clip-path: polygon(0 0, calc(100% - 18px) 0, 100% 50%, calc(100% - 18px) 100%, 0 100%); padding-left: 0; }
+.step.on .chev { background: var(--navy); color: var(--on-navy); }
+.chev .n { font-size: 13px; font-weight: 700; opacity: .75; margin-right: 6px; }
+.step .under { text-align: center; font-size: 14px; color: var(--ink-secondary); margin-top: 8px; padding-right: 10px; }
+.rule { margin-top: 16px; background: var(--surface-alt); border-radius: var(--radius-md); padding: 12px 16px; font-size: 16px; }
+.rule b { color: var(--navy); }
+.bricks { display: flex; flex-direction: column; gap: 4px; }
+.brick { display: grid; grid-template-columns: 44px 1fr; align-items: center; height: 22px; font-size: 13.5px; background: var(--surface-alt); color: var(--ink-secondary); }
+.brick .b { font-weight: 700; color: var(--navy); text-align: center; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--navy-tint); }
+.brick span:last-child { padding-left: 10px; }
+.brick.on { background: var(--navy); color: var(--on-navy); height: 30px; font-size: 15px; font-weight: 700; }
+.brick.on .b { background: var(--protip-gold); color: var(--on-gold); }
+
+/* ---------- Cards ---------- */
+.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.card { border: 1px solid var(--hairline); padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+.card h3 { display: flex; align-items: center; gap: 10px; font-size: 20px; line-height: 1.2; color: var(--navy); }
+.card h3 .num { flex: none; width: 30px; height: 30px; background: var(--navy); color: var(--on-navy); font-size: 16px; display: flex; align-items: center; justify-content: center; }
+.take { font-weight: 700; font-size: 16px; border-bottom: 1px solid var(--hairline); padding-bottom: 9px; }
+.card p, .card li { font-size: 15px; line-height: 1.38; }
+.card ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.card li { padding-left: 14px; position: relative; }
+.card li::before { content: ""; position: absolute; left: 0; top: .6em; width: 6px; height: 6px; background: var(--accent); }
+.kbd { display: inline-block; border: 1px solid var(--hairline); border-bottom-width: 2px; color: var(--tool-red); font-weight: 700; font-size: 14.5px; padding: 0 6px; line-height: 1.5; background: var(--surface); white-space: nowrap; }
+.kv { display: grid; grid-template-columns: max-content 1fr; gap: 5px 10px; align-items: baseline; font-size: 15px; }
+.kv .kbd { justify-self: start; }
+.checks { display: flex; flex-direction: column; gap: 6px; }
+.chk { display: grid; grid-template-columns: 28px 1fr; align-items: baseline; font-size: 15px; }
+.chk .i { width: 22px; height: 22px; background: var(--navy); color: var(--on-navy); font-size: 13px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+.warn { font-size: 14.5px; background: var(--surface-alt); padding: 8px 10px; }
+
+.f4 { display: flex; align-items: flex-start; gap: 4px; margin-top: 2px; }
+.f4 .st { flex: 1; text-align: center; }
+.f4 .cell { border: 2px solid var(--navy); font-family: Consolas, Menlo, monospace; font-weight: 700; font-size: 16px; padding: 4px 0; color: var(--ink); }
+.f4 .st:first-child .cell { border-color: var(--accent); }
+.f4 .lab { font-size: 12.5px; color: var(--ink-secondary); margin-top: 3px; line-height: 1.25; }
+.f4 .ar { color: var(--accent); font-weight: 700; padding-top: 5px; font-size: 16px; }
+.f4cap { font-size: 13.5px; color: var(--ink-secondary); }
+
+.errs { display: grid; grid-template-columns: 1fr 1fr; gap: 5px 12px; }
+.err { display: grid; grid-template-columns: 76px 1fr; align-items: baseline; font-size: 14.5px; white-space: nowrap; }
+.err code { font-weight: 700; font-size: 13.5px; text-align: center; }
+
+.gb { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--hairline); }
+.gb > div { padding: 7px 9px; font-size: 14px; line-height: 1.35; }
+.gb .h { font-weight: 700; font-size: 13px; letter-spacing: .06em; border-bottom: 1px solid var(--hairline); }
+.gb .good { border-right: 1px solid var(--hairline); }
+.g { color: var(--status-good); font-weight: 700; }
+.x { color: var(--status-critical); font-weight: 700; }
+.protip { display: flex; gap: 8px; align-items: baseline; background: var(--surface-alt); border-radius: var(--radius-md); padding: 8px 10px; font-size: 14.5px; }
+.tip { display: flex; gap: 8px; align-items: baseline; background: var(--surface-alt); border-radius: var(--radius-md); padding: 8px 10px; font-size: 14.5px; }
+.tip .tag { flex: none; color: var(--navy); font-weight: 700; font-size: 13px; }
+.protip .tag { flex: none; background: var(--protip-gold); color: var(--on-gold); font-weight: 700; font-size: 12px; padding: 2px 7px; border-radius: var(--radius-sm); }
+
+/* ---------- Result + insight ---------- */
+.bottom { display: grid; grid-template-columns: 1fr 440px; gap: 28px; }
+.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.kpi { background: var(--surface-alt); border-radius: var(--radius-md); padding: 10px 14px; }
+.kpi .v { font-size: 28px; line-height: 1.05; font-weight: 700; color: var(--navy); }
+.kpi .v small { font-size: 18px; }
+.kpi .c { font-size: 13.5px; color: var(--ink-secondary); margin-top: 4px; }
+.kpi .v .ok { font-size: 22px; color: var(--status-good); margin-left: 4px; }
+.note { font-size: 14px; color: var(--ink-secondary); margin-top: 10px; }
+.insight { border: 2px solid var(--navy); padding: 16px 18px; }
+.insight .s { font-size: 16.5px; line-height: 1.65; }
+.blank { display: inline-block; min-width: 64px; border-bottom: 2px solid var(--ink-muted); }
+.tag3 { display: inline-block; font-size: 12.5px; font-weight: 700; padding: 1px 7px; border-radius: var(--radius-sm); background: var(--navy-tint); color: var(--navy); white-space: nowrap; }
+.three { display: flex; gap: 8px; margin-top: 12px; }
+.three > div { flex: 1; text-align: center; background: var(--surface-alt); padding: 8px 4px; }
+.three b { display: block; color: var(--navy); font-size: 16px; }
+.three span { font-size: 12.5px; color: var(--ink-secondary); }
+
+/* ---------- Footer ---------- */
+.next { background: var(--navy); color: var(--on-navy); padding: 18px 48px 16px; display: grid; grid-template-columns: 1.35fr 1fr; gap: 40px; }
+.next h4 { font-size: 15px; letter-spacing: .1em; text-transform: uppercase; color: var(--navy-light); margin-bottom: 10px; }
+.next ol { list-style: none; display: flex; flex-direction: column; gap: 4px; counter-reset: n; }
+.next li { font-size: 15px; line-height: 1.4; padding-left: 30px; position: relative; counter-increment: n; }
+.next li::before { content: counter(n); position: absolute; left: 0; top: 1px; width: 21px; height: 21px; background: var(--on-navy); color: var(--navy); font-weight: 700; font-size: 13px; display: flex; align-items: center; justify-content: center; }
+.next code { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); color: var(--on-navy); }
+.next .bq { font-size: 19px; font-weight: 700; line-height: 1.35; }
+.next .tools { margin-top: 10px; font-size: 15px; opacity: .92; }
+.foot { display: flex; justify-content: space-between; font-size: 12.5px; color: var(--ink-muted); padding: 9px 48px 10px; }
+
+.cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.dmg { display: grid; grid-template-columns: 92px 1fr; border: 1px solid var(--hairline); font-size: 14px; }
+.dmg > div { padding: 5px 8px; border-bottom: 1px solid var(--hairline); line-height: 1.3; }
+.dmg > div:nth-last-child(-n+2) { border-bottom: none; }
+.dmg .k { font-weight: 700; color: var(--navy); background: var(--surface-alt); }
+.vs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.vs > div { background: var(--surface-alt); padding: 6px 10px; }
+.vs b { display: block; font-size: 20px; color: var(--navy); line-height: 1.15; }
+.vs span { font-size: 13px; color: var(--ink-secondary); }
+.anat { font-family: Consolas, Menlo, monospace; font-size: 13.5px; background: var(--surface-alt); border: 1px solid var(--hairline); padding: 6px 8px; line-height: 1.5; }
+.anat .s { color: var(--tool-red); font-weight: 700; }
+.anat .c { color: var(--link); font-weight: 700; }
+.small { font-size: 13.5px; color: var(--ink-secondary); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ===== Hero ===== -->
+  <header class="hero">
+    <div>
+      <div class="brand"><b>MCI</b><span>Excel for Business Intelligence Analyst</span></div>
+      <div class="kicker">TÓM TẮT BUỔI 2 / 7</div>
+      <h1>Hàm cho phân tích:<br>từ giao dịch đến KPI</h1>
+      <p class="sub">Định nghĩa KPI cho rõ, tính bằng hàm, và tự kiểm chứng con số trước khi báo cáo.</p>
+    </div>
+    <div class="qbox">
+      <div class="lbl">Câu hỏi mở buổi</div>
+      <div class="q">“Doanh thu, số đơn, biên lợi nhuận của từng vùng tháng này là bao nhiêu?”</div>
+      <span class="chip-tier">Tầng 1 — Descriptive</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <!-- ===== Bức tranh lớn ===== -->
+    <div class="big">
+      <div>
+        <div class="sec-title">Quy trình BI 5 bước</div>
+        <div class="steps">
+          <div class="step on"><div class="chev"><span class="n">1</span>Hỏi</div><div class="under">KPI Definition Card</div></div>
+          <div class="step"><div class="chev"><span class="n">2</span>Thu thập</div><div class="under">Get Data</div></div>
+          <div class="step"><div class="chev"><span class="n">3</span>Làm sạch</div><div class="under">Power Query</div></div>
+          <div class="step on"><div class="chev"><span class="n">4</span>Phân tích</div><div class="under">SUMIFS, XLOOKUP</div></div>
+          <div class="step"><div class="chev"><span class="n">5</span>Trình bày</div><div class="under">Dashboard</div></div>
+        </div>
+        <div class="rule">Quy tắc hôm nay: <b>viết KPI card trước, viết công thức sau</b>. Biết <b>grain</b> của bảng: tblSales có {{q1.rows|n}} dòng nhưng chỉ {{q1.orders|n}} đơn, vì 1 dòng = 1 sản phẩm trong 1 đơn.</div>
+      </div>
+      <div>
+        <div class="sec-title">7 viên gạch</div>
+        <div class="bricks">
+          <div class="brick"><span class="b">B7</span><span>Dự án BI end-to-end + thuyết trình</span></div>
+          <div class="brick"><span class="b">B6</span><span>Dashboard có target / RAG</span></div>
+          <div class="brick"><span class="b">B5</span><span>Star schema + KPI dictionary</span></div>
+          <div class="brick"><span class="b">B4</span><span>Pipeline Power Query tự refresh</span></div>
+          <div class="brick"><span class="b">B3</span><span>Báo cáo Pivot</span></div>
+          <div class="brick on"><span class="b">B2</span><span>Bảng làm giàu + bảng KPI SUMIFS</span></div>
+          <div class="brick"><span class="b">B1</span><span>Dữ liệu gốc tidy (Excel Table)</span></div>
+        </div>
+        <p class="note" style="margin-top:6px">Bảng KPI hôm nay dùng để đối soát ở B3 và B5.</p>
+      </div>
+    </div>
+
+    <!-- ===== 6 nội dung ===== -->
+    <div class="cards">
+
+      <section class="card">
+        <h3><span class="num">1</span>KPI Card &amp; grain</h3>
+        <div class="take">Định nghĩa KPI trước, công thức sau.</div>
+        <div class="dmg">
+          <div class="k">Dimension</div><div>Theo cái gì? Miền, tháng…</div>
+          <div class="k">Measure</div><div>Đo cái gì? Revenue, COGS…</div>
+          <div class="k">Grain</div><div>Mỗi dòng là gì? 1 sản phẩm / đơn</div>
+        </div>
+        <p><span class="tool">KPI Definition Card</span>: công thức, nguồn, grain, owner, target, giới hạn.</p>
+        <div class="warn">Đếm dòng rồi báo “số đơn” là sai gần gấp đôi.</div>
+      </section>
+
+      <section class="card">
+        <h3><span class="num">2</span>Hàm logic</h3>
+        <div class="take">Gắn nhãn, phân loại theo điều kiện.</div>
+        <ul>
+          <li><span class="tool">IF</span>: một điều kiện, hai kết quả</li>
+          <li><span class="tool">IFS</span>: dừng ở điều kiện đúng <b>đầu tiên</b>, nên đặt ngưỡng cao trước; <code>TRUE</code> ở cuối = còn lại</li>
+          <li><span class="tool">AND</span> / <span class="tool">OR</span> / <span class="tool">NOT</span>: lồng vào IF</li>
+          <li><span class="tool">IFERROR</span>: thay lỗi bằng giá trị khác</li>
+        </ul>
+        <div class="protip"><span class="tag">PRO TIP</span><span>IFERROR <b>che</b> lỗi chứ không <b>sửa</b> lỗi. Thay bằng chữ có nghĩa, đừng thay bằng 0.</span></div>
+      </section>
+
+      <section class="card">
+        <h3><span class="num">3</span>Thống kê mô tả</h3>
+        <div class="take">Một con số “trung bình” có thể nói dối.</div>
+        <div class="vs">
+          <div><b>{{thongke.mean|n}}</b><span><span class="tool">AVERAGE</span> giá trị đơn</span></div>
+          <div><b>{{thongke.median|n}}</b><span><span class="tool">MEDIAN</span> giá trị đơn</span></div>
+        </div>
+        <p>Trung bình &gt; trung vị: vài đơn rất lớn kéo lên (<span class="tool">SKEW</span> &gt; 0).</p>
+        <ul>
+          <li><span class="tool">STDEV.S</span>, <span class="tool">QUARTILE.INC</span>: ngưỡng outlier Q3 + 1,5 × IQR = <b>{{thongke.fence|n}}</b>, {{thongke.n_outlier}} đơn vượt</li>
+          <li><span class="tool">RANK.EQ</span>: khóa vùng xếp hạng bằng <code>$</code></li>
+        </ul>
+        <div class="tip"><span class="tag">TIP</span><span>Outlier không phải lỗi để xóa. Giải thích trước, quyết định sau.</span></div>
+      </section>
+
+      <section class="card">
+        <h3><span class="num">4</span>SUMIFS &amp; bảng KPI</h3>
+        <div class="take">Mỗi tiêu chí là một bộ lọc.</div>
+        <div class="anat">=<span class="s">SUMIFS</span>(<b>tblSales[Revenue]</b>,<br>&nbsp;tblSales[Region],<span class="c">$A6</span>,<br>&nbsp;tblSales[Thang],<span class="c">B$5</span>)</div>
+        <p class="small">Vùng cần cộng đứng <b>đầu</b>. Một công thức, kéo cả bảng.</p>
+        <ul>
+          <li>Bắc, tháng 3: <b>{{sumifs.bac_t3_rev|n}}</b></li>
+          <li><span class="tool">COUNTIFS</span> + <code>Line_No=1</code>: {{sumifs.bac_t3_orders}} đơn (không phải {{sumifs.bac_t3_lines}} dòng)</li>
+        </ul>
+        <div class="protip"><span class="tag">PRO TIP</span><span>KPI tỷ lệ: <b>tổng ÷ tổng</b> = {{q1.gm_pct|pct}} ✔ · trung bình 6 ngành {{q1.avg_of_category_gm|pct}} ✘</span></div>
+      </section>
+
+      <section class="card">
+        <h3><span class="num">5</span>Nối bảng (lookup)</h3>
+        <div class="take">Không lỗi ≠ không sai.</div>
+        <ul>
+          <li><span class="tool">VLOOKUP</span>: luôn ghi <code>FALSE</code></li>
+          <li><span class="tool">INDEX / MATCH</span>: chạy trên mọi phiên bản</li>
+          <li><span class="tool">XLOOKUP</span>: mặc định khớp chính xác</li>
+        </ul>
+        <p><b>Laws of Lookups:</b> khóa <b>duy nhất</b> · <b>cùng kiểu</b> (<span class="tool">TRIM</span>, <span class="tool">VALUE</span>) · không thấy thì ra <code>#N/A</code>.</p>
+        <div class="warn">P021 trùng khóa: XLOOKUP lấy dòng đầu, không báo lỗi, GM% “đẹp” {{p021.gm_pct_wrong|pct}}. Kiểm tra <code>COUNTIF</code> &gt; 1.</div>
+      </section>
+
+      <section class="card">
+        <h3><span class="num">6</span>Text &amp; Date</h3>
+        <div class="take">Chuẩn hóa để phân tích theo thời gian.</div>
+        <ul>
+          <li><span class="tool">LEFT</span>/<span class="tool">MID</span>/<span class="tool">RIGHT</span>, <span class="tool">&amp;</span>, <span class="tool">TRIM</span>: tách, ghép chuỗi</li>
+          <li><span class="tool">TEXT</span>: ra <b>chữ</b>, chỉ để hiển thị</li>
+          <li><span class="tool">EOMONTH</span>, <span class="tool">MONTH</span>, <span class="tool">WEEKDAY</span>: cuối tháng, tháng, quý, thứ</li>
+          <li><span class="tool">NETWORKDAYS</span>: tháng 1/2025 còn <b>{{date.networkdays_hol.0}}</b> ngày làm việc (không trừ Tết: {{date.networkdays.0}})</li>
+        </ul>
+        <div class="tip"><span class="tag">TIP</span><span>Ngày trong Excel là số. Ngày căn trái = ngày lưu dạng chữ.</span></div>
+      </section>
+    </div>
+
+    <!-- ===== Kết quả + insight ===== -->
+    <div class="bottom">
+      <div>
+        <div class="sec-title">Viên gạch B2: tự đối chiếu file của bạn</div>
+        <div class="kpis">
+          <div class="kpi"><div class="v">{{q1.revenue|n}}</div><div class="c">Tổng bảng KPI Miền × Tháng = tổng cột Revenue</div></div>
+          <div class="kpi"><div class="v">{{q1.orders|n}}</div><div class="c">Số đơn Q1 (ra {{q1.rows|n}} là đang đếm dòng)</div></div>
+          <div class="kpi"><div class="v">{{q1.cogs|n}}</div><div class="c">Tổng COGS (ra {{p021.total_cogs_wrong|n}} là chưa xóa P021 cũ)</div></div>
+          <div class="kpi"><div class="v">{{q1.aov|n}}</div><div class="c">AOV Q1 (VNĐ / đơn)</div></div>
+          <div class="kpi"><div class="v">{{q1.gm_pct|pct}}</div><div class="c">Gross Margin %, tổng ÷ tổng</div></div>
+          <div class="kpi"><div class="v">0</div><div class="c">ô <code>#N/A</code> trong tblSales</div></div>
+        </div>
+        <p class="note">Đáp án: <code>B2_MCI_Mart_Q1_2025_Answer.xlsx</code>, sheet Kiem_tra (file khởi đầu Buổi 3).</p>
+      </div>
+      <div>
+        <div class="sec-title">Câu insight cuối buổi</div>
+        <div class="insight">
+          <p class="s">“Doanh thu tháng <span class="blank"></span> là <span class="blank" style="min-width:110px"></span>, vì <span class="blank" style="min-width:170px"></span>, nên <span class="blank" style="min-width:170px"></span>.”</p>
+          <div class="three">
+            <div><b>Con số</b><span>có so sánh</span></div>
+            <div><b>Nguyên nhân</b><span>khả dĩ</span></div>
+            <div><b>Hàm ý</b><span>vậy thì sao?</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Trước Buổi 3 ===== -->
+  <footer class="next">
+    <div>
+      <h4>Trước Buổi 3</h4>
+      <ol>
+        <li><b>Bài tập về nhà (bắt buộc):</b> <code>B2_BTVN_MCI_Mart_T4_2025.xlsx</code>. Lookup → bảng Miền × Ngành hàng → AOV, GM% theo miền → card AOV → 1 câu insight.</li>
+        <li>Nộp tại hocvien.mcivietnam.com, tên file <code>B2_BTVN_&lt;HoTen&gt;.xlsx</code>.</li>
+        <li>Hoàn thành 3 KPI card, đọc handout B2, tick “Checklist trước Buổi 3” (mục 10 handout).</li>
+      </ol>
+    </div>
+    <div>
+      <h4>Buổi 3 sẽ trả lời</h4>
+      <p class="bq">“Doanh thu biến động thế nào theo cửa hàng, ngày trong tuần và ngành hàng, và vì sao tháng 1 cao hơn hẳn tháng 2?”</p>
+      <p class="tools">Nguyên liệu: file đáp án B2 · Công cụ: PivotTable</p>
+    </div>
+  </footer>
+  <div class="foot"><span>MCI – Magic Code Institute · Excel for Business Intelligence Analyst</span><span>Tóm tắt Buổi 2 · Dữ liệu case MCI Mart</span></div>
+</div>
+</body>
+</html>

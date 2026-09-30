@@ -1,0 +1,9 @@
+﻿ERROR: The property 'WindowState' cannot be found on this object. Verify that the property exists and can be set.
+At line:8 char:9
++ Retry { $xl.WindowState = -4143 }
++         ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : PropertyNotFound
+ 
+
+DONE

@@ -1,0 +1,19 @@
+﻿True
+S18a_full RECT 32 238 189 418
+snap S18a_full.png orange=156
+True
+S24_full RECT 32 238 405 418
+snap S24_full.png orange=156
+True
+S25_full RECT 32 238 580 358
+snap S25_full.png orange=156
+True
+S20a_full RECT 32 238 439 538
+snap S20a_full.png orange=156
+True
+S21b_full RECT 267 258 949 418
+snap S21b_full.png orange=156
+RECT 267 258 1073 858
+RECT 267 258 949 538
+
+DONE

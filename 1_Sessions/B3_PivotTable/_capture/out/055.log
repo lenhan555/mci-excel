@@ -1,0 +1,16 @@
+﻿True
+PV_NganhHang shape Chart 3 type=3 L=327 T=48 W=465 H=270
+snap v_PV_NganhHang.png orange=1
+True
+snap v_PV_Thang.png orange=1
+True
+PV_Ngay shape Order_Date type=-2 L=176.25 T=48 W=465 H=105
+PV_Ngay shape Chart 1 type=3 L=176.25 T=183 W=558 H=300
+snap v_PV_Ngay.png orange=1
+True
+PV_Thu shape Chart 2 type=3 L=164.25 T=48 W=372 H=270
+snap v_PV_Thu.png orange=1
+True
+snap v_PV_CuaHang.png orange=1
+
+DONE

@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(D=/private/tmp/claude-501/bundled-skills/2.1.280/32e6334b1ccb0dfd241329bb833482b3/dataviz/scripts; cd $D && node validate_palette.js \"#3398da,#eb6834,#1baf7a,#eda100,#e87ba4,#4a3aa7\" --mode light --surface \"#ffffff\" 2>&1 | grep -E \"PASS|FAIL|WARN|→\"; echo ---; node validate_palette.js \"#2a78d6,#eb6834,#1baf7a\" --mode light --surface \"#ffffff\" --pairs all 2>&1 | grep -E \"PASS|FAIL|WARN|→\"; echo --- dark; node validate_palette.js \"#3987e5,#d95926,#199e70,#c98500,#d55181,#9085e9\" --mode dark --surface \"#1a1a19\" 2>&1 | grep -E \"PASS|FAIL|WARN|→\")",
+      "Bash(D=/private/tmp/claude-501/bundled-skills/2.1.280/32e6334b1ccb0dfd241329bb833482b3/dataviz/scripts; cd $D && node validate_palette.js \"#3987e5,#d95926,#199e70,#c98500,#d55181,#9085e9\" --mode dark --surface \"#151a24\" 2>&1 | grep -E \"PASS|FAIL|WARN|→\"; node validate_palette.js \"#3987e5,#d95926,#199e70\" --mode dark --surface \"#151a24\" --pairs all 2>&1 | grep -E \"FAIL|→\")",
+      "Bash(python3 -)",
+      "Bash(python3 make_slides.py)"
+    ]
+  }
+}

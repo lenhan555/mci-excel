@@ -1,0 +1,9 @@
+﻿ERROR: Exception from HRESULT: 0x800A03EC
+At line:3 char:58
++ ... CH("hộp")'; $c1.DataBodyRange.Formula = '=ISNUMBER(SEARCH("hộp",[@Pro ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], COMException
+    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException
+ 
+
+DONE
