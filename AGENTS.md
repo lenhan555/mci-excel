@@ -72,6 +72,7 @@ Bước 2 và 3 làm được theo từng đợt ảnh. Trước khi agent ghi `
 
 Bài học viên nộp tải về `1_Sessions/B<n>_…/Homework/Bai_nop/`, rồi gọi agent `homework-grader` (`.codex/agents/homework-grader.toml`). Agent chấm theo De_bai và file `_Answer` bằng script `2_Dataset/_generator/grade_b<n>.py`, ghi nhận xét từng học viên, `Tong_hop_B<n>.csv` và `Bao_cao_lop_B<n>.md` vào `Homework/Cham_bai/`. Không sửa file học viên nộp.
 - **Điểm số làm tròn thành số nguyên** (integer) ở mọi nơi: nhận xét, `Tong_hop_B<n>.csv`, báo cáo lớp.
+- **Nhận xét có ảnh minh họa đối chiếu bài nộp với đáp án.** Mỗi lỗi chính nêu trong nhận xét kèm một cặp ảnh chụp Excel 365 Windows (zoom 100%): ảnh "bài của bạn" chụp từ file trong `Bai_nop/`, ảnh "đáp án" chụp từ file `_Answer`, cùng sheet và vùng để học viên so được ngay. Ô cần nhấn mạnh tô viền trên **bản sao** của file, không sửa file gốc của học viên. Lỗi chỉ có một phía (ví dụ bài thiếu sheet) thì chụp phía có và ghi rõ. Ảnh lưu `Cham_bai/<Học viên>/Images/NX<số thứ tự 2 chữ số>[a|b]_<chủ_đề>.png` (a = bài nộp, b = đáp án); chưa chụp được thì liệt kê trong `Cham_bai/_DANH_SACH_ANH_NX.md`, không bỏ qua. Dựng PDF bằng `python 2_Dataset/_generator/build_nhanxet_pdf.py B<n>`; PDF phát cho học viên không còn khung chờ ảnh.
 
 - Đọc cả ô và XML drawing/text box để kiểm tra insight; openpyxl chỉ đọc ô có thể bỏ sót phần chữ. Không giả định có Cowork. Phần không đọc được ghi rõ Không kiểm được, cần GV xem.
 
