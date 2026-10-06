@@ -1,0 +1,47 @@
+﻿== PV_Loc pivots=1
+  PV_Loc @ A8:D12
+     [Calendar].[Nam] -> orient 3
+     [Calendar].[Quy] -> orient 3
+     [Store].[Region] -> orient 1
+     [Measures].[Total Revenue] -> orient 4
+     [Measures].[Revenue All Stores] -> orient 4
+     [Measures].[% Revenue Share] -> orient 4
+== PV_Target pivots=1
+  PV_Target @ A8:E21
+     [Calendar].[Nam] -> orient 3
+     [Calendar].[Thang] -> orient 1
+     [Measures].[Total Revenue] -> orient 4
+     [Measures].[Total Target] -> orient 4
+     [Measures].[Revenue vs Target %] -> orient 4
+     [Measures].[Variance] -> orient 4
+== PV_Target_CuaHang pivots=1
+  PV_Target_CuaHang @ A8:F22
+     [Calendar].[Nam] -> orient 3
+     [Calendar].[Thang] -> orient 2
+     [Store].[Store_Code] -> orient 1
+     [Measures].[Revenue vs Target %] -> orient 4
+== PV_YoY pivots=1
+  PV_YoY @ A8:D21
+     [Calendar].[Nam] -> orient 3
+     [Calendar].[Thang] -> orient 3
+     [Store].[Store_Code] -> orient 1
+     [Measures].[Total Revenue] -> orient 4
+     [Measures].[Revenue LY] -> orient 4
+     [Measures].[Revenue YoY %] -> orient 4
+== PV_GM_Nam pivots=1
+  PV_GM_Nam @ A8:B11
+     [Calendar].[Nam] -> orient 1
+     [Measures].[Gross Margin %] -> orient 4
+== PV_KPI_Thang pivots=1
+  PV_KPI_Thang @ A8:H13
+     [Calendar].[Nam] -> orient 3
+     [Calendar].[Thang] -> orient 1
+     [Measures].[Total Revenue] -> orient 4
+     [Measures].[Gross Margin %] -> orient 4
+     [Measures].[Revenue YTD] -> orient 4
+     [Measures].[Revenue YoY %] -> orient 4
+     [Measures].[Total Orders] -> orient 4
+     [Measures].[Avg Order Value] -> orient 4
+     [Measures].[Active Customers] -> orient 4
+
+DONE

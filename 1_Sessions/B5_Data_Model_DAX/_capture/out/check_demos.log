@@ -1,0 +1,24 @@
+== B5_Demo_Model.xlsx
+tables: Product=40, Store=12, Customer=1500, Target=144, Calendar=731, Sales=30247
+relationships: 0  measures: 0
+sheets: Sales | Product | Store | KPI_SUMIFS | Sales_PQ | Huong_dan
+pivots: 0
+
+== B5_Demo_Model_HocVien.xlsx
+tables: Product=40, Store=12, Customer=1500, Target=144, Calendar=731, Sales=30247
+relationships: 0  measures: 0
+sheets: Huong_dan | Sales | Product | Store | KPI_SUMIFS | Sales_PQ
+pivots: 0
+
+== B5_Demo_DAX.xlsx
+tables: Product=40, Store=12, Customer=1500, Target=144, Calendar=731, Sales=30247
+relationships: 6  measures: 0
+sheets: Sales | Product | Store | KPI_SUMIFS | Sales_PQ | Huong_dan
+pivots: 0
+
+== B5_Demo_DAX_HocVien.xlsx
+tables: Product=40, Store=12, Customer=1500, Target=144, Calendar=731, Sales=30247
+relationships: 6  measures: 0
+sheets: Huong_dan | Sales | Product | Store | KPI_SUMIFS | Sales_PQ
+pivots: 0
+

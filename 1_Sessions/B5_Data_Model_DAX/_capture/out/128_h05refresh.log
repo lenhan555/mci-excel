@@ -1,0 +1,9 @@
+﻿ERROR: You cannot call a method on a null-valued expression.
+At line:11 char:1
++ $sl = $sc.Slicers.Add($ws, [Type]::Missing, 'Nguong', 'Nguong dat Tar ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+
+DONE

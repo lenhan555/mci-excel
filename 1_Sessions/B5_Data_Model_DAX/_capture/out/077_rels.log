@@ -1,0 +1,8 @@
+﻿rels: 4
+Sales[Order_Date] -> Calendar[Date] active=True
+Sales[Product_Code] -> Product[Product_Code] active=True
+Sales[Store_Code] -> Store[Store_Code] active=True
+Sales[Customer_ID] -> Customer[Customer_ID] active=True
+front 'Power Pivot for Excel'
+
+DONE

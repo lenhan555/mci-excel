@@ -1,0 +1,9 @@
+Copy D:\Onedrive\MCI Excel\1_Sessions\B3_PivotTable\Practice\B3_MCI_Mart_Q1_2025_Answer.xlsx
+  -> D:\Onedrive\MCI Excel\1_Sessions\B4_Power_Query\Practice\B4_MCI_Mart_Answer.xlsx
+Dựng Power Query bằng Excel (COM) — có thể mất vài phút...
+Kết quả kiểm tra (lần 1): ['Order_ID', '✔', '✔', '✔', '✔', '✔', '✔', '✔', '✔', '✔', '✔']
+Gắn nhóm query trợ giúp, mở lại bằng Excel để Refresh All và lưu...
+Kết quả kiểm tra (sau khi mở lại): ['Order_ID', '✔', '✔', '✔', '✔', '✔', '✔', '✔', '✔', '✔', '✔']
+Nhóm query trợ giúp và liên kết Transform File ↔ Transform Sample File: OK
+
+Xong: D:\Onedrive\MCI Excel\1_Sessions\B4_Power_Query\Practice\B4_MCI_Mart_Answer.xlsx — Kiem_tra_B4 10/10 ✔

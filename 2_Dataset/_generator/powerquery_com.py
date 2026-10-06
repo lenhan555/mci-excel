@@ -67,6 +67,8 @@ class KiemTra:
     note: str
     rows: list                        # [(label, formula_or_None, value, expected)] — formula=None: value là số, hoặc "model:<Bảng>"
                                       # để ghi RecordCount của bảng đó trong Data Model (đọc qua COM sau Refresh All)
+    expected_label: str = "Đáp án"    # tiêu đề cột D
+    steps: list = field(default_factory=list)   # các dòng chữ ghi dưới bảng (mục "Cách dùng"), mỗi phần tử một dòng
 
 
 def _esc_ps_dq(s: str) -> str:
@@ -79,7 +81,7 @@ def _ps_str(s: str) -> str:
     return "'" + str(s).replace("'", "''") + "'"
 
 
-def run(path, queries, table_loads=(), model_loads=(), pivots=(), kiemtra=None, checks=()):
+def run(path, queries, table_loads=(), model_loads=(), pivots=(), kiemtra=None, checks=(), first_sheet=None):
     if sys.platform != "win32":
         raise RuntimeError("powerquery_com chỉ chạy trên Windows (Excel qua COM).")
     path = os.path.abspath(path)
@@ -159,7 +161,7 @@ Com {{
     $sh.Range("A2").Value2 = {_ps_str(kiemtra.note)}
     $sh.Range("A4").Value2 = "Chỉ tiêu"
     $sh.Range("C4").Value2 = "Kết quả"
-    $sh.Range("D4").Value2 = "Đáp án"
+    $sh.Range("D4").Value2 = {_ps_str(kiemtra.expected_label)}
     $sh.Range("E4").Value2 = "Khớp?"
 }}''')
         for i, (label, formula, value, expected) in enumerate(kiemtra.rows, start=5):
@@ -173,6 +175,14 @@ Com {{
                 lines.append(f'Com {{ $sh = $wb.Worksheets.Item({_ps_str(kiemtra.sheet)}); $sh.Range("C{i}").Value2 = {value} }}')
             lines.append(f'Com {{ $sh = $wb.Worksheets.Item({_ps_str(kiemtra.sheet)}); $sh.Range("D{i}").Value2 = {expected} }}')
             lines.append(f'Com {{ $sh = $wb.Worksheets.Item({_ps_str(kiemtra.sheet)}); $sh.Range("E{i}").Formula = "=IF(ROUND(C{i},2)=ROUND(D{i},2),""✔"",""✘"")" }}')
+
+        if kiemtra.steps:
+            r0 = 5 + len(kiemtra.rows) + 1
+            for j, text in enumerate(["Cách dùng"] + list(kiemtra.steps)):
+                lines.append(f'Com {{ $sh = $wb.Worksheets.Item({_ps_str(kiemtra.sheet)}); $sh.Range("A{r0 + j}").Value2 = {_ps_str(text)} }}')
+
+    if first_sheet:                   # đưa sheet lên đầu và mở file ở sheet đó
+        lines.append(f'Com {{ $s0 = $wb.Worksheets.Item({_ps_str(first_sheet)}); if ($s0.Index -ne 1) {{ $s0.Move($wb.Worksheets.Item(1)) }}; [void]$s0.Activate() }}')
 
     lines.append('Com { $x.CalculateFull() }')
     cells_ps = ", ".join(_ps_str(c) for c in checks)
@@ -251,3 +261,146 @@ _PS_FOOTER = r"""
 $result = @{ error = $errOut; cells = $cellsOut }
 [IO.File]::WriteAllText(__RES__, (ConvertTo-Json -InputObject $result -Compress), (New-Object Text.UTF8Encoding $false))
 """
+
+
+# ------------------------------------------------------------------ nhóm query (Query Groups) ---
+# COM (WorkbookQuery) không có thuộc tính nhóm, và không gắn được hàm "Transform File" với query mẫu
+# "Transform Sample File" như khi bấm Combine trên giao diện. Hai thứ đó nằm trong gói DataMashup
+# (customXml/itemN.xml, base64, cấu trúc theo [MS-QDEFF]):
+#   - nhóm: metadata, mục AllFormulas, Entry "QueryGroups" (nhị phân .NET, base64) + Entry "QueryGroupID" ở từng query;
+#   - liên kết hàm: thuộc tính [ FunctionQueryBinding = "{""exemplarFormulaName"":""<query mẫu>""}" ] trong Section1.m.
+# Định dạng lấy từ file Excel 365 tạo bằng giao diện (Data → Get Data → From Folder → Combine & Transform Data).
+# Sửa xong phải mở lại bằng Excel (run(path, queries=[]...)) để Excel đọc, Refresh và lưu lại gói chuẩn.
+
+import base64 as _b64, io as _io, re as _re, struct as _struct, uuid as _uuid, zipfile as _zip
+
+
+def _mashup_locate(zf):
+    for n in zf.namelist():
+        if n.startswith("customXml/item") and "Props" not in n and n.endswith(".xml"):
+            raw = zf.read(n)
+            text = raw.decode("utf-16") if raw[:2] in (b"\xff\xfe", b"\xfe\xff") else raw.decode("utf-8-sig")
+            m = _re.search(r"(<DataMashup[^>]*>)(.*?)(</DataMashup>)", text, _re.S)
+            if m:
+                return n, raw, text, m
+    raise RuntimeError("Không thấy DataMashup trong file (workbook chưa có Power Query?)")
+
+
+def _mashup_split(b):
+    ver, plen = _struct.unpack("<II", b[:8])
+    pkg = b[8:8 + plen]; off = 8 + plen
+    out = {"ver": ver, "pkg": pkg}
+    for key in ("perm", "meta", "bind"):
+        n = _struct.unpack("<I", b[off:off + 4])[0]
+        out[key] = b[off + 4:off + 4 + n]; off += 4 + n
+    return out
+
+
+def _mashup_join(p):
+    b = _struct.pack("<II", p["ver"], len(p["pkg"])) + p["pkg"]
+    for key in ("perm", "meta", "bind"):
+        b += _struct.pack("<I", len(p[key])) + p[key]
+    return b
+
+
+def read_mashup(path):
+    """Trả về (section1_m, metadata_xml) của workbook — để kiểm tra sau khi dựng."""
+    with _zip.ZipFile(path) as zf:
+        _, _, _, m = _mashup_locate(zf)
+    p = _mashup_split(_b64.b64decode(m.group(2)))
+    with _zip.ZipFile(_io.BytesIO(p["pkg"])) as zp:
+        sec = zp.read("Formulas/Section1.m").decode("utf-8-sig")
+    mlen = _struct.unpack("<I", p["meta"][4:8])[0]
+    return sec, p["meta"][8:8 + mlen].decode("utf-8-sig")
+
+
+def _net_str(t):
+    b = t.encode("utf-8"); n = len(b); pre = bytearray()
+    while n >= 0x80:
+        pre.append((n & 0x7F) | 0x80); n >>= 7
+    pre.append(n)
+    return bytes(pre) + b
+
+
+def _encode_groups(groups):
+    out = _struct.pack("<i", len(groups))
+    for g in groups:
+        out += _struct.pack("<i", 0) + _uuid.UUID(g["id"]).bytes_le + _net_str(g["name"]) + _net_str(g.get("description", ""))
+        out += (b"\x01" + _uuid.UUID(g["parent"]).bytes_le) if g.get("parent") else b"\x00"
+        out += _struct.pack("<i", 0)
+    return out
+
+
+def set_query_groups(path, groups, members, function_bindings=None):
+    """Gắn nhóm query và liên kết hàm ↔ query mẫu vào workbook đã lưu (không cần Excel).
+
+    groups:  [{"id": "<guid>", "name": "Transform File from Data_Sales"},
+              {"id": "<guid>", "name": "Helper Queries", "parent": "<guid nhóm cha>"}]
+    members: {"Sample File": "<guid nhóm>", ...}   — query không có trong members nằm ở "Other Queries"
+    function_bindings: {"Transform File": "Transform Sample File"}
+    """
+    function_bindings = function_bindings or {}
+    with _zip.ZipFile(path) as zf:
+        item_name, raw, text, m = _mashup_locate(zf)
+        entries = [(i, zf.read(i.filename)) for i in zf.infolist()]
+    p = _mashup_split(_b64.b64decode(m.group(2)))
+
+    # 1) Section1.m: thuộc tính FunctionQueryBinding cho query hàm
+    with _zip.ZipFile(_io.BytesIO(p["pkg"])) as zp:
+        parts = [(i, zp.read(i.filename)) for i in zp.infolist()]
+    new_parts = []
+    for info, data in parts:
+        if info.filename == "Formulas/Section1.m":
+            sec = data.decode("utf-8-sig")
+            for fn, exemplar in function_bindings.items():
+                ident = fn if _re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", fn) else '#"' + fn + '"'
+                attr = '[ FunctionQueryBinding = "{""exemplarFormulaName"":""' + exemplar + '""}" ]'
+                pat = _re.compile(r"(?:\[ [^\r\n]*\]\r?\n)?shared " + _re.escape(ident) + " = ")
+                if not pat.search(sec):
+                    raise RuntimeError(f"Không thấy query hàm {fn} trong Section1.m")
+                sec = pat.sub(lambda _m: attr + "\r\nshared " + ident + " = ", sec, count=1)
+            data = sec.encode("utf-8")
+        new_parts.append((info, data))
+    buf = _io.BytesIO()
+    with _zip.ZipFile(buf, "w", _zip.ZIP_DEFLATED) as zp:
+        for info, data in new_parts:
+            zp.writestr(info.filename, data)
+    p["pkg"] = buf.getvalue()
+
+    # 2) metadata: QueryGroups (mục AllFormulas) + QueryGroupID từng query
+    mver, mlen = _struct.unpack("<II", p["meta"][:8])
+    xml = p["meta"][8:8 + mlen].decode("utf-8-sig")
+    rest = p["meta"][8 + mlen:]
+    qg = '<Entry Type="QueryGroups" Value="s' + _b64.b64encode(_encode_groups(groups)).decode() + '" />'
+    xml = _re.sub(r'<Entry Type="QueryGroups" Value="[^"]*" />', "", xml)
+    allf = "<ItemType>AllFormulas</ItemType><ItemPath /></ItemLocation>"
+    if allf + "<StableEntries />" in xml:
+        xml = xml.replace(allf + "<StableEntries />", allf + '<StableEntries><Entry Type="Relationships" Value="sAAAAAA==" />' + qg + "</StableEntries>", 1)
+    elif allf + "<StableEntries>" in xml:
+        xml = xml.replace(allf + "<StableEntries>", allf + "<StableEntries>" + qg, 1)
+    else:
+        raise RuntimeError("metadata không có mục AllFormulas")
+    for q, gid in members.items():
+        loc = "<ItemType>Formula</ItemType><ItemPath>Section1/" + q.replace(" ", "%20") + "</ItemPath></ItemLocation>"
+        add = '<Entry Type="LoadToReportDisabled" Value="l1" /><Entry Type="QueryGroupID" Value="s' + gid + '" />'
+        if loc + "<StableEntries />" in xml:
+            xml = xml.replace(loc + "<StableEntries />", loc + "<StableEntries>" + add + "</StableEntries>", 1)
+        elif loc + "<StableEntries>" in xml:
+            seg_start = xml.index(loc)
+            seg_end = xml.index("</StableEntries>", seg_start)
+            seg = _re.sub(r'<Entry Type="(QueryGroupID|LoadToReportDisabled)" Value="[^"]*" />', "", xml[seg_start:seg_end])
+            seg = seg.replace(loc + "<StableEntries>", loc + "<StableEntries>" + add, 1)
+            xml = xml[:seg_start] + seg + xml[seg_end:]
+        else:
+            raise RuntimeError(f"metadata không có query {q}")
+    xb = xml.encode("utf-8-sig") if p["meta"][8:11] == b"\xef\xbb\xbf" else xml.encode("utf-8")
+    p["meta"] = _struct.pack("<II", mver, len(xb)) + xb + rest
+
+    # 3) ghi lại customXml/itemN.xml (giữ nguyên mã hóa), các phần khác của xlsx giữ nguyên
+    new_text = text[:m.start(2)] + _b64.b64encode(_mashup_join(p)).decode() + text[m.end(2):]
+    new_raw = (b"\xff\xfe" + new_text.encode("utf-16-le")) if raw[:2] == b"\xff\xfe" else new_text.encode("utf-8")
+    tmp = path + ".tmp"
+    with _zip.ZipFile(tmp, "w") as zo:
+        for info, data in entries:
+            zo.writestr(info, new_raw if info.filename == item_name else data)
+    os.replace(tmp, path)

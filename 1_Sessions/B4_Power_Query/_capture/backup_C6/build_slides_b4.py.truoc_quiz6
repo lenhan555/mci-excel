@@ -1,0 +1,664 @@
+"""Dựng deck Buổi 4: Slide_B4.pptx từ Slide_Script_B4.md, theo style của Slide_B1.pptx (cùng khung với build_slides_b3.py).
+
+- Master, layout, theme và slide bìa lấy từ Slide_B1.pptx (không sửa file B1; chỉ đọc làm khuôn).
+- Chữ trên slide khai báo trong script này, khớp phần "Trên slide" của kịch bản.
+- Speaker notes lấy NGUYÊN VĂN từ kịch bản (Lời giảng, Ghi chú giảng viên), bỏ định dạng markdown,
+  nên sửa lời giảng thì sửa Slide_Script_B4.md rồi chạy lại script này.
+- Quiz: shape đáp án tên "Answer …", lớp mờ "Dim …", hiện khi bấm (build_student_slides.py sẽ xóa ở bản _HocVien).
+- Ảnh chụp thật lấy từ Materials/B4/Images (tên S<số slide>_…png, danh sách: _DANH_SACH_ANH.md); chưa có thì để khung [CHỤP].
+- Số liệu khớp build_b4_meta.json (build_b4_homework.py) và Kiem_tra_B4 của file đáp án (build_b4.py).
+
+    python 2_Dataset\\_generator\\build_slides_b4.py     # cần python-pptx
+    python 2_Dataset\\_generator\\build_student_slides.py B4
+"""
+import copy, os, re, sys
+for s_ in (sys.stdout, sys.stderr):
+    if hasattr(s_, "reconfigure"): s_.reconfigure(encoding="utf-8", errors="replace")
+from pptx import Presentation
+from pptx.util import Inches, Pt, Emu
+from pptx.dml.color import RGBColor
+from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
+from pptx.enum.dml import MSO_LINE
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.oxml.ns import qn
+from lxml import etree
+
+ROOT = os.environ.get("MCI_ROOT") or os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+TEMPLATE = os.path.join(ROOT, "1_Sessions", "B1_Nen_tang_Excel_Du_lieu", "Slide_B1.pptx")
+B4 = os.path.join(ROOT, "1_Sessions", "B4_Power_Query")
+SCRIPT = os.path.join(B4, "Slide_Script_B4.md")
+OUT = os.path.join(B4, "Slide_B4.pptx")
+IMG = os.path.join(ROOT, "Materials", "B4", "Images")        # ảnh chụp thật: S<số slide>_<chủ đề>.png
+MISSING = []
+
+NAVY, INK, INK2, MUTED = "203864", "1B2230", "585858", "6B6F76"
+RED, GOLD, ALT, HAIR, WHITE = "C00000", "FFC000", "F3F5F9", "D9DEE8", "FFFFFF"
+GOOD, GOOD_BG, BAD_TXT, BAD_BG, ACCENT = "2E7D32", "E8F5E9", "9C0006", "FFC7CE", "3398DA"
+L, R, W = 1.67, 12.74, 11.07          # lề trái, lề phải, bề rộng vùng nội dung (in)
+
+# ---------------------------------------------------------------------
+# Khuôn: mở B1, giữ slide bìa, xóa các slide còn lại
+# ---------------------------------------------------------------------
+prs = Presentation(TEMPLATE)
+sldIdLst = prs.slides._sldIdLst
+for sldId in list(sldIdLst)[1:]:
+    prs.part.drop_rel(sldId.rId); sldIdLst.remove(sldId)
+LAYOUT = {l.name: l for l in prs.slide_layouts}
+
+def rgb(h): return RGBColor.from_string(h)
+
+def _runs(p, parts, size, color, bold):
+    for part in parts:
+        if isinstance(part, str): part = (part, {})
+        text, f = part
+        r = p.add_run(); r.text = text
+        r.font.size = Pt(f.get("size", size)); r.font.bold = f.get("b", bold)
+        r.font.color.rgb = rgb(f.get("color", color)); r.font.name = "Arial"
+        if f.get("i"): r.font.italic = True
+
+def tb(s, x, y, w, h, paras, size=18, color=INK, bold=False, anchor="t", align=None, name="TextBox", bullet=False, space=6):
+    """paras: str | list[para]; para: str | list[run]; run: str | (text, {b, color, size, i})."""
+    sh = s.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h)); sh.name = name
+    tf = sh.text_frame; tf.word_wrap = True
+    tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
+    tf.vertical_anchor = {"t": MSO_ANCHOR.TOP, "ctr": MSO_ANCHOR.MIDDLE, "b": MSO_ANCHOR.BOTTOM}[anchor]
+    if isinstance(paras, str): paras = [paras]
+    for i, para in enumerate(paras):
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        if align: p.alignment = {"l": PP_ALIGN.LEFT, "ctr": PP_ALIGN.CENTER, "r": PP_ALIGN.RIGHT}[align]
+        if i: p.space_before = Pt(space)
+        if isinstance(para, str): para = [para]
+        if bullet: para = [("•  ", {"color": NAVY, "b": True})] + list(para)
+        _runs(p, para, size, color, bold)
+    return sh
+
+def box(s, x, y, w, h, fill=None, line=None, lw=1, shape=MSO_SHAPE.RECTANGLE, radius=None, name="Box", alpha=None):
+    sh = s.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h)); sh.name = name
+    if radius is not None and shape == MSO_SHAPE.ROUNDED_RECTANGLE: sh.adjustments[0] = radius
+    if fill: sh.fill.solid(); sh.fill.fore_color.rgb = rgb(fill)
+    else: sh.fill.background()
+    if line: sh.line.color.rgb = rgb(line); sh.line.width = Pt(lw)
+    else: sh.line.fill.background()
+    sh.shadow.inherit = False
+    if alpha is not None:
+        clr = sh.fill._xPr.find(qn("a:solidFill")).find(qn("a:srgbClr"))
+        a = etree.SubElement(clr, qn("a:alpha")); a.set("val", str(alpha))
+    return sh
+
+def chip(s, x, y, w, text, fill=None, line=NAVY, color=NAVY, size=14, name="Chip", h=0.4):
+    sh = box(s, x, y, w, h, fill=fill, line=line, lw=1, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.2, name=name)
+    tf = sh.text_frame; tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    p = tf.paragraphs[0]; p.alignment = PP_ALIGN.CENTER; _runs(p, [text], size, color, True)
+    return sh
+
+def vline(s, x, y, h):
+    ln = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x), Inches(y), Inches(x), Inches(y + h))
+    ln.line.color.rgb = rgb(HAIR); ln.line.width = Pt(1); return ln
+
+def content(title, rail):
+    s = prs.slides.add_slide(LAYOUT["Title Only"])
+    s.shapes.title.text = title
+    tb(s, 0, 1.5, 1.07, 5.25, rail, size=14, color=WHITE, bold=True, anchor="ctr", align="ctr", name="Rail label")
+    s.shapes[-1].text_frame._bodyPr.set("vert", "vert270")
+    return s
+
+def section(title, body=None):
+    s = prs.slides.add_slide(LAYOUT["Section Header"])
+    s.shapes.title.text = title
+    for ph in list(s.placeholders):
+        if ph.placeholder_format.idx == 1:
+            if body: ph.text = body
+            else: ph._element.getparent().remove(ph._element)
+    return s
+
+def tip(s, x, y, w, h, text, pro=False):
+    box(s, x, y, w, h, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.06, name=("PRO TIP" if pro else "TIP") + " callout")
+    if pro:
+        chip(s, x + 0.12, y + 0.12, 1.1, "PRO TIP", fill=GOLD, line=None, color=INK, size=12, name="PRO TIP chip", h=0.35)
+        tb(s, x + 1.32, y + 0.1, w - 1.44, h - 0.2, text, size=16, name="PRO TIP text")
+    else:
+        tb(s, x + 0.12, y + 0.12, 0.6, 0.35, "TIP", size=14, color=NAVY, bold=True, anchor="ctr")
+        tb(s, x + 0.75, y + 0.1, w - 0.87, h - 0.2, text, size=16, name="TIP text")
+
+def tool(s, x, y, w, name, purpose, h_purpose=0.7, size=24):
+    tb(s, x, y, w, 0.5, name, size=size, color=RED, bold=True, name="Tool name")
+    tb(s, x, y + 0.5, w, h_purpose, purpose, size=16, color=INK2, name="Tool purpose")
+
+def table(s, x, y, colw, rows, size=16, head_size=None, rowh=0.45, bold_first=False, name="Table",
+          header=True, fills=None, colors=None, align=None):
+    """rows[0] là tiêu đề (nền navy). fills/colors: {(r,c): hex}. Chữ trong ô có thể là list run."""
+    nr, nc = len(rows), len(rows[0])
+    gf = s.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(sum(colw)), Inches(rowh * nr)); gf.name = name
+    tbl = gf.table
+    tbl._tbl.tblPr.set("firstRow", "1"); tbl._tbl.tblPr.set("bandRow", "0")
+    style = tbl._tbl.tblPr.find(qn("a:tableStyleId"))
+    if style is not None: tbl._tbl.tblPr.remove(style)
+    for j, cw in enumerate(colw): tbl.columns[j].width = Inches(cw)
+    for i in range(nr):
+        tbl.rows[i].height = Inches(rowh)
+        for j in range(nc):
+            c = tbl.cell(i, j); v = rows[i][j]
+            c.margin_left = c.margin_right = Inches(0.08); c.margin_top = c.margin_bottom = Inches(0.03)
+            c.vertical_anchor = MSO_ANCHOR.MIDDLE
+            tf = c.text_frame; tf.word_wrap = True
+            p = tf.paragraphs[0]
+            if align and align[j]: p.alignment = {"l": PP_ALIGN.LEFT, "ctr": PP_ALIGN.CENTER, "r": PP_ALIGN.RIGHT}[align[j]]
+            head = header and i == 0
+            col = WHITE if head else (colors or {}).get((i, j), INK)
+            parts = v if isinstance(v, list) else [str(v)]
+            _runs(p, parts, head_size or size, col, head or (bold_first and j == 0))
+            tcPr = c._tc.get_or_add_tcPr()
+            for side in ("a:lnL", "a:lnR", "a:lnT", "a:lnB"):
+                ln = etree.SubElement(tcPr, qn(side))
+                if side in ("a:lnL", "a:lnR"):
+                    ln.set("w", "0"); etree.SubElement(ln, qn("a:noFill"))
+                else:
+                    ln.set("w", "12700"); sf = etree.SubElement(ln, qn("a:solidFill"))
+                    etree.SubElement(sf, qn("a:srgbClr")).set("val", HAIR)
+            f = NAVY if head else (fills or {}).get((i, j))
+            if f:
+                sf = etree.SubElement(tcPr, qn("a:solidFill")); etree.SubElement(sf, qn("a:srgbClr")).set("val", f)
+            else:
+                etree.SubElement(tcPr, qn("a:noFill"))
+    return gf
+
+def fx(s, x, y, w, formula, size=16, name="Formula bar"):
+    """Thanh công thức mô phỏng Excel: ô 'fx' + công thức."""
+    box(s, x, y, w, 0.45, fill=WHITE, line=HAIR, name=name)
+    tb(s, x + 0.1, y, 0.45, 0.45, [[("fx", {"i": True})]], size=14, color=MUTED, anchor="ctr")
+    tb(s, x + 0.6, y, w - 0.7, 0.45, formula, size=size, color=INK, anchor="ctr", name="Formula")
+
+def stat(s, x, y, w, h, label, value, sub=None, name="Stat card", vcolor=NAVY, vsize=32):
+    box(s, x, y, w, h, fill=WHITE, line=HAIR, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.06, name=name)
+    paras = [[(label, {"size": 14, "color": INK2})], [(value, {"size": vsize, "b": True, "color": vcolor})]]
+    if sub: paras.append([(sub, {"size": 14, "color": INK})])
+    tb(s, x + 0.2, y + 0.1, w - 0.4, h - 0.2, paras, anchor="ctr", space=2)
+
+def shot(s, x, y, w, h, what, where, img, name="Image placeholder [CHỤP]"):
+    """Ảnh chụp thật (Excel 365 Windows, zoom 100%) — xem CLAUDE.md, mục Ảnh minh họa.
+    Có file Materials/B4/Images/<img> thì chèn ảnh vào khung (giữ tỉ lệ, canh giữa, viền hairline);
+    chưa có thì để khung chờ [CHỤP] ghi nội dung, file · sheet · vùng và tên file ảnh cần lưu."""
+    path = os.path.join(IMG, img)
+    if os.path.exists(path):
+        pic = s.shapes.add_picture(path, Inches(x), Inches(y), width=Inches(w))
+        if pic.height > Inches(h):
+            ratio = Inches(h) / pic.height; pic.height = Inches(h); pic.width = int(pic.width * ratio)
+        pic.left = Inches(x) + (Inches(w) - pic.width) // 2; pic.top = Inches(y) + (Inches(h) - pic.height) // 2
+        pic.line.color.rgb = rgb(HAIR); pic.line.width = Pt(0.75); pic.name = f"Screenshot {img[:-4]}"
+        return pic
+    sh = box(s, x, y, w, h, fill=ALT, line="A6A6A6", lw=1.25, name=name)
+    sh.line.dash_style = MSO_LINE.DASH
+    tb(s, x + 0.2, y + 0.1, w - 0.4, h - 0.2, [[("[CHỤP] ", {"b": True, "color": NAVY}), (what, {"color": INK2})],
+                                               [(f"{where} → {img}", {"color": MUTED, "size": 12})]], size=14, anchor="ctr", align="ctr", space=4)
+    MISSING.append(img)
+    return sh
+
+def footnote(s, text):
+    tb(s, L, 6.8, W, 0.35, text, size=12, color=MUTED, anchor="b", name="Footnote")
+
+# ---------------------------------------------------------------------
+# Speaker notes từ kịch bản
+# ---------------------------------------------------------------------
+md = open(SCRIPT, encoding="utf-8").read()
+blocks = re.split(r"^### Slide (\d+) · ", md, flags=re.M)
+NOTES = {}
+
+def clean(t):
+    t = re.sub(r"\*\*(.+?)\*\*", r"\1", t); t = re.sub(r"(?<![\w*])\*(?=\S)(.+?)(?<=\S)\*(?![\w*])", r"\1", t)
+    return t.replace("`", "").strip()
+
+def fmt_min(m):
+    return (f"{m:g}").replace(".", ",")
+
+for k in range(1, len(blocks), 2):
+    n = int(blocks[k]); body = blocks[k + 1]
+    head, rest = body.split("\n", 1)
+    body = re.split(r"^(?:---|## )", rest, flags=re.M)[0]
+    m = re.search(r"· ([\d.]+)'\s*$", head) or re.search(r"\((\d+) phút\)", head)
+    out = []
+    ans = re.search(r"\*\*([A-D])\)", body)
+    if head.startswith("QUESTION"):
+        out.append(f"Khoảng 40 giây. Đáp án: {ans.group(1)}.")
+    elif m:
+        out.append(f"Thời lượng: {fmt_min(float(m.group(1)))} phút.")
+    for sec in re.finditer(r"^\*\*(Lời giảng[^*]*|Ghi chú giảng viên[^*]*):\*\*\n(.*?)(?=^\*\*(?:Lời giảng|Ghi chú giảng viên)|\Z)", body, flags=re.M | re.S):
+        label, txt = sec.group(1), sec.group(2)
+        head_, _, tail_ = label.partition(" (")
+        out.append(head_.upper() + (f" ({tail_}" if tail_ else ""))
+        for line in txt.splitlines():
+            line = line.rstrip()
+            if line.startswith(">"): line = line[1:].strip()
+            elif line.lstrip().startswith("- "): line = line.lstrip()[2:]
+            else: line = line.strip()
+            if line: out.append(clean(line))
+    NOTES[n] = "\n".join(out)
+assert len(NOTES) == 39, sorted(NOTES)
+
+def notes(s, n):
+    s.notes_slide.notes_text_frame.text = NOTES[n]
+
+# ---------------------------------------------------------------------
+# Quiz: 4 phương án, đáp án hiện khi bấm (Q1 = slide 31 → nhãn "Question 1")
+# ---------------------------------------------------------------------
+def quiz(n, topic, question, options, answer, rail="PHẦN 9 · QUIZ & TỔNG KẾT", qsize=22, osize=18):
+    s = content(f"Question {n - 30}: {topic}", rail)
+    tb(s, L, 1.65, W, 1.0, question, size=qsize, color=INK)
+    pos = {"A": (L, 2.85), "B": (7.33, 2.85), "C": (L, 4.35), "D": (7.33, 4.35)}
+    ow, oh = 5.41, 1.3
+    for letter, (x, y) in pos.items():
+        box(s, x, y, ow, oh, fill=WHITE, line=HAIR, name=f"Option {letter}")
+        if letter == answer:
+            box(s, x, y, ow, oh, fill=GOOD_BG, line=GOOD, lw=3, name=f"Answer highlight {letter}")
+        lt = box(s, x + 0.2, y + (oh - 0.6) / 2, 0.6, 0.6, fill=NAVY, shape=MSO_SHAPE.OVAL, name=f"Letter {letter}")
+        _center_text(lt, letter)
+        if letter == answer:
+            al = box(s, x + 0.2, y + (oh - 0.6) / 2, 0.6, 0.6, fill=GOOD, shape=MSO_SHAPE.OVAL, name=f"Answer letter {letter}")
+            _center_text(al, letter)
+        tb(s, x + 1.0, y, ow - 1.1, oh, options[letter], size=osize, anchor="ctr")
+    for letter, (x, y) in pos.items():
+        if letter != answer: box(s, x, y, ow, oh, fill=WHITE, name=f"Dim {letter}", alpha=60000)
+    ax, ay = pos[answer]
+    chip(s, ax + ow - 1.6, ay - 0.2, 1.45, "✓ Đáp án", fill=GOOD, line=None, color=WHITE, size=14, name="Answer chip", h=0.32)
+    _reveal(s, [sh for sh in s.shapes if sh.name.startswith(("Answer", "Dim"))])
+    notes(s, n)
+
+def _center_text(sh, text):
+    tf = sh.text_frame; tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = 0
+    tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    p = tf.paragraphs[0]; p.alignment = PP_ALIGN.CENTER; _runs(p, [text], 20, WHITE, True)
+
+def _reveal(s, shapes):
+    """Một lần bấm: mọi shape đáp án/làm mờ hiện dần (fade), giống deck B1."""
+    ids = [sh.shape_id for sh in shapes]
+    cid = [3]
+    def nid(): cid[0] += 1; return cid[0]
+    pars = []
+    for k, spid in enumerate(ids):
+        a, b = nid(), nid(); c = nid()
+        node = "clickEffect" if k == 0 else "withEffect"
+        pars.append(f'<p:par><p:cTn id="{a}" presetID="10" presetClass="entr" presetSubtype="0" fill="hold" grpId="0" nodeType="{node}">'
+                    f'<p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst><p:set><p:cBhvr><p:cTn id="{b}" dur="1" fill="hold">'
+                    f'<p:stCondLst><p:cond delay="0"/></p:stCondLst></p:cTn><p:tgtEl><p:spTgt spid="{spid}"/></p:tgtEl>'
+                    f'<p:attrNameLst><p:attrName>style.visibility</p:attrName></p:attrNameLst></p:cBhvr><p:to><p:strVal val="visible"/></p:to></p:set>'
+                    f'<p:animEffect transition="in" filter="fade"><p:cBhvr><p:cTn id="{c}" dur="400"/><p:tgtEl><p:spTgt spid="{spid}"/></p:tgtEl></p:cBhvr></p:animEffect>'
+                    f'</p:childTnLst></p:cTn></p:par>')
+    bld = "".join(f'<p:bldP spid="{i}" grpId="0" animBg="1"/>' for i in ids)
+    xml = ('<p:timing xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main"><p:tnLst><p:par>'
+           '<p:cTn id="1" dur="indefinite" restart="never" nodeType="tmRoot"><p:childTnLst><p:seq concurrent="1" nextAc="seek">'
+           '<p:cTn id="2" dur="indefinite" nodeType="mainSeq"><p:childTnLst><p:par><p:cTn id="3" fill="hold"><p:stCondLst><p:cond delay="indefinite"/></p:stCondLst>'
+           f'<p:childTnLst><p:par><p:cTn id="{nid() + 900}" fill="hold"><p:stCondLst><p:cond delay="0"/></p:stCondLst><p:childTnLst>{"".join(pars)}</p:childTnLst></p:cTn></p:par>'
+           '</p:childTnLst></p:cTn></p:par></p:childTnLst></p:cTn><p:prevCondLst><p:cond evt="onPrev" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:prevCondLst>'
+           '<p:nextCondLst><p:cond evt="onNext" delay="0"><p:tgtEl><p:sldTgt/></p:tgtEl></p:cond></p:nextCondLst></p:seq></p:childTnLst></p:cTn></p:par></p:tnLst>'
+           f'<p:bldLst>{bld}</p:bldLst></p:timing>')
+    s._element.append(etree.fromstring(xml))
+
+# =====================================================================
+# SLIDES
+# =====================================================================
+BLUE, ORANGE = "2A78D6", "EB6834"
+R0 = "PHẦN 0 · MỞ ĐẦU"; R1 = "PHẦN 1 · QUY TRÌNH POWER EXCEL"; R2 = "PHẦN 2 · GET DATA & QUERY EDITOR"
+R3 = "PHẦN 3 · LÀM SẠCH DỮ LIỆU"; R4 = "PHẦN 4 · UNPIVOT & GROUP BY"; R5 = "PHẦN 5 · APPEND & MERGE"
+R6 = "PHẦN 6 · CALENDAR"; R7 = "PHẦN 7 · LOAD & ĐỐI SOÁT"; R8 = "PHẦN 8 · THỰC HÀNH"
+
+def card(s, x, y, w, h, title, body, size=15, fill=WHITE, line=HAIR, title_color=NAVY, name="Card"):
+    box(s, x, y, w, h, fill=fill, line=line, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.05, name=name)
+    paras = [[(title, {"b": True, "color": title_color, "size": size + 1})]] + [p if isinstance(p, list) else [p] for p in body]
+    tb(s, x + 0.18, y + 0.12, w - 0.36, h - 0.24, paras, size=size, space=5)
+
+def bricks(s, done, nxt):
+    box(s, 9.07, 4.6, 3.67, 1.0, fill=NAVY, name=f"Brick {done[:2]}")
+    tb(s, 9.17, 4.6, 3.47, 1.0, "✓  " + done, size=18, color=WHITE, bold=True, anchor="ctr")
+    box(s, 9.07, 3.3, 3.67, 1.0, fill=WHITE, line=BLUE, lw=2.25, name=f"Brick {nxt[:2]}")
+    tb(s, 9.17, 3.3, 3.47, 1.0, nxt, size=18, color=NAVY, bold=True, anchor="ctr")
+
+def venn(s, x, y, kind, d=0.52):
+    """[VẼ] Hai vòng tròn giao nhau (bảng trái, bảng phải); phần tô navy là phần Merge giữ lại.
+    Vùng giao (hình thấu kính) vẽ gần đúng bằng một elip hẹp đặt đè lên chỗ chồng nhau."""
+    step = 0.65 * d                                   # khoảng cách hai tâm: hai vòng chồng 35%
+    lx, rx = x, x + step
+    box(s, lx, y, d, d, fill=NAVY if kind in ("left", "anti") else WHITE, line=None, shape=MSO_SHAPE.OVAL, name=f"Venn {kind} trái")
+    box(s, rx, y, d, d, fill=NAVY if kind == "right" else WHITE, line=None, shape=MSO_SHAPE.OVAL, name=f"Venn {kind} phải")
+    lw_, lh_ = d - step, 0.76 * d
+    box(s, rx, y + (d - lh_) / 2, lw_, lh_, fill=WHITE if kind == "anti" else NAVY, line=None, shape=MSO_SHAPE.OVAL, name=f"Venn {kind} giao")
+    for xx, side in ((lx, "trái"), (rx, "phải")):
+        box(s, xx, y, d, d, fill=None, line=NAVY, lw=1.25, shape=MSO_SHAPE.OVAL, name=f"Venn {kind} viền {side}")
+
+# 1 · Bìa
+s1 = prs.slides[0]
+for sh in s1.shapes:
+    if sh.name.startswith("subTitle"):
+        sh.text_frame.paragraphs[0].runs[0].text = "Buổi 4: Tiền xử lý dữ liệu với Power Query"
+        for r in sh.text_frame.paragraphs[0].runs[1:]: r.text = ""
+    elif sh.has_text_frame and sh.text_frame.text.startswith("Yêu cầu máy"):
+        p = sh.text_frame.paragraphs[0]
+        p.runs[0].text = "Bắt buộc máy Windows có Power Query (Data → Get Data)"
+        for r in p.runs[1:]: r.text = ""
+        p2 = copy.deepcopy(p._p); sh.text_frame._txBody.append(p2)
+        p2r = sh.text_frame.paragraphs[-1].runs
+        p2r[0].text = "Mở sẵn: file khởi đầu B3_MCI_Mart_Q1_2025_Answer.xlsx (đáp án Buổi 3)"
+        for r in p2r[1:]: r.text = ""
+        sh.height = Inches(0.9)
+    elif sh.has_text_frame and sh.text_frame.text.startswith("Mở sẵn"):
+        p = sh.text_frame.paragraphs[0]
+        p.runs[0].text = "Mở sẵn: file khởi đầu B3_MCI_Mart_Q1_2025_Answer.xlsx (đáp án Buổi 3)"
+        for r in p.runs[1:]: r.text = ""
+s1.notes_slide.notes_text_frame.text = NOTES[1]
+
+# 2 · Câu hỏi mở buổi
+s = content("Câu hỏi mở buổi", R0)
+tb(s, L, 1.9, 9.8, 2.2, [[("“Làm sao để việc làm sạch dữ liệu chỉ làm MỘT LẦN,", {"b": True, "color": NAVY})],
+                          [("từ đó chỉ cần bấm Refresh?”", {"b": True, "color": NAVY})]], size=30, space=6)
+box(s, L, 4.3, 9.8, 1.9, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.06, name="Explainer")
+tb(s, L + 0.25, 4.5, 9.3, 1.5, "Tháng nào công ty cũng có file bán hàng mới. Copy-paste, sửa ngày, sửa mã cửa hàng bằng tay mỗi tháng là công việc không có hồi kết — càng làm nhiều lần càng dễ sai.", size=17, color=INK2)
+box(s, 11.6, 1.9, 1.1, 1.1, fill=NAVY, shape=MSO_SHAPE.OVAL, name="Refresh icon")
+tb(s, 11.6, 1.9, 1.1, 1.1, [[("⟳", {"size": 40, "color": WHITE, "b": True})]], anchor="ctr", align="ctr")
+notes(s, 2)
+
+# 3 · Recap B3 & file khởi đầu
+s = content("Recap Buổi 3 & file khởi đầu", R0)
+tb(s, L, 1.75, 7.1, 4.6, [
+    [("Viên gạch B3: ", {"b": True, "color": NAVY}), "Pivot Miền × Tháng (tổng 941.454.000), Slicer nối 3 Pivot, PivotChart theo ngày."],
+    [("Bài về nhà B3 (4 tháng đầu năm): ", {"b": True, "color": NAVY}), "đối soát Pivot với số liệu hệ thống, 6 ô Quantity dạng chữ cài sẵn tháng 4, câu hỏi “ST07 đã hồi phục chưa”."],
+    [("File khởi đầu hôm nay ", {"b": True, "color": NAVY}), "= đáp án B3 (B3_MCI_Mart_Q1_2025_Answer.xlsx). Lưu thành B4_<HoTen>.xlsx. GIỮ NGUYÊN mọi sheet cũ — hôm nay chỉ thêm vào."],
+], size=18, bullet=True, space=16)
+bricks(s, "B3 · Báo cáo Pivot", "B4 · Pipeline Power Query")
+footnote(s, "Demo: ../B3_PivotTable/Practice/B3_MCI_Mart_Q1_2025_Answer.xlsx (sheet Kiem_tra) · ../B3_PivotTable/Homework/B3_BTVN_MCI_Mart_T1_T4_2025_Answer.xlsx")
+notes(s, 3)
+
+# 4 · Nỗi đau: ba file CSV
+s = content("“Nỗi đau” — làm tay ba file CSV", R0)
+for k, (f, n_) in enumerate([("Sales_2025-01.csv", "2.726 dòng"), ("Sales_2025-02.csv", "1.596 dòng"), ("Sales_2025-03.csv", "1.868 dòng")]):
+    x = L + k * 3.75
+    box(s, x, 1.6, 3.5, 1.2, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.08, name=f"File {k+1}")
+    tb(s, x + 0.15, 1.72, 3.2, 1.0, [[(f, {"b": True, "color": NAVY, "size": 16})], [(n_, {"size": 14, "color": INK2})]], space=4)
+shot(s, L, 3.0, W, 2.55, "Ba cửa sổ Excel mở đồng thời 3 file CSV tháng 1–3/2025, xếp cạnh nhau", "Practice/Data_Sales/Sales_2025-01/02/03.csv", "S04_ba_file_csv.png")
+tip(s, L, 5.75, W, 0.9, "Việc phải làm bằng tay mỗi tháng: mở file → copy → dán nối tiếp → sửa 25 mã cửa hàng dính dấu cách → sửa ngày dd/mm và giá “19.000” → tìm và xóa dòng trùng.")
+footnote(s, "Ảnh: Practice/Data_Sales/Sales_2025-01.csv, -02.csv, -03.csv mở bằng Excel (View → Arrange All → Vertical)")
+notes(s, 4)
+
+# 5 · Chia phần 1
+notes(section("1. Quy trình Power Excel: từ dữ liệu thô đến báo cáo"), 5)
+
+# 6 · Bốn khối
+s = content("Raw Data → Power Query → Data Model → Power Pivot", R1)
+blocks4 = [("1", "Raw Data", "CSV/TXT, Excel Table, database, cả một thư mục file, web…", False),
+           ("2", "Power Query", "Kết nối, làm sạch, biến đổi — ETL (Extract – Transform – Load)", True),
+           ("3", "Data Model", "Các bảng đã sạch, nối bằng quan hệ, không gộp thành một bảng khổng lồ (B5)", False),
+           ("4", "Power Pivot & Pivot", "Phân tích, viết DAX (B5–B6)", False)]
+for k, (n_, t_, d_, on) in enumerate(blocks4):
+    x = L + k * 2.8
+    box(s, x, 2.1, 2.55, 2.7, fill=NAVY if on else WHITE, line=None if on else HAIR, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.06, name=f"Block {n_}")
+    tb(s, x + 0.15, 2.25, 2.25, 2.4, [[(n_ + "  ", {"color": "CDE2FB" if on else MUTED, "size": 14}), (t_, {"b": True, "color": WHITE if on else NAVY, "size": 17})],
+                                       [(d_, {"color": "E3ECF7" if on else INK2, "size": 13})]], space=8)
+    if k < 3:
+        a = s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x + 2.58), Inches(3.45), Inches(x + 2.77), Inches(3.45))
+        a.line.color.rgb = rgb(ACCENT); a.line.width = Pt(2.5)
+tip(s, L, 5.2, W, 0.85, "Tất cả nằm sẵn trong Excel (tab Data), không cần cài thêm phần mềm. Hôm nay ở khối 2; Buổi 5 sang khối 3 và 4: sạch trước, nối sau, phân tích cuối cùng.")
+notes(s, 6)
+
+# 7 · Khi nào dùng PQ/PP
+s = content("Khi nào dùng Power Query / Power Pivot", R1)
+reasons = ["Dữ liệu nhiều hơn một triệu dòng (vượt giới hạn worksheet)", "Dữ liệu nằm ở nhiều nguồn (nhiều file, database, thư mục)",
+           "Cần tự động hoá: mỗi lần có dữ liệu mới, chỉ Refresh", "Cần kết hợp nhiều bảng mà không muốn nhân bản dữ liệu"]
+for k, t in enumerate(reasons):
+    y = 1.75 + k * 1.0
+    box(s, L, y, 7.3, 0.85, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.1, name=f"Reason {k+1}")
+    tb(s, L + 0.25, y, 6.8, 0.85, t, size=16, anchor="ctr")
+box(s, 9.3, 1.75, 3.44, 3.2, fill=WHITE, line=HAIR, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.06, name="Row limit card")
+tb(s, 9.5, 1.9, 3.04, 2.9, [[("Excel worksheet", {"color": INK2, "size": 14})], [("1.048.576", {"b": True, "size": 26, "color": BAD_TXT})], "dòng tối đa",
+                            [("Data Model", {"color": INK2, "size": 14})], [("Hàng chục triệu dòng", {"b": True, "size": 18, "color": GOOD})], [("giới hạn bởi bộ nhớ máy (Excel 64-bit)", {"size": 12, "color": INK2})]], space=6)
+tip(s, L, 5.85, W, 0.85, "Power Pivot KHÔNG chạy trên Mac và Excel Online — lý do B1 đã nhắc yêu cầu máy Windows từ B4. Chưa chuẩn bị được: gặp trợ giảng ngay giờ nghỉ.")
+notes(s, 7)
+
+# 8 · Chia phần 2
+notes(section("2. Get Data & Query Editor: nơi mọi bước làm sạch được ghi lại"), 8)
+
+# 9 · Get Data, Query Editor, Applied Steps
+s = content("Get Data · Query Editor · Applied Steps", R2)
+table(s, L, 1.55, [5.0, 6.07], [
+    ["Tên", "Mục đích"],
+    [[("Data → Get Data → From File → From Text/CSV", {"b": True, "color": RED})], "Kết nối tới một file; bấm Transform Data để mở Query Editor trước khi nạp"],
+    [[("Query Editor", {"b": True, "color": RED})], "Bảng xem trước ở giữa, Applied Steps bên phải, 4 tab Home / Transform / Add Column / View"],
+    [[("Applied Steps", {"b": True, "color": RED})], "Danh sách các bước đã làm, chạy lại TỰ ĐỘNG mỗi lần Refresh — như một macro"],
+], size=14, rowh=0.5)
+shot(s, L, 3.95, 6.0, 2.7, "Query Editor: bảng xem trước, thanh công thức, Applied Steps 3 bước tự động Source · Promoted Headers · Changed Type", "Query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv) ngay sau Transform Data", "S09_query_editor.png")
+tip(s, 7.75, 3.95, 4.99, 1.25, "Query Editor KHÔNG có Undo: bỏ một bước = bấm dấu X cạnh bước đó. Bấm một bước ở giữa để xem dữ liệu tại bước đó.")
+tip(s, 7.75, 5.3, 4.99, 1.35, "Đặt tên query rõ ràng NGAY TỪ ĐẦU (ô Name, ví dụ Sales_T1) — đổi tên sau khi query khác đã tham chiếu tới sẽ rất phiền.", pro=True)
+footnote(s, "Ảnh: Practice/Data_Sales/Sales_2025-01.csv → Data → Get Data → From Text/CSV → Transform Data (query Sales_T1)")
+notes(s, 9)
+
+# 10 · Chia phần 3
+notes(section("3. Làm sạch dữ liệu: nhìn trước khi sửa"), 10)
+
+# 11 · Data profiling
+s = content("Data profiling", R3)
+tool(s, L, 1.6, W, "View → Column quality / Column distribution / Column profile", "Xem nhanh sức khoẻ từng cột: % Valid / Error / Empty, số giá trị khác nhau, Min / Max, giá trị hay gặp — trước khi mất công sửa mò.", 0.6)
+shot(s, L, 2.85, 5.43, 2.9, "Unit_Price 100% Valid nhưng Min 10, Max 650; Order_Date có Error (máy English US)", "Query Sales_T1, bước Changed Type tự động, profiling entire data set", "S11a_column_quality.png")
+shot(s, 7.31, 2.85, 5.43, 2.9, "Store_Code trước Trim: 23 giá trị khác nhau thay vì 12 (“ST07” và “ST07 ” đếm là hai)", "Query Sales_T1, Column statistics của Store_Code", "S11b_column_distribution.png")
+tip(s, L, 5.9, W, 0.85, "Góc dưới trái ghi “Column profiling based on top 1000 rows”: bấm vào, chọn entire data set để đếm trên cả file. 100% Valid chưa chắc đúng — nhìn cả Min / Max.")
+footnote(s, "Ảnh: Query Editor, query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv), bước Changed Type tự động")
+notes(s, 11)
+
+# 12 · Change Type & Locale
+s = content("Change Type → Using Locale…", R3)
+tool(s, L, 1.55, W, "Change Type → Using Locale…", "Đổi kiểu dữ liệu THEO ĐÚNG định dạng vùng miền của dữ liệu nguồn — không phải định dạng máy đang chạy Excel.", 0.55)
+stat(s, L, 2.7, 3.55, 1.55, "Đọc kiểu Mỹ mm/dd (Order_Date)", "1.735 / 2.726", "dòng Error; 991 dòng đảo ngày–tháng", vcolor=BAD_TXT, vsize=26)
+shot(s, 5.45, 2.7, 3.3, 3.0, "Change Type with Locale: Date, Vietnamese (Vietnam) → Order_Date 100% Valid", "Query Sales_T1", "S12a_locale_date.png")
+shot(s, 8.98, 2.7, 3.76, 3.0, "Unit_Price sau Using Locale → Whole Number, Vietnamese: 19.000 → 19000", "Query Sales_T1", "S12b_locale_price.png")
+tb(s, L, 4.4, 3.55, 1.3, [[("Đọc kiểu Mỹ (Unit_Price)", {"color": INK2, "size": 13})], [("19.000 → 19", {"b": True, "size": 20, "color": BAD_TXT})], "sai 1.000 lần, KHÔNG báo lỗi"], space=4)
+tip(s, L, 5.9, W, 0.85, "Quy tắc nhớ đời: XÓA bước Changed Type tự động, rồi đổi kiểu cột ngày và cột số bằng Using Locale → Vietnamese (Vietnam).")
+footnote(s, "Ảnh: Query Editor, query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv), cột Order_Date và Unit_Price")
+notes(s, 12)
+
+# 13 · Headers · Trim/Clean · Conditional Column
+s = content("Headers · Trim · Conditional Column", R3)
+table(s, L, 1.55, [3.9, 7.17], [
+    ["Tên", "Mục đích"],
+    [[("Home → Use First Row as Headers", {"b": True, "color": RED})], "Biến dòng đầu của bảng thành tên cột"],
+    [[("Transform → Format → Trim / Clean", {"b": True, "color": RED})], "Xoá khoảng trắng đầu/cuối (Trim) hoặc ký tự ẩn (Clean)"],
+    [[("Add Column → Conditional Column", {"b": True, "color": RED})], "Tạo cột mới theo quy tắc IF/THEN, không cần viết hàm"],
+], size=14, rowh=0.58)
+shot(s, L, 3.95, 5.43, 1.95, "Store_Code sau Trim: còn đúng 12 giá trị (trước là 23)", "Query Sales_T1", "S13a_trim.png")
+shot(s, 7.31, 3.95, 5.43, 1.95, "Add Conditional Column: Nhom_SL — If Quantity > 3 then “Nhiều” else “Ít”", "Query Sales_T1", "S13b_conditional_column.png")
+tip(s, L, 6.0, W, 0.7, "Trim/Clean có ở cả Transform (sửa cột đang có) và Add Column (tạo cột mới): chọn đúng tab theo việc mình muốn.")
+footnote(s, "Ảnh: Query Editor, query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv)")
+notes(s, 13)
+
+# 14 · Remove Duplicates
+s = content("Remove Duplicates", R3)
+tool(s, L, 1.55, W, "Home → Remove Rows → Remove Duplicates", "Xoá các dòng GIỐNG HỆT NHAU trên các cột đang chọn — dùng cho bảng giao dịch (trùng tuyệt đối) lẫn bảng lookup (khoá trùng).", 0.6)
+shot(s, L, 2.8, 4.7, 2.45, "Sales_T1: Remove Duplicates (mọi cột) → Count Rows = 2.725 (trước 2.726)", "Query Sales_T1", "S14a_remove_dup_sales.png")
+shot(s, 5.49, 2.8, 4.7, 2.45, "Product: Remove Duplicates theo Product_Code → Count Rows = 40 (trước 41)", "Query Product (Practice/B4_Lookups.xlsx)", "S14b_remove_dup_product.png")
+stat(s, 10.34, 2.8, 2.4, 2.45, "Merge khi chưa bỏ P015 trùng", "29.408 dòng", "thay vì 28.328 — 1.080 dòng P015 bị nhân đôi", vsize=24, vcolor=BAD_TXT)
+tip(s, L, 5.4, W, 1.3, "Đếm dòng ngay trong Power Query: Transform → Count Rows, xem số, rồi xóa bước đó. Remove Duplicates chỉ xét các cột đang chọn: chọn cả bảng (Ctrl+A) cho bảng giao dịch, chỉ cột khóa cho bảng lookup.")
+footnote(s, "Ảnh: query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv) · query Product (Practice/B4_Lookups.xlsx, bảng Product)")
+notes(s, 14)
+
+# 15 · Keep/Remove Errors
+s = content("Keep Errors · Remove Errors", R3)
+tool(s, L, 1.6, W, "Home → Keep Rows → Keep Errors  ·  Remove Rows → Remove Errors", "Tách riêng các dòng có ô lỗi (Error) để XEM trước khi quyết định xoá hay sửa — không xoá mù.", 0.6, size=20)
+shot(s, L, 2.85, 6.3, 2.9, "Order_Date đọc kiểu English (US) → Keep Errors còn 1.735 dòng; chi tiết lỗi của một ô", "Query Sales_T1 (2) — bản sao của Sales_T1", "S15_keep_errors.png")
+box(s, 8.15, 2.85, 4.59, 2.9, fill=WHITE, line=HAIR, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.05, name="Rule card")
+tb(s, 8.35, 3.0, 4.19, 2.6, [[("Keep Errors", {"b": True, "color": NAVY})], "Xem và hiểu lỗi TRƯỚC",
+                             [("Remove Errors", {"b": True, "color": BAD_TXT})], "Chỉ dùng khi chắc chắn dòng đó nên bỏ",
+                             [("Xoá nhầm = mất dữ liệu âm thầm", {"b": True})]], size=15, space=8)
+tip(s, L, 5.9, W, 0.85, "Lỗi do sai Locale: sửa lại bằng Using Locale (Slide 12), KHÔNG Remove Errors — xóa là mất 1.735 dòng doanh thu mà không ai biết.")
+footnote(s, "Ảnh: bản sao query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv), Order_Date đọc bằng Locale English (United States)")
+notes(s, 15)
+
+# 16 · Nghỉ
+notes(section("Nghỉ 10 phút", "Trước khi quay lại: mở sẵn Query Editor (Data → Get Data → Launch Power Query Editor)"), 16)
+
+# 17 · Chia phần 4
+notes(section("4. Unpivot & Group By: đổi hình dạng bảng"), 17)
+
+# 18 · Unpivot Columns
+s = content("Unpivot Columns", R4)
+tool(s, L, 1.55, W, "Transform → Unpivot Columns ▾ → Unpivot Other Columns", "Biến NHIỀU CỘT CÙNG LOẠI (Tháng 1…Tháng 12) thành hai cột: tên cột cũ và giá trị — ngược lại của Pivot.", 0.6)
+shot(s, L, 2.8, 4.5, 2.75, "Trước Unpivot: tiêu đề ở dòng 1, tên cột ở dòng 3, Tháng 1…12 nằm ngang", "Query Target, bước Navigation", "S18a_target_before.png")
+shot(s, 6.32, 2.8, 4.5, 2.75, "Sau Unpivot và làm gọn: Store_Code · Thang (số) · Target · Ngay_Dau_Thang", "Query Target, bước cuối", "S18b_target_after.png")
+tb(s, 6.17, 3.9, 0.2, 0.5, [[("→", {"b": True, "color": ACCENT, "size": 20})]], anchor="ctr", align="ctr")
+stat(s, 11.0, 2.8, 1.74, 2.75, "Kết quả", "144", "dòng = 12 cửa hàng × 12 tháng", vsize=30)
+tip(s, L, 5.7, W, 1.0, "Chọn cột GIỮ NGUYÊN (Store_Code, Store_Name) rồi Unpivot Other Columns: tháng mới thêm vào file tự được xoay. Thang → Extract Text After Delimiter → số; thêm Ngay_Dau_Thang = #date(2025, [Thang], 1) để B5 nối với Calendar.")
+footnote(s, "Ảnh: Practice/B4_Target_2025.xlsx, sheet Target_2025 (query Target) · Chuỗi A lần 4: Table (B1) → Dimension/Measure (B2) → Pivot (B3) → Unpivot (B4) → Star schema (B5)")
+notes(s, 18)
+
+# 19 · Group By
+s = content("Group By", R4)
+tool(s, L, 1.6, W, "Transform → Group By (Basic / Advanced)", "Tổng hợp dữ liệu LÊN MỨC CHI TIẾT KHÁC — từ dòng giao dịch lên theo cửa hàng, theo tháng — ngay trong Power Query, ra một BẢNG MỚI.", 0.65)
+shot(s, L, 2.9, 6.9, 2.85, "Group By (Advanced): Store_Code; So_dong = Count Rows; Doanh_thu = Sum of Revenue → 12 dòng", "Query DoiSoat_T1 (Reference của Sales_T1)", "S19_group_by.png")
+stat(s, 8.75, 2.9, 3.99, 1.35, "Target tháng 1 (Group By Thang)", "353.000.000", "thực tế 425.850.000 · 120,6%", vsize=24)
+stat(s, 8.75, 4.4, 3.99, 1.35, "Target tháng 2", "298.000.000", "thực tế 245.996.000 · 82,5%", vsize=24, vcolor=BAD_TXT)
+tip(s, L, 5.9, W, 0.85, "Reference: query mới đọc kết quả của query gốc, gốc đổi thì đổi theo. Duplicate: chép rời mọi bước. Bảng đối soát, bảng tổng hợp → dùng Reference.", pro=True)
+footnote(s, "Ảnh: query DoiSoat_T1 (Reference của Sales_T1, Practice/Data_Sales/Sales_2025-01.csv)")
+notes(s, 19)
+
+# 20 · Chia phần 5
+notes(section("5. Append & Merge: nối dọc và nối ngang"), 20)
+
+# 21 · From Folder · Append
+s = content("From Folder · Append Queries", R5)
+table(s, L, 1.55, [5.5, 5.57], [
+    ["Tên", "Mục đích"],
+    [[("Data → Get Data → From File → From Folder", {"b": True, "color": RED})], "Đọc và nối MỌI FILE cùng cấu trúc trong một thư mục; file mới thả vào tự được đọc khi Refresh"],
+    [[("Home → Append Queries", {"b": True, "color": RED})], "Nối dọc hai (hoặc nhiều) query có CÙNG TÊN CỘT"],
+], size=14, rowh=0.55)
+shot(s, L, 3.45, 6.9, 2.3, "Danh sách 4 file của Practice/Data_Sales/ và nút Combine ▾ → Combine & Transform Data", "Data → Get Data → From Folder", "S21_from_folder.png")
+stat(s, 8.75, 3.45, 3.99, 1.1, "Sau Combine + làm sạch", "28.328 dòng", "doanh thu 4.139.884.500", vsize=24)
+tip(s, 8.75, 4.65, 3.99, 1.1, "Nhóm query trợ giúp (Sample File, Transform File…): ĐỪNG XÓA. Làm sạch trên query gộp Sales.")
+tip(s, L, 5.85, W, 0.85, "Tham số hóa đường dẫn thư mục (Home → Manage Parameters): chuyển máy chỉ sửa một chỗ — xem handout.", pro=True)
+footnote(s, "Ảnh: Data → Get Data → From File → From Folder → Practice/Data_Sales/ · đếm: Transform → Count Rows; tổng: Statistics → Sum")
+notes(s, 21)
+
+# 22 · Merge Queries
+s = content("Merge Queries", R5)
+tool(s, L, 1.55, W, "Home → Merge Queries ▾ → Merge Queries as New", "Nối NGANG hai bảng theo cột chung — đúng như XLOOKUP nhưng làm ở CẤP CẢ BẢNG, không phải từng ô.", 0.6)
+shot(s, L, 2.8, 5.43, 2.9, "Merge: Sales × Product theo Product_Code, Left Outer — “matches 28328 of 28328 rows”", "Merge Queries as New", "S22a_merge_dialog.png")
+shot(s, 7.31, 2.8, 5.43, 2.9, "Sales_Merge_Demo sau Expand: thêm cột Category, không dòng null, vẫn 28.328 dòng", "Query Sales_Merge_Demo", "S22b_merge_expand.png")
+tip(s, L, 5.85, W, 0.95, "Merge ở đây CHỈ ĐỂ MINH HỌA (Merge as New, xem xong xóa). Product/Store/Customer load riêng, B5 nối bằng Relationship. Số dòng TĂNG sau Merge = lookup có khóa trùng (29.408 thay vì 28.328).")
+footnote(s, "Ảnh: query Sales_Merge_Demo (Sales × Product, Practice/B4_Lookups.xlsx)")
+notes(s, 22)
+
+# 23 · Các kiểu Join
+s = content("Các kiểu Join (Merge)", R5)
+table(s, L, 1.6, [1.6, 2.1, 4.3, 3.07], [
+    ["Phần giữ lại", "Join Kind", "Kết quả", "Giống"],
+    ["", [("Left Outer", {"b": True, "color": RED})], "Giữ hết bảng trái, thêm cột nếu khớp bảng phải", "XLOOKUP (không thấy → null)"],
+    ["", [("Inner", {"b": True, "color": RED})], "Chỉ giữ dòng khớp ở CẢ HAI bảng", "INNER JOIN (SQL)"],
+    ["", [("Right Outer", {"b": True, "color": RED})], "Giữ hết bảng phải, thêm cột từ bảng trái nếu khớp", "Left Outer đổi chiều"],
+    ["", [("Left Anti", {"b": True, "color": RED})], "Chỉ giữ dòng bảng trái KHÔNG khớp bảng phải", "Tìm “dòng mồ côi”"],
+], size=14, rowh=0.72)
+for k, kind in enumerate(["left", "inner", "right", "anti"]):
+    venn(s, L + 0.37, 1.6 + 0.72 * (k + 1) + 0.1, kind)
+tip(s, L, 5.55, W, 1.15, "Kiểm tra chất lượng bằng Left Anti: Merge Sales × Product, Join Kind = Left Anti — ra 0 dòng nghĩa là mọi Product_Code trong Sales đều có trong danh mục.")
+notes(s, 23)
+
+# 24 · Chia phần 6
+notes(section("6. Bảng Calendar: trục thời gian cho mọi bảng"), 24)
+
+# 25 · Calendar
+s = content("Calendar: Blank Query → List.Dates", R6)
+tool(s, L, 1.55, W, "New Source → Blank Query · List.Dates · Add Column → Date", "Bảng có ĐỦ MỌI NGÀY LIÊN TỤC trong các năm cần phân tích, kèm Năm / Tháng / Quý / Thứ — trục thời gian chung cho Sales và Target ở B5.", 0.6, size=20)
+fx(s, L, 2.75, 6.9, "= List.Dates(#date(2024,1,1), 731, #duration(1,0,0,0))", size=14)
+shot(s, L, 3.35, 6.9, 2.4, "Calendar: Date, Nam, Thang, Quy, Thu", "Query Calendar (Blank Query)", "S25_calendar.png")
+stat(s, 8.75, 2.75, 3.99, 1.45, "01/01/2024 – 31/12/2025", "731 dòng", "2024 nhuận 366 + 2025 365", vsize=26)
+tip(s, 8.75, 4.35, 3.99, 1.4, "Liên tục, phủ trọn các năm của mọi bảng fact (Target đủ 12 tháng 2025). Mùng 1 Tết: 10/02/2024 · 29/01/2025.")
+tip(s, L, 5.9, W, 0.8, "Rolling calendar: điểm cuối tự lấy theo ngày hiện tại bằng DateTime.LocalNow() — xem handout.", pro=True)
+footnote(s, "Ảnh: query Calendar (Blank Query) trong B4_<HoTen>.xlsx · không lấy Calendar từ Order_Date: ngày không có đơn sẽ bị thiếu")
+notes(s, 25)
+
+# 26 · Chia phần 7
+notes(section("7. Load: đưa các bảng sạch vào đúng chỗ"), 26)
+
+# 27 · Close & Load To
+s = content("Close & Load To · Data Model", R7)
+tool(s, L, 1.55, W, "Close & Load To…  ·  chuột phải query → Load To…", "Chọn nơi mỗi query đi tới: Table (ra sheet) · Only Create Connection (chỉ lưu các bước) · ☑ Add this data to the Data Model.", 0.6, size=20)
+shot(s, L, 2.85, 6.9, 2.8, "Queries & Connections: 6 query + nhóm trợ giúp của From Folder; “28,328 rows loaded” dưới Sales", "B4_<HoTen>.xlsx, Data → Queries & Connections", "S27_queries_pane.png")
+table(s, 8.75, 2.85, [2.2, 1.79], [["Bảng", "Số dòng"], ["Sales", "28.328"], ["Product", "40"], ["Store", "12"], ["Customer", "1.500"], ["Target", "144"], ["Calendar", "731"]],
+      size=13, rowh=0.4, name="Row counts")
+tip(s, L, 5.8, W, 0.95, "Sales → Table + Data Model. Product/Store/Customer/Target/Calendar → Only Create Connection + Data Model, KHÔNG Merge vào Sales. Sales → Properties → bỏ tick Enable background refresh.")
+footnote(s, "Ảnh: B4_<HoTen>.xlsx, Data → Queries & Connections")
+notes(s, 27)
+
+# 28 · Thực hành 1
+s = content("Thực hành 1: Thả tháng 4, Refresh", R8)
+chip(s, L, 1.6, 1.53, "10 phút", name="Time chip")
+tb(s, L, 2.2, 6.9, 4.5, [
+    [("1. ", {"b": True, "color": NAVY}), "Ghi lại TRƯỚC khi Refresh: Grand Total của PV_Refresh (28.328 dòng · 4.139.884.500)."],
+    [("2. ", {"b": True, "color": NAVY}), "Copy Practice/New_Month/Sales_2025-04.csv vào ĐÚNG thư mục Practice/Data_Sales/."],
+    [("3. ", {"b": True, "color": NAVY}), "Data → Refresh All (hoặc Ctrl+Alt+F5)."],
+    [("4. ", {"b": True, "color": NAVY}), "Quan sát: PV_Refresh có thêm dòng 2025 · 4, Grand Total tự đổi — KHÔNG sửa một bước nào."],
+], size=16, space=12)
+box(s, 8.87, 1.6, 3.87, 5.0, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.03, name="Check box")
+tb(s, 9.07, 1.75, 3.47, 4.7, [[("Kiểm tra sau Refresh", {"b": True, "color": NAVY, "size": 16})], [("30.247 dòng", {"b": True, "color": NAVY, "size": 26})],
+                              [("4.436.849.500", {"b": True, "color": NAVY, "size": 20})], "Dòng 2025 · 4: 1.919 dòng · 296.965.000", "Đây là khoảnh khắc D3 của khóa học"], size=15, space=8)
+footnote(s, "File tháng 4: Practice/New_Month/Sales_2025-04.csv")
+notes(s, 28)
+
+# 29 · Thực hành 2
+s = content("Thực hành 2: Đối soát & chữa bài nhanh", R8)
+chip(s, L, 1.6, 1.53, "10 phút", name="Time chip")
+items29 = ["Sales sau Refresh: 30.247 dòng, 4.436.849.500 (tăng đúng 1.919 dòng, 296.965.000)",
+           "PV_Refresh tự có dòng 2025 · 4 mà không sửa bước nào; lọc Store_Code = ST12: dòng đầu tiên là 06/2024",
+           "Product 40 dòng · Store 12 · Customer 1.500 · Target 144 · Calendar 731",
+           "Product/Store/Customer/Target/Calendar: Only Create Connection + Data Model, không Merge vào Sales"]
+for k, t in enumerate(items29):
+    y = 2.2 + k * 1.0
+    box(s, L, y + 0.25, 0.35, 0.35, fill=WHITE, line=NAVY, lw=1.5, name=f"Checkbox {k+1}")
+    tb(s, L + 0.6, y, W - 0.6, 0.85, t, size=16, anchor="ctr")
+footnote(s, "Ghi số dòng và doanh thu trước / sau Refresh cạnh PV_Refresh · Đối chiếu: Practice/B4_MCI_Mart_Answer.xlsx, sheet Kiem_tra_B4")
+notes(s, 29)
+
+# 30 · Quiz cover
+notes(section("Excel Quiz Challenge", "7 câu hỏi nhanh · câu 6–7 là tình huống"), 30)
+quiz(31, "Applied Steps", "Refresh một query sau khi file nguồn có dữ liệu mới. Các bước làm sạch có phải làm lại bằng tay không?",
+     {"A": "Không, Applied Steps tự chạy lại theo đúng thứ tự đã ghi", "B": "Có, mỗi lần Refresh phải làm lại từ đầu",
+      "C": "Chỉ bước đầu tiên tự chạy lại", "D": "Chỉ khi mở lại Query Editor"}, "A", osize=16)
+quiz(32, "Locale", "Cột ngày 13/01/2025 (dd/mm/yyyy) bị báo lỗi khi Change Type sang Date. Nguyên nhân khả dĩ nhất?",
+     {"A": "File bị hỏng", "B": "Cột đang là số",
+      "C": "Đang đổi kiểu theo locale mặc định (mm/dd), không phải Using Locale kiểu Việt Nam", "D": "Thiếu bước Trim"}, "C", osize=15)
+quiz(33, "Remove Duplicates", "Product có mã P015 xuất hiện 2 dòng. Nếu Merge Sales với Product mà CHƯA Remove Duplicates, hậu quả là gì?",
+     {"A": "Merge báo lỗi ngay", "B": "Cột Category bị để trống",
+      "C": "Không ảnh hưởng gì", "D": "Số dòng Sales sau Merge tăng lên (dòng P015 bị nhân đôi)"}, "D", osize=15)
+quiz(34, "Unpivot", "Bảng Target_2025 có các cột Tháng 1 … Tháng 12. Muốn đưa về dạng tidy (Store_Code, Thang, Target), dùng công cụ nào?",
+     {"A": "Pivot Column", "B": "Unpivot Columns", "C": "Transpose", "D": "Group By"}, "B")
+quiz(35, "Append vs Merge", "Bốn file CSV theo tháng, cùng 8 cột, muốn gộp thành một bảng dài hơn. Nên dùng công cụ nào?",
+     {"A": "Append Queries (hoặc From Folder)", "B": "Merge Queries", "C": "Group By", "D": "Unpivot"}, "A")
+quiz(36, "Tình huống — Refresh lỗi", "File CSV mới đổi tên cột Store_Code thành StoreCode. Refresh báo lỗi ở bước Trim cột Store_Code. Nguyên nhân?",
+     {"A": "File bị hỏng", "B": "Do chưa Remove Duplicates",
+      "C": "Do thiếu Using Locale", "D": "Bước Trim gọi đích danh tên cột Store_Code, cột đó không còn tồn tại với tên mới"}, "D", qsize=20, osize=14)
+quiz(37, "Tình huống — Chọn công cụ", "Nghi ngờ vài dòng Sales ghi Product_Code sai chính tả, không khớp Product nào. Cách kiểm tra nhanh nhất?",
+     {"A": "Đọc từng dòng bằng mắt", "B": "Group By theo Product_Code",
+      "C": "Merge Sales với Product, Join Kind = Left Anti, xem có dòng nào không", "D": "Xoá cột Product_Code"}, "C", osize=15)
+
+# 38 · Tổng kết + insight
+s = content("Tổng kết & insight của bạn", "PHẦN 9 · QUIZ & TỔNG KẾT")
+tb(s, L, 1.65, 5.3, 0.45, "Điểm chính cần nhớ", size=18, color=NAVY, bold=True)
+tb(s, L, 2.2, 5.3, 4.4, ["(1) Applied Steps = công thức làm sạch được ghi lại, tự chạy lại khi Refresh.",
+                        "(2) Xóa Changed Type tự động; ngày và số của dữ liệu Việt Nam đổi kiểu bằng Using Locale.",
+                        "(3) Remove Duplicates ở lookup TRƯỚC khi Merge hoặc tạo Relationship.",
+                        "(4) Unpivot đưa bảng cột-tháng về tidy; Append / From Folder nối dọc, Merge nối ngang.",
+                        "(5) Đối soát số dòng/tổng sau mỗi bước; lookup load riêng (Only Create Connection + Data Model)."], size=16, space=10)
+box(s, 6.97, 1.65, 5.77, 3.8, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.03, name="Insight box")
+tb(s, 7.17, 1.8, 5.37, 0.45, "Insight của bạn (1 câu)", size=18, color=NAVY, bold=True)
+tb(s, 7.17, 2.35, 5.37, 2.2, "“Sau khi gộp và Refresh, ___ (con số), phát hiện ___ (bất thường), nên ___ (hàm ý).”", size=19)
+for k, t in enumerate(["Con số", "Bất thường", "Hàm ý"]):
+    chip(s, 7.17 + k * 1.84, 4.8, 1.69, t, fill=WHITE, line=HAIR, name=f"Tag {t}", h=0.45)
+tb(s, 6.97, 5.6, 5.77, 0.9, "Gợi ý: lọc PV_Refresh theo từng cửa hàng — một cửa hàng không có dòng nào suốt 5 tháng đầu 2024.", size=14, color=INK2)
+notes(s, 38)
+
+# 39 · Preview B5
+s = content("Buổi sau: Data Model & DAX", "PHẦN 9 · QUIZ & TỔNG KẾT")
+tb(s, L, 1.65, 7.0, 1.1, "“Doanh thu tháng này đạt bao nhiêu % mục tiêu, và vì sao mỗi báo cáo cũ lại ra một con số khác nhau?”", size=18, color=NAVY, bold=True)
+tb(s, L, 2.85, 7.0, 1.0, [[("Giới hạn hôm nay: ", {"b": True}), "6 bảng sạch nhưng đứng rời nhau. Muốn phân tích Sales và Target cùng lúc mà không gộp thành một bảng khổng lồ?"]], size=15)
+tb(s, L, 3.9, 7.0, 2.8, [[("Về nhà", {"b": True, "color": NAVY})],
+                          [("Bài tập về nhà (bắt buộc): ", {"b": True}), "B4_BTVN_MCI_Mart_T4_2025.xlsx + thư mục B4_BTVN_Du_lieu — 12 file CSV tháng 4, mỗi cửa hàng một file: From Folder, làm sạch, Left Anti, đối soát với hệ thống, % đạt target"],
+                          "Nộp trước Buổi 5 tại hocvien.mcivietnam.com · đọc handout B4 · tick “Checklist trước Buổi 5”"], size=15, space=6)
+bricks(s, "B4 · Pipeline Power Query", "B5 · Star schema + DAX")
+tb(s, 9.07, 5.7, 3.67, 0.5, "File đáp án B4 (Practice/B4_MCI_Mart_Answer.xlsx) là file khởi đầu Buổi 5.", size=13, color=INK2)
+notes(s, 39)
+
+assert len(prs.slides) == 39, len(prs.slides)
+prs.save(OUT)
+print("ok", OUT, len(prs.slides), "slide;", f"còn {len(MISSING)} khung [CHỤP] chưa có ảnh:" if MISSING else "đủ ảnh.", " ".join(MISSING))

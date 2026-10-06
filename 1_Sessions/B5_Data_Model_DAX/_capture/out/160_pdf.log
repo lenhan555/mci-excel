@@ -1,0 +1,9 @@
+﻿ERROR: Argument: '1' should be a System.Management.Automation.PSReference. Use [ref].
+At line:14 char:11
++ finally { $w.Quit(0); [void][Runtime.InteropServices.Marshal]::Releas ...
++           ~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [], MethodException
+    + FullyQualifiedErrorId : NonRefArgumentToRefParameterMsg
+ 
+
+DONE

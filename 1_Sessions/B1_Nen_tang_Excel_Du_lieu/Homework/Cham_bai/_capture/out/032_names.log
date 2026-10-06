@@ -1,0 +1,7 @@
+﻿NAME Sales!_FilterDatabase -> =Sales!$A$1:$I$1920 visible=False
+NAME lstProductCode -> =Product!$A$2:$A$41 visible=True
+NAME lstStoreCode -> =Store!$A$2:$A$13 visible=True
+NAME Region -> =Store!$A$2:$A$13 visible=True
+mo duoc 'Name Manager' cho b1_btvn_xlsx_PhamNhuTam.xlsx D21
+
+DONE

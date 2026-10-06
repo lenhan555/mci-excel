@@ -1,0 +1,17 @@
+﻿model null? False
+try 0 tables: 6
+Product | Product
+Store | Store
+Customer | Customer
+Target | Target
+Calendar | Calendar
+Sales | Sales
+queries: 11
+Connection
+Query - Calendar
+Query - Customer
+Query - Product
+Query - Sales
+Query - Store
+Query - Target
+ThisWorkbookDataModel

@@ -1,0 +1,10 @@
+﻿== B5_Chup_Answer.xlsx rel=7 meas=16
+Sales : Order_ID, Line_No, Quantity, Unit_Price, Revenue
+Target : Target
+sheets: Sales, Product, Store, KPI_SUMIFS, KPI_Card, Kiem_tra_B4, PV_Refresh, Sales_PQ, PV_MienThang, PV_NganhHang, PV_Thang, PV_Ngay, PV_Thu, PV_CuaHang, ST07_T3_ChiTiet, Kiem_tra, PV_Loc, PV_Target, PV_Target_CuaHang, PV_Nguong, PV_Hier, PV_YoY, PV_GM_Nam, PV_KPI_Thang, PV_DoiSoat_B2, DoiSoat_B2, KPI_Dictionary, Kiem_tra_B5
+== B5_Chup_Model.xlsx rel=6 meas=0
+Sales : Order_ID, Line_No, Order_Date, Store_Code, Customer_ID, Product_Code, Quantity, Unit_Price, Revenue, Nam, Thang
+Target : Store_Code, Thang, Target, Ngay_Dau_Thang
+sheets: PV_Grain, Huong_dan, Sales, Product, Store, KPI_SUMIFS, Sales_PQ
+
+DONE

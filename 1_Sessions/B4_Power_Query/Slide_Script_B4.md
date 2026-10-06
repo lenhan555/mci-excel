@@ -1,9 +1,9 @@
 # Kịch bản slide — Buổi 4: Tiền xử lý dữ liệu với Power Query
 
-> **Phiên bản 1.3 (2026-09-30):** soạn theo `Course_Plan.md` v3.3, khuôn mẫu `Slide_Script_B3.md`. Lời giảng viết thành **văn nói đầy đủ**. Mọi con số tính từ chính các file `Practice/` bằng `2_Dataset/_generator/build_b4_homework.py` (lưu ở `build_b4_meta.json`) và khớp file đáp án dựng bằng Power Query thật (`build_b4.py`, Excel qua COM trên Windows).
+> **Phiên bản 1.4 (2026-10-01):** soạn theo `Course_Plan.md` v3.3, khuôn mẫu `Slide_Script_B3.md`. Lời giảng viết thành **văn nói đầy đủ**. Mọi con số tính từ chính các file `Practice/` bằng `2_Dataset/_generator/build_b4_homework.py` (lưu ở `build_b4_meta.json`) và khớp file đáp án dựng bằng Power Query thật (`build_b4.py`, Excel qua COM trên Windows).
 > Căn cứ: `Course_Plan.md` v3.3 (B4: timetable 150 phút, Hướng dẫn giảng dạy B4, Nguyên tắc 1/6/7/9/10, Phụ lục A chuỗi A và B, Phụ lục F câu chuyện #3 và #4).
 >
-> **Thay đổi so với 1.2:** thao tác Power Query viết lại cho đúng giao diện Excel 365 (CSV mở ra có 3 bước tự động; Query Editor không có Undo, muốn bỏ thì xóa bước; bước Changed Type tự động đoán kiểu theo locale máy nên phải xóa rồi Using Locale); lỗi Locale tái hiện được trên mọi máy bằng Using Locale → English (United States); đối soát ngay trong Power Query bằng Count Rows và Statistics → Sum; làm sạch lại trên query gộp từ Folder thay vì trong Transform Sample File; Merge minh họa bằng **Merge Queries as New** (không đụng vào Sales); Target thêm cột Thang dạng số và `Ngay_Dau_Thang` để B5 nối với Calendar; **Calendar 01/01/2024–31/12/2025 = 731 dòng** (phủ trọn hai năm, vì Target có đủ 12 tháng 2025; Course Plan Phụ lục F ghi "Calendar 2 năm"); Pivot `PV_Refresh` đổi thành Nam × Thang (số dòng, doanh thu) và lọc Store_Code, để đối soát từng tháng và thấy ST12; tắt background refresh để Refresh All cập nhật Pivot trong một lần bấm. Bài tập về nhà, handout, infographic đã dựng. File đáp án `Practice/B4_MCI_Mart_Answer.xlsx` đã dựng lại trên Windows theo bản 1.3 (30/09/2026, `Kiem_tra_B4` 10/10 ✔). Đã chụp đủ 19 ảnh deck + 9 ảnh handout, dựng lại deck, bản `_HocVien`, handout và xuất PDF (30/09/2026).
+> **Thay đổi so với 1.2:** thao tác Power Query viết lại cho đúng giao diện Excel 365 (CSV mở ra có 3 bước tự động; Query Editor không có Undo, muốn bỏ thì xóa bước; bước Changed Type tự động đoán kiểu theo locale máy nên phải xóa rồi Using Locale); lỗi Locale tái hiện được trên mọi máy bằng Using Locale → English (United States); đối soát ngay trong Power Query bằng Count Rows và Statistics → Sum; làm sạch lại trên query gộp từ Folder thay vì trong Transform Sample File; Merge minh họa bằng **Merge Queries as New** (không đụng vào Sales); Target thêm cột Thang dạng số và `Ngay_Dau_Thang` để B5 nối với Calendar; **Calendar 01/01/2024–31/12/2025 = 731 dòng** (phủ trọn hai năm, vì Target có đủ 12 tháng 2025; Course Plan Phụ lục F ghi "Calendar 2 năm"); Pivot `PV_Refresh` đổi thành Nam × Thang (số dòng, doanh thu) và lọc Store_Code, để đối soát từng tháng và thấy ST12; tắt background refresh để Refresh All cập nhật Pivot trong một lần bấm. Bài tập về nhà, handout, infographic đã dựng. File đáp án `Practice/B4_MCI_Mart_Answer.xlsx` đã dựng lại trên Windows theo bản 1.3 (30/09/2026, `Kiem_tra_B4` 10/10 ✔). Đã chụp đủ 19 ảnh deck + 9 ảnh handout, dựng lại deck, bản `_HocVien`, handout và xuất PDF (30/09/2026). **01/10/2026:** file đáp án dựng lại cho khớp đúng thao tác trên lớp: Sales có 4 query trợ giúp của Combine (nhóm `Transform File from Data_Sales` / `Helper Queries`, Transform File gắn với Transform Sample File), tham số `DataFolder` dùng ở cả Sales và Sample File; Calendar theo Add Column → Date → … → Name of Day (cột Thu ra Monday… trên máy tiếng Anh); `Kiem_tra_B4` 10/10 ✔; tên bước của Sales và Target theo đúng thao tác trên lớp (Using Locale hai bước, `Added Custom`); chụp lại H08, S14b, S18a, S18b (chỉ hiện các query đã dạy); quiz 6 đổi thành tình huống "lỗi ngầm" (đã thử trên Excel: file mới đổi tên cột thì Refresh không báo lỗi, cột để trống); slide 12 tách 991 / 927 dòng; câu Locale ở slide 25. **02/10/2026:** thêm **file mốc** `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx` (`build_b4.py --moc`, chỉ Windows): trạng thái cuối slide 27, để học viên có file lỗi hoặc chưa làm kịp vẫn vào được Thực hành 1 (ghi chú giảng viên slide 28, bảng file, bảng lỗi thường gặp).
 
 ## Cách dùng kịch bản
 
@@ -11,6 +11,7 @@
 - Dòng *(→ …)* trong lời giảng là **chỉ dẫn hành động**. Đường dẫn file tính từ thư mục buổi này (`1_Sessions/B4_Power_Query/`); file khởi đầu nằm ở `../B3_PivotTable/Practice/`.
 - Mỗi slide có thời lượng dự kiến. Nếu lớp chậm, cắt ở những chỗ đánh dấu **[có thể rút gọn]**.
 - **Buổi này không có file `Demo/`.** Power Query là xây pipeline trên chính dữ liệu thật, nên mọi demo chạy nguyên trạng trên các file `Practice/` (CSV bẩn, `B4_Lookups.xlsx`, `B4_Target_2025.xlsx`) — đúng quy tắc dùng lại file đã có trong `CLAUDE.md`. Giảng viên và học viên cùng làm trên **bản sao file khởi đầu** của mình (`B4_<HoTen>.xlsx`), nên mọi con số trên màn hình giống nhau.
+- **File mốc khi học viên bị tụt lại.** Cả buổi là một chuỗi liền trên một file: hỏng một query ở slide 12 hay 21 là không còn gì để làm Thực hành 1. `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx` là trạng thái **cuối slide 27** (đủ 6 bảng, `PV_Refresh`, Sales 28.328 dòng, chưa có tháng 4), mở ra ở sheet `Huong_dan_Moc`: cách dùng và bảng tự kiểm. Học viên phải sửa tham số `DataFolder` về thư mục `Practice` trên máy mình rồi Refresh All; bước này chưa dạy trên lớp (handout mục 8), nên trợ giảng làm giúp. Không dùng file đáp án thay file mốc: đáp án đã có tháng 4 và sheet `Kiem_tra_B4`.
 - **File khởi đầu:** bản sao `../B3_PivotTable/Practice/B3_MCI_Mart_Q1_2025_Answer.xlsx`, lưu thành `B4_<HoTen>.xlsx`. Các sheet tblSales, KPI_SUMIFS, PV_… của B3 **giữ nguyên**; query và bảng mới hôm nay được **thêm vào** file này (B5 sẽ đối soát measure với KPI_SUMIFS ngay trong cùng file).
 - **Query dựng trong buổi:** `Sales_T1` (query tập, một file tháng 1; Phần 2–4), `DoiSoat_T1` (Reference của Sales_T1, Group By), `Product` · `Store` · `Customer` (Phần 3), `Target` (Phần 4), `Sales` (From Folder, Phần 5), `Sales_Merge_Demo` (Phần 5, xóa ngay sau khi xem), `Calendar` (Phần 6). Phần 7 xóa các query tập, còn đúng 6 bảng: **Sales, Product, Store, Customer, Target, Calendar** (cộng nhóm query trợ giúp mà From Folder tự tạo).
 - **Pivot "tự cập nhật"** là Pivot mới `PV_Refresh` dựng trên bảng Sales do Power Query nạp ra (Phần 7), không phải các Pivot cũ của B3 (nguồn của chúng là tblSales Quý 1, không đọc thư mục `Data_Sales`). Nói rõ điều này để học viên không đi tìm Pivot B3 sau khi Refresh.
@@ -33,7 +34,8 @@ Loại slide và nguồn ảnh giống `Slide_Script_B3.md`: BÌA · CHIA PHẦN
 | `Practice/B4_Lookups.xlsx` (bảng Product, Store, Customer) | Product 41 dòng (**P015 trùng**): Remove Duplicates, Merge minh họa; Store, Customer load riêng | 14, 22, 23, 27 |
 | `Practice/B4_Target_2025.xlsx` (sheet Target_2025) | Target dạng cột Tháng 1…Tháng 12, tiêu đề ở dòng 3: Unpivot | 18, 19 |
 | `Practice/New_Month/Sales_2025-04.csv` | Tháng 4/2025 (1.920 dòng thô, cùng dạng lỗi): chép vào `Data_Sales/` ở Thực hành 1 | 28, 29 |
-| `Practice/B4_MCI_Mart_Answer.xlsx` | **Đáp án B4** (`build_b4.py`, Power Query thật): 6 query + tham số `DataFolder`, Sales (Table `Sales` trên sheet `Sales_PQ` + Data Model, đã gồm tháng 4), 5 bảng Connection Only + Data Model, Pivot `PV_Refresh`, sheet `Kiem_tra_B4`. Giữ nguyên các sheet B3. **File khởi đầu Buổi 5** | 29, 39 |
+| `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx` | **File mốc** (`build_b4.py --moc`, Power Query thật): giống đáp án nhưng ở trạng thái **cuối slide 27** — Data_Sales 4 file, Sales 28.328 dòng · 4.139.884.500, 5 bảng Connection Only + Data Model, `PV_Refresh`; không có `Kiem_tra_B4`. Sheet `Huong_dan_Moc` (đứng đầu): 4 bước dùng file (Save As, sửa `DataFolder`, Refresh All, làm Thực hành 1) và bảng tự kiểm 10 dòng. Chỉ phát cho học viên có file lỗi hoặc chưa làm kịp | 28 |
+| `Practice/B4_MCI_Mart_Answer.xlsx` | **Đáp án B4** (`build_b4.py`, Power Query thật): 6 query + tham số `DataFolder` + 4 query trợ giúp của Combine (nhóm `Transform File from Data_Sales`; `DataFolder` dùng ở cả Sales và Sample File), Sales (Table `Sales` trên sheet `Sales_PQ` + Data Model, đã gồm tháng 4), 5 bảng Connection Only + Data Model, Pivot `PV_Refresh`, sheet `Kiem_tra_B4`. Giữ nguyên các sheet B3. **File khởi đầu Buổi 5** | 29, 39 |
 | `Homework/B4_BTVN_MCI_Mart_T4_2025.xlsx` + thư mục `Homework/B4_BTVN_Du_lieu/` (`Cua_hang/` 12 CSV, `Bo_sung/` 1 CSV) | **Bài tập về nhà bắt buộc** (đề): tháng 4/2025 mỗi cửa hàng một file; sheet De_bai, So_lieu_he_thong, Product, Target_2025, Insight | 39 |
 | `Homework/B4_BTVN_MCI_Mart_T4_2025_Answer.xlsx` | Đáp án bài về nhà: bảng kết quả Sales_T4, KetQua_T4, mã M (Dap_an_M), `Kiem_tra` (11/11 ✔), Dap_an_loi, Insight_mau. Chỉ giảng viên / trợ giảng | — |
 | `Handout/B4_Handout.docx` / `.pdf` | Handout tự học (11 mục) | 39 |
@@ -44,7 +46,7 @@ Loại slide và nguồn ảnh giống `Slide_Script_B3.md`: BÌA · CHIA PHẦN
 | Chỉ tiêu | Giá trị |
 |---|---|
 | `Sales_2025-01.csv` | 2.726 dòng thô → **2.725** sau Remove Duplicates; doanh thu **425.850.000** |
-| Order_Date tháng 1 có ngày ≥ 13 (thành Error nếu đọc kiểu mm/dd) | **1.735 / 2.726** dòng; 991 dòng còn lại không báo lỗi nhưng **bị đảo ngày–tháng** |
+| Order_Date tháng 1 có ngày ≥ 13 (thành Error nếu đọc kiểu mm/dd) | **1.735 / 2.726** dòng; 991 dòng còn lại không báo lỗi, trong đó **927 dòng bị đảo ngày–tháng** (64 dòng ngày 01/01 đọc kiểu nào cũng đúng) |
 | Unit_Price tháng 1 đọc kiểu Mỹ (dấu chấm là thập phân) | từ **10 đến 650** (đúng: 10.000 đến 650.000) — không báo lỗi |
 | Store_Code tháng 1 trước Trim | **23 giá trị khác nhau** (12 mã + 11 mã có dấu cách cuối); sau Trim còn 12. Mỗi file 2025 có 25 dòng dính dấu cách |
 | Group By tháng 1 theo Store_Code | 12 dòng; cao nhất ST08 345 dòng / 52.832.000, thấp nhất ST04 136 dòng / 18.991.000 |
@@ -220,14 +222,14 @@ Bảng đối soát theo tháng (Pivot `PV_Refresh`, Nam × Thang):
 - **Tên (đỏ):** **Change Type → Using Locale…**
 - **Mục đích:** Đổi kiểu dữ liệu **theo đúng định dạng vùng miền của dữ liệu nguồn** — không phải định dạng của máy đang chạy Excel.
 - **Ảnh:** [CHỤP] hộp Change Type with Locale: Data Type = Date, Locale = **Vietnamese (Vietnam)**, cột Order_Date của `Sales_T1` 100% Valid. [CHỤP] Unit_Price sau Using Locale → Whole Number, Vietnamese: 19.000 → **19000**.
-- **Thẻ số:** Đọc Order_Date kiểu Mỹ (mm/dd): **1.735 / 2.726** dòng Error (ngày ≥ 13); 991 dòng còn lại **bị đảo ngày–tháng mà không báo lỗi**. Đọc Unit_Price kiểu Mỹ: **19.000 → 19**, sai 1.000 lần, không báo lỗi.
+- **Thẻ số:** Đọc Order_Date kiểu Mỹ (mm/dd): **1.735 / 2.726** dòng Error (ngày ≥ 13); 991 dòng còn lại không báo lỗi, trong đó **927 dòng bị đảo ngày–tháng**. Đọc Unit_Price kiểu Mỹ: **19.000 → 19**, sai 1.000 lần, không báo lỗi.
 - **TIP:** Chuột phải tiêu đề cột → Change Type → **Using Locale…** (hoặc Transform → Data Type ▾ → Using Locale). Quy tắc: **xóa bước Changed Type tự động, rồi đổi kiểu cột ngày và cột số bằng Using Locale.**
 - **Chân slide:** Ảnh: Query Editor, query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv), cột Order_Date và Unit_Price.
 
 **Lời giảng:**
 > Đây là lỗi các bạn **chắc chắn gặp** khi làm việc với dữ liệu Việt Nam. Trước hết, *(→ trong Applied Steps của `Sales_T1`: bấm X cạnh bước Changed Type)* mình xóa bước Changed Type tự động. Mọi cột trở về dạng chữ, biểu tượng ABC trên tiêu đề cột. Giờ mình tự đổi kiểu, có kiểm soát.
 >
-> Để cả lớp cùng thấy lỗi, dù máy để tiếng Anh hay tiếng Việt, mình cố tình đọc theo kiểu Mỹ: *(→ chuột phải Order_Date → Change Type → Using Locale → Data Type: Date, Locale: English (United States) → OK)* Nhìn Column quality: cột đỏ gần hai phần ba. Đúng **1.735 trên 2.726 dòng** lỗi, vì kiểu Mỹ đọc tháng trước ngày sau, mà không có tháng 13. Còn nguy hiểm hơn: *(→ trỏ một dòng ngày 02/01/2025)* ngày 2 tháng 1 bị đọc thành **1 tháng 2** — không báo lỗi gì cả. 991 dòng như thế.
+> Để cả lớp cùng thấy lỗi, dù máy để tiếng Anh hay tiếng Việt, mình cố tình đọc theo kiểu Mỹ: *(→ chuột phải Order_Date → Change Type → Using Locale → Data Type: Date, Locale: English (United States) → OK)* Nhìn Column quality: cột đỏ gần hai phần ba. Đúng **1.735 trên 2.726 dòng** lỗi, vì kiểu Mỹ đọc tháng trước ngày sau, mà không có tháng 13. Còn nguy hiểm hơn: *(→ trỏ một dòng ngày 02/01/2025)* ngày 2 tháng 1 bị đọc thành **1 tháng 2** — không báo lỗi gì cả. 927 dòng như thế.
 >
 > *(→ bấm X xóa bước vừa tạo; chuột phải Order_Date → Change Type → Using Locale → Date, Vietnamese (Vietnam) → OK)* Nói cho Excel biết dữ liệu này viết kiểu Việt Nam, ngày trước tháng sau. Cột xanh 100%, và ngày 2 tháng 1 đúng là ngày 2 tháng 1.
 >
@@ -316,7 +318,7 @@ Bảng đối soát theo tháng (Pivot `PV_Refresh`, Nam × Thang):
 >
 > Dòng 1 là tiêu đề báo cáo, tên cột thật ở dòng 3. *(→ nếu Applied Steps có bước Promoted Headers / Changed Type tự động: xóa cả hai; Home → Remove Rows → Remove Top Rows → 2; Home → Use First Row as Headers)* Đây là lúc dùng tay Use First Row as Headers.
 >
-> *(→ chọn cột Store_Code, giữ Ctrl chọn Store_Name → Transform → Unpivot Columns ▾ → Unpivot Other Columns)* Chọn hai cột **giữ nguyên**, rồi xoay mọi cột còn lại. *(→ đổi tên: Attribute → Thang, Value → Target)* Cột Thang đang là chữ "Tháng 1". *(→ chọn Thang → Transform → Extract → Text After Delimiter → dấu cách → OK; đổi kiểu Whole Number; Target → Whole Number; chuột phải Store_Name → Remove)* Lấy phần số, bỏ Store_Name vì tên cửa hàng đã có ở bảng Store. *(→ Add Column → Custom Column: tên `Ngay_Dau_Thang`, công thức `#date(2025, [Thang], 1)` → OK → đổi kiểu Date)* Cột ngày đầu tháng này để Buổi 5 nối Target với Calendar. *(→ Transform → Count Rows = 144 → xóa bước đếm)* **144 dòng**: 12 cửa hàng nhân 12 tháng.
+> *(→ chọn cột Store_Code, giữ Ctrl chọn Store_Name → Transform → Unpivot Columns ▾ → Unpivot Other Columns)* Chọn hai cột **giữ nguyên**, rồi xoay mọi cột còn lại. *(→ đổi tên: Attribute → Thang, Value → Target)* Cột Thang đang là chữ "Tháng 1". *(→ chọn Thang → Transform → Extract → Text After Delimiter → dấu cách → OK; đổi kiểu Whole Number; Target → Whole Number; chuột phải Store_Name → Remove)* Lấy phần số, bỏ Store_Name vì tên cửa hàng đã có ở bảng Store. *(→ Add Column → Custom Column: tên `Ngay_Dau_Thang`, công thức `#date(2025, [Thang], 1)`, Data type: Date → OK)* Cột ngày đầu tháng này để Buổi 5 nối Target với Calendar. *(→ Transform → Count Rows = 144 → xóa bước đếm)* **144 dòng**: 12 cửa hàng nhân 12 tháng.
 >
 > **Câu hỏi cho lớp: nếu để nguyên dạng cột-tháng, Buổi 5 có làm được Pivot "Doanh thu so với Target theo tháng" không?** *(→ chờ)* Rất khó, vì Pivot cần "tháng" nằm trong **một cột giá trị** để lọc và nối, không phải rải ra 12 cột. Đây là Chuỗi A, lần thứ tư.
 
@@ -331,7 +333,7 @@ Bảng đối soát theo tháng (Pivot `PV_Refresh`, Nam × Thang):
 **Lời giảng:**
 > Nhìn nhanh tổng Target theo tháng. *(→ trên query Target: Transform → Group By → Basic; Group by Thang; New column name Tong_Target, Operation Sum, Column Target → OK)* Group By kiểu Basic: một cột nhóm, một phép tính. 12 dòng. Tháng 1 kế hoạch **353 triệu**, thực tế 425,85 triệu — vượt khoảng 21%. Tháng 2 kế hoạch **298 triệu**, thực tế chỉ 246 triệu — hụt khoảng 17%. Cùng một công ty, hai tháng liền kề, một tháng vượt xa, một tháng hụt. Vì sao? Nhớ hai con số này, cuối buổi mình quay lại. *(→ bấm X xóa bước Grouped Rows: Target trở lại 144 dòng)*
 >
-> Giờ dùng Group By để **đối soát**. *(→ trên `Sales_T1`: Add Column → Custom Column: tên Revenue, công thức `[Quantity] * [Unit_Price]` → đổi kiểu Whole Number)* Thêm cột doanh thu. *(→ khung Queries: chuột phải `Sales_T1` → Reference; đổi tên query mới thành `DoiSoat_T1`)* **Reference** tạo một query mới đọc kết quả của Sales_T1 — Sales_T1 đổi thì nó đổi theo. *(→ Transform → Group By → Advanced; Group by Store_Code; So_dong = Count Rows; Add aggregation: Doanh_thu = Sum of Revenue → OK)* 12 dòng: mỗi cửa hàng một số dòng và một tổng doanh thu tháng 1. Cao nhất ST08, 345 dòng, 52,8 triệu. Cộng lại đúng 2.725 dòng, 425.850.000. Đây là bảng đối soát: có số liệu hệ thống thì so từng cửa hàng **trước khi** nạp dữ liệu đi đâu cả.
+> Giờ dùng Group By để **đối soát**. *(→ trên `Sales_T1`: Add Column → Custom Column: tên Revenue, công thức `[Quantity] * [Unit_Price]`, Data type: Whole Number → OK)* Thêm cột doanh thu. *(→ khung Queries: chuột phải `Sales_T1` → Reference; đổi tên query mới thành `DoiSoat_T1`)* **Reference** tạo một query mới đọc kết quả của Sales_T1 — Sales_T1 đổi thì nó đổi theo. *(→ Transform → Group By → Advanced; Group by Store_Code; So_dong = Count Rows; Add aggregation: Doanh_thu = Sum of Revenue → OK)* 12 dòng: mỗi cửa hàng một số dòng và một tổng doanh thu tháng 1. Cao nhất ST08, 345 dòng, 52,8 triệu. Cộng lại đúng 2.725 dòng, 425.850.000. Đây là bảng đối soát: có số liệu hệ thống thì so từng cửa hàng **trước khi** nạp dữ liệu đi đâu cả.
 >
 > Khác Pivot: Group By tạo một **bảng cố định**, không kéo thả được nữa. Dùng khi cần một bảng tổng hợp để đối soát, để Merge, hoặc làm nguồn cho biểu đồ — ví dụ bảng doanh thu theo ngày cho Forecast ở Buổi 6.
 
@@ -427,7 +429,7 @@ Bảng đối soát theo tháng (Pivot `PV_Refresh`, Nam × Thang):
 >
 > **Câu hỏi cho lớp: vì sao không lấy Calendar từ cột Order_Date của Sales cho nhanh?** *(→ chờ)* Vì ngày nào không có đơn hàng thì ngày đó **biến mất** khỏi Order_Date — Calendar bị thủng lỗ, và các phép lũy kế, so cùng kỳ ở Buổi 5 sai ngay từ những ngày trống. Và vì sao tới tận cuối năm 2025, khi dữ liệu bán hàng mới tới tháng 4? Vì **Target có đủ 12 tháng 2025**. Calendar phải phủ trọn các năm của mọi bảng cần phân tích.
 >
-> *(→ Transform → To Table → OK; đổi tên Column1 thành Date, kiểu Date; chọn Date → Add Column → Date → Year → Year (đổi tên Nam); Month → Month (Thang); Quarter → Quarter of Year (Quy); Day → Name of Day (Thu); Count Rows = 731 → xóa bước đếm)* Vài cú nhấp, mình có Năm, Tháng, Quý, Thứ cho một trục thời gian dùng chung. Tên thứ hiện theo ngôn ngữ máy: máy tiếng Anh ra Monday, máy tiếng Việt ra Thứ Hai.
+> *(→ Transform → To Table → OK; đổi tên Column1 thành Date, kiểu Date; chọn Date → Add Column → Date → Year → Year (đổi tên Nam); Month → Month (Thang); Quarter → Quarter of Year (Quy); Day → Name of Day (Thu); Count Rows = 731 → xóa bước đếm)* Vài cú nhấp, mình có Năm, Tháng, Quý, Thứ cho một trục thời gian dùng chung. Tên thứ hiện theo Locale của workbook, mặc định lấy theo Region của máy lúc tạo query: máy tiếng Anh ra Monday, máy tiếng Việt (hoặc workbook đặt Locale Vietnamese trong Query Options) ra Thứ Hai.
 >
 > Một điều nhìn thấy ngay khi có Calendar hai năm: *(→ cuộn tới dòng 10/02/2024 và 29/01/2025 của query Calendar, hoặc chỉ trên slide)* Mùng 1 Tết năm 2024 là **10/02**, năm 2025 là **29/01**. Tết năm ngoái rơi vào tháng 2, năm nay rơi vào tháng 1. Nhớ lại hai con số Target tháng 1 và tháng 2 ở Phần 4 — mình sẽ nối hai điều này ở phần tổng kết.
 
@@ -479,6 +481,7 @@ Bảng đối soát theo tháng (Pivot `PV_Refresh`, Nam × Thang):
 
 **Ghi chú giảng viên:**
 - Lỗi hay gặp nhất: chép nhầm thư mục (vào `New_Month` hoặc thư mục khác), Refresh không đổi gì. Kiểm tra đường dẫn: Data → Queries & Connections → di chuột lên query Sales.
+- Học viên có file lỗi hoặc chưa làm kịp tới slide 27: phát `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx`, mở sheet `Huong_dan_Moc`, làm bước 1–3 (Save As, sửa tham số `DataFolder` về thư mục `Practice` trên máy học viên, Refresh All: bảng tự kiểm toàn ✔), rồi làm Thực hành 1 như cả lớp. Bước sửa `DataFolder` chưa dạy trên lớp, trợ giảng làm giúp.
 - Pivot không đổi sau lần Refresh All đầu: chưa tắt Enable background refresh ở Slide 27 — bấm Refresh All lần nữa, rồi tắt thiết lập đó.
 - File tháng 4 có cùng dạng lỗi (giá "19.000", ngày dd/mm, 25 mã dính khoảng trắng, 1 dòng trùng). Applied Steps viết theo **tên cột** nên tự làm sạch file mới. Refresh báo lỗi thì xem Applied Steps có bước nào gọi đích danh một **giá trị** cụ thể, hoặc còn sót bước Changed Type tự động.
 
@@ -538,11 +541,11 @@ Quiz kiểu hỏi nhanh: khoảng 40 giây mỗi câu. **Câu 6–7 là câu tì
 **Lời giảng:**
 > A. Cùng cấu trúc cột, nối theo chiều dọc (thêm dòng) là Append; From Folder làm việc đó cho cả thư mục. Merge dùng khi nối theo chiều ngang (thêm cột) dựa trên khóa chung.
 
-### Slide 36 · QUESTION 6: TÌNH HUỐNG — REFRESH LỖI
-- Tháng sau, file CSV mới có tên cột `Store_Code` bị đổi thành `StoreCode` (không có dấu gạch dưới). Bạn Refresh và Power Query báo lỗi ở bước Trim cột Store_Code. Nguyên nhân? A) File bị hỏng · B) Do chưa Remove Duplicates · C) Do thiếu Using Locale · **D) Bước Trim đang gọi đích danh tên cột `Store_Code`, cột đó không còn tồn tại với tên mới**
+### Slide 36 · QUESTION 6: TÌNH HUỐNG — LỖI NGẦM
+- Tháng sau, file CSV mới thả vào `Data_Sales` có tên cột `Store_Code` bị đổi thành `StoreCode` (không có dấu gạch dưới). Bạn Refresh All: **không báo lỗi gì**, nhưng bộ lọc Store_Code của Pivot có thêm mục **(blank)**. Nguyên nhân? A) File mới bị hỏng · B) Do chưa Remove Duplicates · C) Do thiếu Using Locale · **D) Combine lấy tên cột theo file mẫu (file đầu tiên); file mới không có cột `Store_Code` nên các dòng của nó để trống, còn cột `StoreCode` bị bỏ đi**
 
 **Lời giảng:**
-> D. Các bước trong Applied Steps tham chiếu tên cột cụ thể; nguồn đổi tên cột thì bước đó không tìm thấy cột và báo lỗi "The column 'Store_Code' of the table wasn't found". Cách xử lý: đổi lại tên cột ngay sau bước gộp (Rename Columns), rồi các bước sau chạy như cũ. Mỗi khi nguồn đổi cấu trúc, kiểm tra Applied Steps từ trên xuống.
+> D. Bước Expand của query gộp lấy danh sách cột từ **file mẫu** — file đầu tiên trong thư mục, ở đây là Sales_2024. File nào thiếu một cột trong danh sách đó thì cột ấy để trống; cột lạ như `StoreCode` thì bị bỏ. Power Query không báo lỗi gì cả, nên đây là loại sai nguy hiểm nhất: số tổng vẫn đúng, nhưng doanh thu tháng mới không gắn được cửa hàng nào. Cách bắt: **đối soát sau mỗi lần Refresh** — Count Rows theo tháng, lọc Store_Code trống, hoặc nhìn mục (blank) trong bộ lọc Store_Code của Pivot. Cách sửa: tốt nhất là yêu cầu bên xuất file giữ đúng tên cột; nếu không được, mở **Transform Sample File** → Advanced Editor, thêm một bước `Table.RenameColumns(..., {{"StoreCode", "Store_Code"}}, MissingField.Ignore)` (bước ở đó chạy trên từng file trước khi nối — handout mục 7). Phải có `MissingField.Ignore`: file mẫu và các file cũ không có cột `StoreCode`, thiếu nó thì Refresh báo lỗi; vì file mẫu không có cột này nên cũng không bấm Rename trên giao diện được.
 
 ### Slide 37 · QUESTION 7: TÌNH HUỐNG — CHỌN CÔNG CỤ
 - Bạn nghi ngờ có vài dòng trong Sales ghi `Product_Code` sai chính tả, không khớp bảng Product nào. Cách kiểm tra nhanh nhất? A) Đọc từng dòng bằng mắt · B) Group By theo Product_Code · **C) Merge Sales với Product, Join Kind = Left Anti, xem có dòng nào không** · D) Xóa cột Product_Code
@@ -615,7 +618,8 @@ Phần 9 cộng từng slide khoảng 8 phút (slide 30: 0,2'; 7 câu × khoản
 
 | Lỗi | Dấu hiệu | Xử lý | Slide |
 |---|---|---|---|
-| Bước Changed Type tự động đoán theo locale máy / ghi cứng tên cột | Ngày ≥ 13 thành Error, giá 19.000 thành 19; Refresh lỗi khi file mới đổi tên cột | Xóa Changed Type tự động, đổi kiểu bằng Using Locale sau khi đã chuẩn hóa cột; kiểm tra Applied Steps | 9, 12, 36 |
+| Bước Changed Type tự động đoán theo locale máy | Ngày ≥ 13 thành Error, giá 19.000 thành 19 | Xóa Changed Type tự động, đổi kiểu bằng Using Locale sau khi đã chuẩn hóa cột | 9, 12 |
+| File mới (From Folder) đổi tên hoặc thêm cột | **Không báo lỗi**: cột sai tên để trống ở các dòng của file đó, cột mới bị bỏ (Combine lấy tên cột theo file mẫu); Pivot/bộ lọc có mục (blank) | Đối soát sau mỗi lần Refresh; yêu cầu nguồn giữ tên cột, hoặc đổi tên trong Transform Sample File với `MissingField.Ignore` | 36 |
 | Tên cột của từng CSV lọt vào dữ liệu khi nối | Dòng có giá trị "Order_ID", "Store_Code" giữa bảng | Combine & Transform (tự lấy dòng đầu làm tên cột cho từng file); gặp thì lọc bỏ dòng có Order_ID = "Order_ID" | 21 |
 | Ngày dd/mm bị hiểu thành mm/dd | Ngày ≥ 13 Error; ngày ≤ 12 đảo ngày–tháng | Change Type → Using Locale → Vietnamese (Vietnam) | 12, 15 |
 | Dấu ngăn nghìn / thập phân | Giá nhỏ đi 1.000 lần, không báo lỗi | Using Locale; nhìn Min / Max ở Column profile | 11, 12 |
@@ -623,10 +627,11 @@ Phần 9 cộng từng slide khoảng 8 phút (slide 30: 0,2'; 7 câu × khoản
 | Merge với lookup có khóa trùng | Số dòng tăng sau Merge (28.328 → 29.408) | Remove Duplicates ở lookup; đối soát số dòng | 14, 22 |
 | Pivot không đổi sau Refresh All | Query đã có dữ liệu mới, Pivot vẫn số cũ | Tắt Enable background refresh của query nguồn; Refresh All lại | 27, 28 |
 | Lỗi Formula.Firewall / privacy levels | Không Refresh được khi kết hợp nhiều nguồn | Handout mục 9 | 22 |
+| Học viên làm hỏng query hoặc tụt lại | Tới slide 28 chưa có Sales From Folder / `PV_Refresh`, không còn giờ làm lại | File mốc `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx`: sửa `DataFolder` → Refresh All → làm tiếp Thực hành 1 (sheet `Huong_dan_Moc`) | 28 |
 
 ### Danh sách ảnh cần chụp [CHỤP] (Excel 365 Windows, zoom 100%)
 
-**Đã chụp đủ (30/09/2026)**, deck và handout đã dựng lại, không còn khung [CHỤP]. Khi cần chụp lại: lưu vào `Materials/B4/Images/` đúng tên ở cột Tên file (danh sách đầy đủ, gồm ảnh handout: `Materials/B4/Images/_DANH_SACH_ANH.md`), rồi chạy lại `build_slides_b4.py`: ảnh tự chèn vào đúng khung. Chụp trên bản sao file khởi đầu, làm đúng các bước của lời giảng slide tương ứng (hoặc mở Query Editor của `Practice/B4_MCI_Mart_Answer.xlsx` cho các ảnh query Sales, Product, Target, Calendar). Máy chụp nên để Region **English (United States)** để thấy đúng lỗi Locale như lời giảng.
+**Đã chụp đủ (30/09/2026; chụp lại H08, S14b, S18a, S18b ngày 01/10/2026)**, deck và handout đã dựng lại, không còn khung [CHỤP]. Khi cần chụp lại: lưu vào `Materials/B4/Images/` đúng tên ở cột Tên file (danh sách đầy đủ, gồm ảnh handout: `Materials/B4/Images/_DANH_SACH_ANH.md`), rồi chạy lại `build_slides_b4.py`: ảnh tự chèn vào đúng khung. Chụp trên bản sao file khởi đầu, làm đúng các bước của lời giảng slide tương ứng (hoặc mở Query Editor của `Practice/B4_MCI_Mart_Answer.xlsx` cho các ảnh query Sales, Product, Target, Calendar). Máy chụp nên để Region **English (United States)** để thấy đúng lỗi Locale như lời giảng.
 
 | Tên file | Nội dung cần chụp | File · query · vùng | Slide |
 |---|---|---|---|
@@ -639,20 +644,21 @@ Phần 9 cộng từng slide khoảng 8 phút (slide 30: 0,2'; 7 câu × khoản
 | S13a_trim.png | Store_Code sau Trim: Column statistics Distinct 12 | Query `Sales_T1` | 13 |
 | S13b_conditional_column.png | Hộp Add Conditional Column: Nhom_SL, Quantity is greater than 3 → "Nhiều", Else "Ít" | Query `Sales_T1` | 13 |
 | S14a_remove_dup_sales.png | Applied Steps có Removed Duplicates, bước Counted Rows hiện 2725 | Query `Sales_T1` | 14 |
-| S14b_remove_dup_product.png | Product: Removed Duplicates theo Product_Code, Counted Rows = 40 | Query `Product` (`Practice/B4_Lookups.xlsx`, bảng Product) | 14 |
+| S14b_remove_dup_product.png | Product: Removed Duplicates theo Product_Code, Counted Rows = 40; khung Queries chỉ có các query đã dạy (Sales_T1, Product, Store, Customer) | Query `Product` (`Practice/B4_Lookups.xlsx`, bảng Product) | 14 |
 | S15_keep_errors.png | Order_Date đọc bằng Locale English (US), Keep Errors: bảng chỉ còn dòng lỗi, khung chi tiết lỗi của một ô | Query `Sales_T1 (2)` (Duplicate của Sales_T1) | 15 |
-| S18a_target_before.png | Target trước Unpivot: dòng 1 tiêu đề báo cáo, dòng 3 tên cột, Tháng 1…12 nằm ngang | Query `Target` (`Practice/B4_Target_2025.xlsx`), bước Navigation | 18 |
+| S18a_target_before.png | Target trước Unpivot (Applied Steps chỉ có Source · Navigation): dòng 1 tiêu đề báo cáo, dòng 3 tên cột, Tháng 1…12 nằm ngang | Query `Target` (`Practice/B4_Target_2025.xlsx`), bước Navigation | 18 |
 | S18b_target_after.png | Target sau Unpivot và làm gọn: Store_Code, Thang, Target, Ngay_Dau_Thang | Query `Target`, bước cuối | 18 |
 | S19_group_by.png | Hộp Group By (Advanced): Store_Code; So_dong = Count Rows; Doanh_thu = Sum of Revenue | Query `DoiSoat_T1` (Reference của Sales_T1) | 19 |
 | S21_from_folder.png | Hộp danh sách file của From Folder (4 file) và nút Combine ▾ đang mở | Data → Get Data → From Folder → `Practice/Data_Sales/` | 21 |
 | S22a_merge_dialog.png | Hộp Merge: Sales × Product theo Product_Code, Left Outer, "The selection matches 28328 of 28328 rows" | Home → Merge Queries ▾ → Merge Queries as New | 22 |
 | S22b_merge_expand.png | Query `Sales_Merge_Demo` sau Expand, cột Category | Query `Sales_Merge_Demo` | 22 |
-| S25_calendar.png | Calendar: Date, Nam, Thang, Quy, Thu; thanh công thức hoặc Applied Steps thấy List.Dates | Query `Calendar` | 25 |
+| S25_calendar.png | Calendar làm theo đúng thao tác của slide (Blank Query → List.Dates → To Table → Add Column → Date → Year / Month / Quarter / Name of Day → đổi tên): cột Date, Nam, Thang, Quy, Thu (máy tiếng Anh: Monday…); Applied Steps từ Source đến Renamed Columns1. Công thức List.Dates in riêng trên slide | Query `Calendar` | 25 |
 | S27_queries_pane.png | Khung Queries & Connections: 6 query + nhóm trợ giúp của From Folder, "28,328 rows loaded" dưới Sales | `B4_<HoTen>.xlsx`, Data → Queries & Connections (trước khi thả file tháng 4) | 27 |
 
 ### Còn cần làm trước khi dạy
 
 - Chạy thử toàn bộ buổi **trên máy trình chiếu**: Region của máy, thư mục `Data_Sales` có đúng 4 file, Refresh All sau khi chép file tháng 4 cập nhật `PV_Refresh` trong một lần bấm.
+- Thử file mốc `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx` trên một máy khác máy dựng, làm đúng 4 bước ở sheet `Huong_dan_Moc`: sau bước 3 bảng tự kiểm toàn ✔, sau bước 4 `PV_Refresh` có dòng 2025 · 4 (30.247 dòng). Chép sẵn file mốc cho trợ giảng.
 - Mở file đáp án trên máy khác máy dựng: sửa tham số `DataFolder` (Data → Get Data → Launch Power Query Editor → Home → Manage Parameters) về thư mục `Practice` của máy đó trước khi Refresh.
 
 ### Ghi chú so với Course Plan

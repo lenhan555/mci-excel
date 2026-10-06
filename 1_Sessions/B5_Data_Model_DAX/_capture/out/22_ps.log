@@ -1,0 +1,40 @@
+﻿
+
+ProcessId   : 10900
+CommandLine : C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command "try { . \"d:\Antigravity IDE\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1\" } catch {}"
+
+ProcessId   : 36752
+CommandLine : C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command "try { . \"d:\Antigravity IDE\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1\" } catch {}"
+
+ProcessId   : 20692
+CommandLine : C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Import-Module 'c:\Users\Admin\.antigravity-ide\extensions\ms-vscode.powershell-2025.4.0-universal\modules\PowerShellEditorServices\PowerShellEditorServices.psd1'; 
+              Start-EditorServices -HostName 'Visual Studio Code Host' -HostProfileId 'Microsoft.VSCode' -HostVersion '2025.4.0' -BundledModulesPath 'c:\Users\Admin\.antigravity-ide\extensions\ms-vscode.powershell-2025.4.0-universal\modules' -EnableConsoleRepl -StartupBanner \"PowerShell Extension 
+              v2025.4.0
+              Copyright (c) Microsoft Corporation.
+              
+              https://aka.ms/vscode-powershell
+              Type 'help' to get help.
+              \" -LogLevel 'Warning' -LogPath 'c:\Users\Admin\AppData\Roaming\Antigravity IDE\logs\20260926T133610\window1\exthost\ms-vscode.powershell' -SessionDetailsPath 'c:\Users\Admin\AppData\Roaming\Antigravity IDE\User\globalStorage\ms-vscode.powershell\sessions\PSES-VSCode-8748-547679.json' 
+              -FeatureFlags @() "
+
+ProcessId   : 15452
+CommandLine : C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command "try { . \"c:\Users\Admin\AppData\Local\Programs\Microsoft VS Code\04c0d99f4f\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1\" } catch {}"
+
+ProcessId   : 19548
+CommandLine : C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command "try { . \"c:\Users\Admin\AppData\Local\Programs\Microsoft VS Code\04c0d99f4f\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1\" } catch {}"
+
+ProcessId   : 25832
+CommandLine : C:\WINDOWS\System32\WindowsPowerShell\v1.0\powershell.exe -noexit -command "try { . \"c:\Users\Admin\AppData\Local\Programs\Microsoft VS Code\04c0d99f4f\resources\app\out\vs\workbench\contrib\terminal\common\scripts\shellIntegration.ps1\" } catch {}"
+
+ProcessId   : 41060
+CommandLine : "C:\WINDOWS\system32\WindowsPowerShell\v1.0\PowerShell.exe" -NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File "D:\Onedrive\MCI Excel\1_Sessions\B5_Data_Model_DAX\_capture\watcher.ps1"
+
+ProcessId   : 43336
+CommandLine : "C:\WINDOWS\system32\WindowsPowerShell\v1.0\PowerShell.exe" -NoProfile -ExecutionPolicy Bypass -WindowStyle Minimized -File "D:\Onedrive\MCI Excel\1_Sessions\B5_Data_Model_DAX\_capture\watcher.ps1"
+
+
+
+
+
+
+DONE

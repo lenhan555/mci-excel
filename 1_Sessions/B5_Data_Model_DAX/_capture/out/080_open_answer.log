@@ -1,0 +1,9 @@
+﻿ERROR: You cannot call a method on a null-valued expression.
+At line:13 char:70
++ ... otTables) { $ws.Name + ' :: ' + $pt.Name + ' @ ' + $pt.TableRange1.Ad ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+
+DONE

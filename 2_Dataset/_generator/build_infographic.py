@@ -7,7 +7,7 @@ Nguồn: _generator/infographic_b<n>.html (khung A4 dọc 1240 × 1754 px). Ản
 Muốn sửa nội dung thì sửa file HTML rồi chạy lại, không sửa ảnh PNG.
 
 Số liệu: nếu có _generator/build_b<n>_meta.json thì HTML viết {{khóa.con|kiểu}} thay cho con số, script điền từ meta.
-Kiểu: n (941.454.000, làm tròn), pct (34,2%), không ghi = giữ nguyên. Khóa thiếu trong meta → dừng, báo lỗi.
+Kiểu: n (941.454.000, làm tròn), pct (34,2%), pct0 (34%), d2pct (0,96%), up (tỷ lệ 1,251 → 25,1%), d1/d2/d3 (số thập phân dấu phẩy), không ghi = giữ nguyên. Khóa thiếu trong meta → dừng, báo lỗi.
 """
 import glob, json, os, pathlib, re, subprocess, sys, tempfile, time
 
@@ -41,8 +41,16 @@ def fill(html, meta):
             return f"{round(v):,}".replace(",", ".")
         if kind == "pct":
             return f"{v * 100:.1f}%".replace(".", ",")
+        if kind == "pct0":
+            return f"{v * 100:.0f}%"
+        if kind == "d2pct":
+            return f"{v * 100:.2f}%".replace(".", ",")
+        if kind == "up":                      # tỷ lệ 1,251 → "25,1%" (tăng so với mốc)
+            return f"{(v - 1) * 100:.1f}%".replace(".", ",")
+        if kind in ("d1", "d2", "d3"):
+            return f"{v:.{kind[1]}f}".replace(".", ",")
         return str(v)
-    return re.sub(r"\{\{\s*([\w.]+)\s*(?:\|\s*(\w+))?\s*\}\}", sub, html)
+    return re.sub(r"\{\{\s*([\w. ]+?)\s*(?:\|\s*(\w+))?\s*\}\}", sub, html)
 
 
 def build(session):

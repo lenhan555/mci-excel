@@ -1,0 +1,11 @@
+﻿tables=7
+  Product
+  Store
+  Customer
+  Target
+  Calendar
+  Sales
+  Nguong
+measure ok
+
+DONE

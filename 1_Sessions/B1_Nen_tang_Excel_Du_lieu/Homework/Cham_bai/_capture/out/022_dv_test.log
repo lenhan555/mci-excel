@@ -1,0 +1,9 @@
+﻿ERROR: Excel ban qua lau
+At D:\Onedrive\MCI Excel\1_Sessions\B1_Nen_tang_Excel_Du_lieu\Homework\Cham_bai\_capture\lib.ps1:37 char:3
++   throw 'Excel ban qua lau'
++   ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (Excel ban qua lau:String) [], RuntimeException
+    + FullyQualifiedErrorId : Excel ban qua lau
+ 
+
+DONE

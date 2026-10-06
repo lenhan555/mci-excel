@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "D:\Onedrive\MCI Excel\2_Dataset\_generator\build_b5.py", line 239, in <module>
+    result, log = run(ANSWER, ANSWER, checks=checks)
+                  ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\Onedrive\MCI Excel\2_Dataset\_generator\datamodel_com.py", line 196, in run
+    os.remove(f)
+    ~~~~~~~~~^^^
+PermissionError: [WinError 32] The process cannot access the file because it is being used by another process: 'C:\\Users\\Admin\\AppData\\Local\\Temp\\mci_excel_dm\\B5_MCI_Mart_Answer.xlsx'

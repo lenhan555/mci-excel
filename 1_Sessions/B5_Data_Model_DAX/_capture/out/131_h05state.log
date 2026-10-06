@@ -1,0 +1,21 @@
+﻿tables=8
+  Product
+  Store
+  Customer
+  Target
+  Calendar
+  Sales
+  Nguong
+  Muc
+formula: VAR t = IF(HASONEVALUE(Muc[Muc]), VALUE(SUBSTITUTE(VALUES(Muc[Muc]), "%", "")) / 100, 0.9) RETURN IF(ISBLANK([Total Revenue]), BLANK(), COUNTROWS(FILTER(VALUES(Store[Store_Code]), NOT ISBLANK([Total Target]) && DIVIDE([Total Revenue], [Total Target]) < t)) + 0)
+caches=0
+Row Labels | Stores Duoi Nguong
+1 | 0
+2 | 8
+3 | 6
+Grand Total | 12
+ | 
+ | 
+ | 
+
+DONE

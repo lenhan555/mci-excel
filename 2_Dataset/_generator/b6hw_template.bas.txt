@@ -1,0 +1,710 @@
+Attribute VB_Name = "@@MOD@@"
+Option Explicit
+' Dung bai tap ve nha B6 (de + _Answer) tren Excel Windows. Sinh boi gen_b6_hw_vba.py.
+' Chay tu Immediate window: @@MOD@@.BuildDe  hoac  @@MOD@@.BuildAnswer   (nhat ky: %TEMP%\b6_hw_log.txt)
+' Cach dung: SaveAs dap an B5 thanh Homework\B6_BTVN_MCI_Mart_Dashboard_Marketing.xlsx (de) hoac ..._Answer.xlsx, mo kem mot workbook trong chua macro.
+
+Private wb As Workbook
+Private gF As Integer
+Private isAns As Boolean
+Private Const CN As String = "ThisWorkbookDataModel"
+Private Const NAM As String = ",""[Calendar].[Nam].&[2025]"""
+
+Private Function U(ByVal s As String) As String
+    Dim p As Long, r As String
+    p = InStr(s, "\u")
+    Do While p > 0
+        r = r & Left$(s, p - 1) & ChrW(CLng("&H" & Mid$(s, p + 2, 4)))
+        s = Mid$(s, p + 6)
+        p = InStr(s, "\u")
+    Loop
+    U = r & s
+End Function
+
+Private Function LogPath() As String
+    LogPath = Environ("TEMP") & "\b6_hw_log.txt"
+End Function
+
+Private Sub L(ByVal s As String)
+    Print #gF, s
+End Sub
+
+Private Sub Chk(ByVal stepName As String)
+    If Err.Number <> 0 Then
+        L "ERR [" & stepName & "] " & Err.Number & ": " & Err.Description
+        Err.Clear
+    End If
+End Sub
+
+Private Function CVF(ByVal meas As String, ByVal args As String) As String
+    CVF = "=CUBEVALUE(""" & CN & """,""[Measures].[" & meas & "]""" & args & ")"
+End Function
+
+Private Function GetSheet(ByVal nm As String) As Worksheet
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = wb.Worksheets(nm)
+    On Error GoTo 0
+    If ws Is Nothing Then
+        Set ws = wb.Worksheets.Add(After:=wb.Worksheets(wb.Worksheets.Count))
+        ws.Name = nm
+    End If
+    ws.Cells.Font.Name = "Arial"
+    ws.Cells.Font.Size = 10
+    Set GetSheet = ws
+End Function
+
+Private Sub DelSheet(ByVal nm As String)
+    On Error Resume Next
+    wb.Worksheets(nm).Delete
+    Err.Clear
+End Sub
+
+Private Sub Title(ws As Worksheet, ByVal txt As String, ByVal note As String)
+    ws.Range("A1").Value = txt
+    ws.Range("A1").Font.Bold = True
+    ws.Range("A1").Font.Size = 14
+    ws.Range("A1").Font.Color = RGB(32, 56, 100)
+    If Len(note) > 0 Then
+        ws.Range("A2").Value = note
+        ws.Range("A2").Font.Italic = True
+        ws.Range("A2").Font.Color = RGB(88, 88, 88)
+    End If
+End Sub
+
+Private Sub Hdr(rng As Range)
+    rng.Font.Bold = True
+    rng.Font.Color = RGB(255, 255, 255)
+    rng.Interior.Color = RGB(32, 56, 100)
+    rng.VerticalAlignment = xlCenter
+    rng.WrapText = True
+End Sub
+
+Private Function NewPT(ws As Worksheet, ByVal addr As String, ByVal nm As String) As PivotTable
+    Dim pc As PivotCache
+    Set pc = wb.PivotCaches.Create(SourceType:=xlExternal, SourceData:=wb.Connections(CN), Version:=6)
+    Set NewPT = pc.CreatePivotTable(TableDestination:=ws.Range(addr), TableName:=nm)
+End Function
+
+Private Sub PageField(pt As PivotTable, ByVal cube As String, ByVal key As String)
+    pt.CubeFields(cube).Orientation = xlPageField
+    pt.PivotFields(cube & "." & Mid(cube, InStrRev(cube, "["))).CurrentPageName = cube & ".&[" & key & "]"
+End Sub
+
+Public Sub BuildDe()
+    Run "B6_BTVN_MCI_Mart_Dashboard_Marketing.xlsx", False
+End Sub
+
+Public Sub BuildAnswer()
+    Run "B6_BTVN_MCI_Mart_Dashboard_Marketing_Answer.xlsx", True
+End Sub
+
+Private Sub Run(ByVal fileName As String, ByVal ans As Boolean)
+    gF = FreeFile
+    Open LogPath() For Output As #gF
+    L "START " & fileName & " " & Now
+    Set wb = Workbooks(fileName)
+    isAns = ans
+    wb.Activate
+    Application.DisplayAlerts = False
+    Application.Calculation = xlCalculationManual
+    Cleanup
+    MakePivotsCu
+    MakeDashboardCu
+    MakeDeBai
+    MakeBrief
+    MakeNhatKy
+    MakeInsight
+    If isAns Then
+        MakeCaiDat
+        MakeNewPivots
+        MakeDataDash
+        MakeDashboardNew
+        MakeKiemTra
+    End If
+    Finish
+    Application.DisplayAlerts = True
+    L "DONE " & Now
+    Close #gF
+End Sub
+
+Private Sub Cleanup()
+    Dim i As Long, nm
+    On Error Resume Next
+    For i = wb.SlicerCaches.Count To 1 Step -1
+        If Left(wb.SlicerCaches(i).Name, 14) = "Slicer_Thang_C" Or wb.SlicerCaches(i).Name = "Slicer_Thang" Then wb.SlicerCaches(i).Delete
+        Chk "del slicer cache"
+    Next
+    For Each nm In Array("De_bai", "Brief", "Dashboard_Cu", "Nhat_ky_doi_soat", "Insight", "Insight_mau", "PV_Cu", "PV_New", "Dashboard", "Data_Dash", "Cai_dat", "Kiem_tra")
+        DelSheet CStr(nm)
+    Next
+    L "cleanup ok"
+End Sub
+
+' ---------- Pivot cho Dashboard_Cu ----------
+Private Sub MakePivotsCu()
+    Dim ws As Worksheet, ptSeg As PivotTable, ptReg As PivotTable
+    Dim wsD As Worksheet, sc As SlicerCache, sl As Slicer
+    On Error Resume Next
+    Set ws = GetSheet("PV_Cu")
+    Set wsD = GetSheet("Dashboard_Cu")
+    Title ws, "PivotTable của dashboard cũ (Dashboard_Cu)", "Nguồn cho pie và bar của dashboard cũ. Không sửa ở đây: việc của bạn là kiểm tra Dashboard_Cu."
+    Set ptSeg = NewPT(ws, "A8", "pvtSegment_Cu")
+    Chk "pt seg create"
+    PageField ptSeg, "[Calendar].[Nam]", "2025"
+    ptSeg.CubeFields("[Customer].[Segment]").Orientation = xlRowField
+    ptSeg.CubeFields("[Measures].[Total Revenue]").Orientation = xlDataField
+    Chk "pt seg fields"
+    Set ptReg = NewPT(ws, "E8", "pvtMien_Cu")
+    Chk "pt reg create"
+    PageField ptReg, "[Calendar].[Nam]", "2025"
+    PageField ptReg, "[Calendar].[Thang]", "4"
+    ptReg.CubeFields("[Store].[Region]").Orientation = xlRowField
+    ptReg.CubeFields("[Measures].[Active Customers]").Orientation = xlDataField
+    Chk "pt reg fields"
+    Set sc = wb.SlicerCaches.Add2(ptSeg, "[Calendar].[Thang]")
+    Chk "slicer cu cache"
+    sc.Name = "Slicer_Thang_Cu"
+    Set sl = sc.Slicers.Add(wsD, , "Thang_Cu", "Tháng", 560, 20, 330, 60)
+    Chk "slicer cu add"
+    sl.NumberOfColumns = 6
+    sc.VisibleSlicerItemsList = Array("[Calendar].[Thang].&[4]")
+    Chk "slicer cu select"
+    L "slicer cu pivots=" & sc.PivotTables.Count
+End Sub
+
+Private Sub MakeDashboardCu()
+    Dim ws As Worksheet, wsP As Worksheet, shp As Shape, ch As Chart, k As Long, c0 As Long
+    Dim lab, f
+    On Error Resume Next
+    Set ws = GetSheet("Dashboard_Cu")
+    Set wsP = GetSheet("PV_Cu")
+    ws.Columns("A").ColumnWidth = 2
+    ws.Columns("B:M").ColumnWidth = 10
+    ws.Range("B2:M2").Merge
+    ws.Range("B2").Value = "Dashboard khách hàng tháng 4/2025 (bản cũ của đồng nghiệp)"
+    ws.Range("B2").Font.Size = 16
+    ws.Range("B2").Font.Bold = True
+    ws.Range("B2").Font.Color = RGB(255, 255, 255)
+    ws.Range("B2:M2").Interior.Color = RGB(89, 89, 89)
+    ws.Rows(2).RowHeight = 30
+    ws.Range("B3:M3").Merge
+    ws.Range("B3").Value = "Câu hỏi của Marketing Director: Xem khách hàng"
+    ws.Range("B3").Font.Italic = True
+    ws.Range("B3").Font.Color = RGB(88, 88, 88)
+    ' 3 the KPI: khong target, khong RAG, Active Customers go cung
+    lab = Array("Doanh thu", "Số đơn", "Active Customers")
+    For k = 0 To 2
+        c0 = 2 + 4 * k
+        ws.Range(ws.Cells(5, c0), ws.Cells(5, c0 + 3)).Merge
+        ws.Cells(5, c0).Value = lab(k)
+        ws.Cells(5, c0).Font.Bold = True
+        ws.Range(ws.Cells(6, c0), ws.Cells(7, c0 + 3)).Merge
+        ws.Range(ws.Cells(5, c0), ws.Cells(7, c0 + 3)).HorizontalAlignment = xlCenter
+        ws.Cells(6, c0).Font.Size = 22
+        ws.Cells(6, c0).Font.Bold = True
+        ws.Range(ws.Cells(5, c0), ws.Cells(7, c0 + 3)).BorderAround xlContinuous, xlThin
+    Next
+    ws.Range("B6").Formula = CVF("Total Revenue", NAM & ",""[Calendar].[Thang].&[4]""")
+    ws.Range("B6").NumberFormat = "#,##0"
+    ws.Range("F6").Formula = CVF("Total Orders", NAM & ",""[Calendar].[Thang].&[4]""")
+    ws.Range("F6").NumberFormat = "#,##0"
+    ws.Range("J6").Value = 713
+    ws.Range("J6").NumberFormat = "#,##0"
+    Chk "cu cards"
+    ' pie 3D theo phan khuc
+    Set shp = ws.Shapes.AddChart2(-1, xl3DPie, ws.Range("B9").Left, ws.Range("B9").Top, ws.Range("B9:G9").Width, 250)
+    shp.Name = "chtPie3D_Cu"
+    Set ch = shp.Chart
+    ch.SetSourceData Source:=wsP.PivotTables("pvtSegment_Cu").TableRange1
+    Chk "cu pie setsource"
+    ch.HasTitle = True
+    ch.ChartTitle.Text = "Doanh thu theo phân khúc"
+    ch.ShowAllFieldButtons = False
+    ch.SeriesCollection(1).HasDataLabels = True
+    Chk "cu pie fmt"
+    ' bar theo mien, truc cat khuc
+    Set shp = ws.Shapes.AddChart2(-1, xlColumnClustered, ws.Range("H9").Left, ws.Range("B9").Top, ws.Range("H9:M9").Width, 250)
+    shp.Name = "chtBar_Cu"
+    Set ch = shp.Chart
+    ch.SetSourceData Source:=wsP.PivotTables("pvtMien_Cu").TableRange1
+    Chk "cu bar setsource"
+    ch.HasTitle = True
+    ch.ChartTitle.Text = "Khách hoạt động theo miền"
+    ch.HasLegend = False
+    ch.ShowAllFieldButtons = False
+    ch.Axes(xlValue).MinimumScale = 100
+    ch.SeriesCollection(1).HasDataLabels = True
+    Chk "cu bar fmt"
+    ws.Range("B31").Value = "Ghi chú của đồng nghiệp: số liệu đã kiểm tra, gửi Marketing Director."
+    ws.Range("B31").Font.Italic = True
+    ws.Range("B31").Font.Color = RGB(88, 88, 88)
+    L "dashboard_cu ok"
+End Sub
+
+' ---------- De bai ----------
+Private Sub MakeDeBai()
+    Dim ws As Worksheet, r As Long
+    On Error Resume Next
+    Set ws = GetSheet("De_bai")
+    ws.Range("A1").Value = "BÀI TẬP VỀ NHÀ BUỔI 6 (BẮT BUỘC) — KIỂM TRA VÀ LÀM LẠI DASHBOARD KHÁCH HÀNG"
+    ws.Range("A1").Font.Bold = True
+    ws.Range("A1").Font.Size = 14
+    ws.Range("A1").Font.Color = RGB(32, 56, 100)
+    ws.Range("A2").Value = "Nộp trước Buổi 7. Đặt tên file: B6_BTVN_<HoTen>.xlsx (làm ngay trên file này). Tình huống: Marketing Director xin một dashboard theo dõi khách hàng tháng 4/2025. Đồng nghiệp đã làm một bản (sheet Dashboard_Cu). Bạn là BI analyst: kiểm tra bản cũ có đáng tin không, rồi làm lại. Bài tập dượt cho bài capstone: tiêu chí C1 (Brief), C5 (Dashboard) và C6 (Insight)."
+    ws.Range("A3").Value = "Nộp bài tại cổng học viên MCI (hocvien.mcivietnam.com). Không bấm Refresh All trong file này: dữ liệu đã nằm sẵn trong Data Model. Chỉ dùng 6 bảng của Data Model; mọi con số trên dashboard mới lấy từ measure có sẵn (không gõ cứng)."
+    ws.Range("A5:C5").Value = Array("#", "Việc cần làm", "Yêu cầu")
+    Hdr ws.Range("A5:C5")
+    ws.Range("A6:C6").Value = Array(1, "Đối soát", "Đối soát từng con số và từng biểu đồ của Dashboard_Cu với measure trong Data Model. Ghi vào Nhat_ky_doi_soat mọi điểm sai: lỗi · số trên dashboard cũ · số đúng · cách sửa. Có 5 lỗi; mỗi lỗi một dòng. (D2: số trông hợp lý chưa chắc đúng.)")
+    ws.Range("A7:C7").Value = Array(2, "Viết brief", "Sheet Brief: viết brief cho Marketing Director gồm người xem, 3–5 câu hỏi đo lường được (chỉ số · chiều · thời gian · mốc so sánh), tần suất refresh, quyết định mà dashboard hỗ trợ. Không dùng câu hỏi dạng chủ đề như ""Xem khách hàng"". (C1 Brief)")
+    ws.Range("A8:C8").Value = Array(3, "Dựng dashboard 1 trang", "Sheet Dashboard (tạo mới): tối đa 8 visual; thẻ KPI lấy bằng CUBEVALUE, có target và RAG kèm biểu tượng và nhãn chữ; Slicer Tháng nối đủ mọi Pivot; mọi chart có alt text; tiêu đề chart là kết luận. Target khách hoạt động: 700 mỗi tháng. (C5 Dashboard)")
+    ws.Range("A9:C9").Value = Array(4, "Viết insight", "Sheet Insight: 3 câu theo khung SCR (Situation · Complication · Resolution), kèm một hành động cụ thể cho Marketing Director. Con số phải có mốc so sánh. (C6 Insight)")
+    ws.Range("A11").Value = "Tự kiểm tra trước khi nộp"
+    ws.Range("A11").Font.Bold = True
+    ws.Range("A12").Value = "☐ Tháng 4/2025: khách hoạt động 670 · target 700 · mức đạt 95,7% (▲ Cảnh báo)"
+    ws.Range("A13").Value = "☐ Khách hoạt động theo phân khúc: Thường 360 · Thân thiết 251 · VIP 59 (cộng lại bằng 670)"
+    ws.Range("A14").Value = "☐ Doanh thu theo phân khúc: Thường 138.190.000 · Thân thiết 119.096.000 · VIP 39.679.000 (tổng 296.965.000)"
+    ws.Range("A15").Value = "☐ Cộng khách hoạt động theo ba miền cho 713, lớn hơn 670: một khách mua ở nhiều miền được đếm ở mỗi miền; vì vậy số này không được cộng tay"
+    ws.Range("A16").Value = "☐ Bấm Slicer sang tháng 3: mọi biểu đồ và thẻ KPI trên dashboard mới đều đổi"
+    ws.Range("A17").Value = "Gợi ý: xem handout B6 (CUBEVALUE, Report Connections, RAG) và KPI Definition Card của Buổi 2."
+    ws.Columns("A").ColumnWidth = 6
+    ws.Columns("B").ColumnWidth = 28
+    ws.Columns("C").ColumnWidth = 110
+    ws.Range("A2:C2").Merge
+    ws.Range("A3:C3").Merge
+    ws.Range("A2:C3").WrapText = True
+    ws.Range("A2:C3").VerticalAlignment = xlTop
+    ws.Rows(2).RowHeight = 48
+    ws.Rows(3).RowHeight = 32
+    ws.Range("C6:C9").WrapText = True
+    ws.Range("A6:C9").VerticalAlignment = xlTop
+    Chk "de_bai"
+    L "de_bai ok"
+End Sub
+
+Private Sub MakeBrief()
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = GetSheet("Brief")
+    Title ws, "BRIEF — DASHBOARD KHÁCH HÀNG CHO MARKETING DIRECTOR", IIf(isAns, "Bản mẫu (đáp án tham khảo). Câu hỏi có đủ chỉ số · chiều · thời gian · mốc so sánh.", "Điền vào cột Nội dung. Mỗi câu hỏi phải đo lường được.")
+    ws.Range("A4:C4").Value = Array("Mục", "Gợi ý", "Nội dung")
+    Hdr ws.Range("A4:C4")
+    ws.Range("A5:B5").Value = Array("Người xem", "Executive, operational hay self-service?")
+    ws.Range("A6:B6").Value = Array("Câu hỏi 1", "Chỉ số · chiều · thời gian · mốc so sánh")
+    ws.Range("A7:B7").Value = Array("Câu hỏi 2", "")
+    ws.Range("A8:B8").Value = Array("Câu hỏi 3", "")
+    ws.Range("A9:B9").Value = Array("Câu hỏi 4 (tùy chọn)", "")
+    ws.Range("A10:B10").Value = Array("Tần suất refresh", "Bao lâu một lần?")
+    ws.Range("A11:B11").Value = Array("Quyết định", "Dashboard giúp quyết định gì?")
+    If isAns Then
+        ws.Range("C5").Value = "Marketing Director: executive, xem trong họp hằng tháng."
+        ws.Range("C6").Value = "Q1. Khách hoạt động tháng 4/2025 đạt bao nhiêu % target 700, so với các tháng trước?"
+        ws.Range("C7").Value = "Q2. Khách hoạt động tháng 4 chia theo phân khúc (Thường, Thân thiết, VIP) thế nào, và phân khúc nào đóng góp nhiều doanh thu nhất?"
+        ws.Range("C8").Value = "Q3. Doanh thu bình quân trên mỗi khách hoạt động của từng phân khúc trong tháng 4 là bao nhiêu?"
+        ws.Range("C9").Value = "Q4. Miền nào có nhiều khách hoạt động nhất trong tháng 4? (không cộng ba miền thành tổng khách)"
+        ws.Range("C10").Value = "Hằng tháng, khi có file dữ liệu tháng mới."
+        ws.Range("C11").Value = "Chọn phân khúc ưu tiên cho chiến dịch giữ chân và kích hoạt lại khách để đạt target khách hoạt động."
+    End If
+    ws.Columns("A").ColumnWidth = 24
+    ws.Columns("B").ColumnWidth = 44
+    ws.Columns("C").ColumnWidth = 110
+    ws.Range("A5:C11").WrapText = True
+    ws.Range("A5:C11").VerticalAlignment = xlTop
+    ws.Range("A5:A11").Font.Bold = True
+    If Not isAns Then ws.Range("C5:C11").Interior.Color = RGB(255, 242, 204)
+    Chk "brief"
+    L "brief ok"
+End Sub
+
+Private Sub MakeNhatKy()
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = GetSheet("Nhat_ky_doi_soat")
+    Title ws, "NHẬT KÝ ĐỐI SOÁT — DASHBOARD_CU ↔ DATA MODEL", "Mỗi lỗi một dòng: lỗi gì, ở đâu, số cũ, số đúng, cách sửa."
+    ws.Range("A4:F4").Value = Array("#", "Lỗi (ở đâu)", "Số trên dashboard cũ", "Số đúng", "Nguyên nhân", "Cách sửa")
+    Hdr ws.Range("A4:F4")
+    If isAns Then
+        ws.Range("A5:F5").Value = Array(1, "Thẻ Active Customers (gõ cứng)", "713", "670", "Gõ tay tổng ba miền (234 + 151 + 328). Một khách mua ở nhiều miền bị đếm nhiều lần: DISTINCTCOUNT không cộng dồn.", "Thay bằng CUBEVALUE gọi measure [Active Customers], lọc bằng Slicer Tháng.")
+        ws.Range("A6:F6").Value = Array(2, "Thẻ KPI không có target và RAG", "Chỉ có số, không có mốc so sánh", "Target 700 · mức đạt 95,7% ▲ Cảnh báo", "Người xem không biết đạt hay chưa; thiếu mốc so sánh. RAG chỉ bằng màu thì người mù màu không đọc được.", "Thêm target (Cai_dat), mức đạt = giá trị ÷ target, biểu tượng ✔ ▲ ✘ và nhãn chữ; ngưỡng ở một ô tham số.")
+        ws.Range("A7:F7").Value = Array(3, "Pie 3D theo phân khúc; trục bar cắt khúc", "Pie 3D; trục miền bắt đầu từ 100", "Thường 46,5% · Thân thiết 40,1% · VIP 13,4%; trục bắt đầu từ 0", "Hiệu ứng 3D làm lệch tỷ lệ; trục cắt khúc làm cột miền lớn nhất trông gấp nhiều lần so với thực tế (328 so với 151).", "Đổi sang bar 2D xếp hạng (hoặc pie 2D khi chỉ 3 nhóm), trục bắt đầu từ 0.")
+        ws.Range("A8:F8").Value = Array(4, "Slicer Tháng chỉ nối một Pivot", "Bấm tháng 3, biểu đồ theo miền không đổi", "Mọi biểu đồ cùng đổi", "Slicer sinh ra từ một Pivot nên mặc định chỉ điều khiển Pivot đó.", "Chuột phải Slicer, Report Connections, tick mọi Pivot của dashboard.")
+        ws.Range("A9:F9").Value = Array(5, "Câu hỏi dạng chủ đề", """Xem khách hàng""", "Câu hỏi có chỉ số · chiều · thời gian · mốc so sánh", "Chủ đề không cho biết cần measure và chart nào.", "Viết lại, ví dụ: Khách hoạt động tháng 4/2025 đạt bao nhiêu % target 700, so với tháng 3?")
+    End If
+    ws.Columns("A").ColumnWidth = 5
+    ws.Columns("B").ColumnWidth = 34
+    ws.Columns("C").ColumnWidth = 30
+    ws.Columns("D").ColumnWidth = 30
+    ws.Columns("E").ColumnWidth = 55
+    ws.Columns("F").ColumnWidth = 55
+    ws.Range("A5:F10").WrapText = True
+    ws.Range("A5:F10").VerticalAlignment = xlTop
+    ws.Range("C5:C9").NumberFormat = "@"
+    Chk "nhat ky"
+    L "nhat_ky ok"
+End Sub
+
+Private Sub MakeInsight()
+    Dim ws As Worksheet
+    On Error Resume Next
+    If isAns Then
+        Set ws = GetSheet("Insight_mau")
+        Title ws, "INSIGHT MẪU (SCR) — KHÁCH HÀNG THÁNG 4/2025", "Đáp án tham khảo. Mỗi câu có con số kèm mốc so sánh."
+        ws.Range("A4:B4").Value = Array("Phần", "Nội dung")
+        Hdr ws.Range("A4:B4")
+        ws.Range("A5:B5").Value = Array("S — Situation", "Tháng 4/2025 có 670 khách hoạt động, đạt 95,7% target 700 (thiếu 30 khách), ở mức Cảnh báo.")
+        ws.Range("A6:B6").Value = Array("C — Complication", "Doanh thu bình quân mỗi khách hoạt động khác nhau rõ giữa các phân khúc: VIP 672.5 nghìn đồng, Thân thiết 474.5 nghìn, Thường 383.9 nghìn; nhưng VIP chỉ có 59 khách (8,8% số khách) và nhóm Thường 360 khách (53,7%).")
+        ws.Range("A7:B7").Value = Array("R — Resolution", "Marketing ưu tiên kích hoạt lại khoảng 30 khách còn thiếu, bắt đầu từ nhóm Thân thiết (251 khách, giá trị bình quân cao hơn nhóm Thường 24%), và theo dõi mức đạt hằng tháng trên dashboard.")
+        ws.Columns("A").ColumnWidth = 22
+        ws.Columns("B").ColumnWidth = 130
+        ws.Range("A5:B7").WrapText = True
+        ws.Range("A5:B7").VerticalAlignment = xlTop
+        ws.Range("A5:A7").Font.Bold = True
+    Else
+        Set ws = GetSheet("Insight")
+        Title ws, "INSIGHT (SCR) — KHÁCH HÀNG THÁNG 4/2025", "3 câu theo khung Situation · Complication · Resolution kèm một hành động cho Marketing Director. Con số phải có mốc so sánh."
+        ws.Range("A4:B4").Value = Array("Phần", "Nội dung của bạn")
+        Hdr ws.Range("A4:B4")
+        ws.Range("A5").Value = "S — Situation"
+        ws.Range("A6").Value = "C — Complication"
+        ws.Range("A7").Value = "R — Resolution"
+        ws.Columns("A").ColumnWidth = 22
+        ws.Columns("B").ColumnWidth = 130
+        ws.Range("B5:B7").Interior.Color = RGB(255, 242, 204)
+        ws.Range("A5:B7").WrapText = True
+        ws.Rows("5:7").RowHeight = 45
+    End If
+    Chk "insight"
+    L "insight ok"
+End Sub
+
+' ---------- Chi _Answer ----------
+Private Sub MakeCaiDat()
+    Dim ws As Worksheet
+    On Error Resume Next
+    Set ws = GetSheet("Cai_dat")
+    Title ws, "Cài đặt dashboard khách hàng", "Mọi mốc so sánh nằm ở đây. Ô nền vàng là ô nhập."
+    ws.Range("A4:C4").Value = Array("KPI", "Đơn vị", "Target")
+    Hdr ws.Range("A4:C4")
+    ws.Range("A5:C5").Value = Array("Khách hoạt động mỗi tháng", "khách", 700)
+    ws.Range("A6:C6").Value = Array("Giá trị đơn trung bình (AOV)", "VND", 300000)
+    ws.Range("C5:C6").Interior.Color = RGB(255, 242, 204)
+    ws.Range("C5:C6").NumberFormat = "#,##0"
+    ws.Range("A8").Value = "Ngưỡng RAG (mức đạt = giá trị ÷ target)"
+    ws.Range("A8").Font.Bold = True
+    ws.Range("A9:C9").Value = Array("Trạng thái", "Biểu tượng", "Ngưỡng từ")
+    Hdr ws.Range("A9:C9")
+    ws.Range("A10:C10").Value = Array("Đạt", ChrW(10004), 1)
+    ws.Range("A11:C11").Value = Array("Cảnh báo", ChrW(9650), 0.8)
+    ws.Range("A12:C12").Value = Array("Không đạt", ChrW(10008), "")
+    ws.Range("C10:C11").NumberFormat = "0%"
+    ws.Range("C10:C11").Interior.Color = RGB(255, 242, 204)
+    ws.Range("B10:B12").HorizontalAlignment = xlCenter
+    ws.Range("B10").Font.Color = RGB(12, 163, 12)
+    ws.Range("B11").Font.Color = RGB(250, 178, 25)
+    ws.Range("B12").Font.Color = RGB(208, 59, 59)
+    ws.Columns("A").ColumnWidth = 36
+    ws.Columns("B:C").ColumnWidth = 14
+    Chk "cai_dat"
+    L "cai_dat ok"
+End Sub
+
+Private Sub MakeNewPivots()
+    Dim ws As Worksheet, ptA As PivotTable, ptB As PivotTable, ptC As PivotTable
+    Dim sc As SlicerCache, sl As Slicer, wsD As Worksheet
+    On Error Resume Next
+    Set ws = GetSheet("PV_New")
+    Set wsD = GetSheet("Dashboard")
+    Title ws, "PivotTable của Dashboard mới (không sửa tay)", "Slicer Tháng nối cả ba Pivot."
+    Set ptA = NewPT(ws, "A8", "pvtKhachPK")
+    PageField ptA, "[Calendar].[Nam]", "2025"
+    ptA.CubeFields("[Customer].[Segment]").Orientation = xlRowField
+    ptA.CubeFields("[Measures].[Active Customers]").Orientation = xlDataField
+    Chk "pt A"
+    Set ptB = NewPT(ws, "E8", "pvtDoanhThuPK")
+    PageField ptB, "[Calendar].[Nam]", "2025"
+    ptB.CubeFields("[Customer].[Segment]").Orientation = xlRowField
+    ptB.CubeFields("[Measures].[Total Revenue]").Orientation = xlDataField
+    Chk "pt B"
+    Set ptC = NewPT(ws, "I8", "pvtKhachMien")
+    PageField ptC, "[Calendar].[Nam]", "2025"
+    ptC.CubeFields("[Store].[Region]").Orientation = xlRowField
+    ptC.CubeFields("[Measures].[Active Customers]").Orientation = xlDataField
+    Chk "pt C"
+    Set sc = wb.SlicerCaches.Add2(ptA, "[Calendar].[Thang]")
+    Chk "slicer cache"
+    sc.Name = "Slicer_Thang"
+    sc.PivotTables.AddPivotTable ptB
+    Chk "conn B"
+    sc.PivotTables.AddPivotTable ptC
+    Chk "conn C"
+    Set sl = sc.Slicers.Add(wsD, , "Thang", "Tháng", wsD.Range("B4").Top, wsD.Range("U4").Left, 250, 110)
+    Chk "slicer add"
+    sl.NumberOfColumns = 4
+    sc.VisibleSlicerItemsList = Array("[Calendar].[Thang].&[4]")
+    Chk "slicer select"
+    L "slicer new pivots=" & sc.PivotTables.Count
+End Sub
+
+Private Sub MakeDataDash()
+    Dim ws As Worksheet, k As Long, r As Long
+    Dim kpi, meas, fmt
+    On Error Resume Next
+    Set ws = GetSheet("Data_Dash")
+    Title ws, "Data_Dash: số liệu thô cho Dashboard (CUBEVALUE, nghe Slicer Tháng)", ""
+    ws.Range("A3:E3").Value = Array("KPI", "Giá trị", "Target", "Mức đạt", "Trạng thái")
+    Hdr ws.Range("A3:E3")
+    kpi = Array("Khách hoạt động", "Doanh thu", "AOV")
+    meas = Array("Active Customers", "Total Revenue", "Avg Order Value")
+    For k = 0 To 2
+        r = 4 + k
+        ws.Cells(r, 1).Value = kpi(k)
+        ws.Cells(r, 2).Formula = CVF(CStr(meas(k)), NAM & ",Slicer_Thang")
+    Next
+    ws.Range("C4").Formula = "=Cai_dat!$C$5"
+    ws.Range("C5").Formula = CVF("Total Target", NAM & ",Slicer_Thang")
+    ws.Range("C6").Formula = "=Cai_dat!$C$6"
+    For r = 4 To 6
+        ws.Cells(r, 4).Formula = "=IFERROR(B" & r & "/C" & r & ","""")"
+        ws.Cells(r, 5).Formula = "=IF(D" & r & "="""","""",IF(D" & r & ">=Cai_dat!$C$10,""✔ Đạt"",IF(D" & r & ">=Cai_dat!$C$11,""▲ Cảnh báo"",""✘ Không đạt"")))"
+    Next
+    ws.Range("B4:C6").NumberFormat = "#,##0"
+    ws.Range("D4:D6").NumberFormat = "0.0%"
+    ws.Range("E4:E6").Font.Name = "Segoe UI Symbol"
+    ws.Range("A8").Value = "Số khách hoạt động theo phân khúc và doanh thu (Slicer Tháng)"
+    ws.Range("A8").Font.Bold = True
+    ws.Range("A9:D9").Value = Array("Phân khúc", "Khách hoạt động", "Doanh thu", "Doanh thu bình quân/khách")
+    Hdr ws.Range("A9:D9")
+    ws.Range("A10").Value = "Thường"
+    ws.Range("A11").Value = "Thân thiết"
+    ws.Range("A12").Value = "VIP"
+    For r = 10 To 12
+        ws.Cells(r, 2).Formula = "=IFERROR(CUBEVALUE(""" & CN & """,""[Measures].[Active Customers]""" & NAM & ",Slicer_Thang,""[Customer].[Segment].&["" & A" & r & " & ""]""),0)"
+        ws.Cells(r, 3).Formula = "=IFERROR(CUBEVALUE(""" & CN & """,""[Measures].[Total Revenue]""" & NAM & ",Slicer_Thang,""[Customer].[Segment].&["" & A" & r & " & ""]""),0)"
+        ws.Cells(r, 4).Formula = "=IFERROR(C" & r & "/B" & r & ",0)"
+    Next
+    ws.Range("A13").Value = "Tổng (đối chiếu thẻ KPI)"
+    ws.Range("B13").Formula = "=SUM(B10:B12)"
+    ws.Range("C13").Formula = "=SUM(C10:C12)"
+    ws.Range("A13:D13").Font.Bold = True
+    ws.Range("B10:D13").NumberFormat = "#,##0"
+    ws.Columns("A").ColumnWidth = 30
+    ws.Columns("B:E").ColumnWidth = 22
+    Chk "data_dash"
+    L "data_dash ok"
+End Sub
+
+Private Sub CardBorder(rng As Range)
+    Dim b As Variant
+    rng.Interior.Color = RGB(255, 255, 255)
+    For Each b In Array(xlEdgeLeft, xlEdgeTop, xlEdgeRight, xlEdgeBottom)
+        rng.Borders(b).LineStyle = xlContinuous
+        rng.Borders(b).Color = RGB(200, 205, 215)
+        rng.Borders(b).Weight = xlThin
+    Next
+End Sub
+
+Private Sub MakeDashboardNew()
+    Dim ws As Worksheet, wsP As Worksheet, k As Long, c0 As Long, r As Long
+    Dim lab, fmtV, shp As Shape, ch As Chart, fc As Object, rg As Range
+    On Error Resume Next
+    Set ws = GetSheet("Dashboard")
+    Set wsP = GetSheet("PV_New")
+    ws.Cells.Interior.Color = RGB(243, 245, 249)
+    ws.Columns("A").ColumnWidth = 2
+    ws.Columns("B:M").ColumnWidth = 10
+    ws.Columns("N").ColumnWidth = 2
+    ws.Columns("U").ColumnWidth = 2
+    ws.Range("B2:M2").Merge
+    ws.Range("B2").Value = "Khách hoạt động đang dưới target tháng 4/2025: cần kích hoạt thêm khách"
+    ws.Range("B2").Font.Size = 15
+    ws.Range("B2").Font.Bold = True
+    ws.Range("B2").Font.Color = RGB(255, 255, 255)
+    ws.Range("B2:M2").Interior.Color = RGB(32, 56, 100)
+    ws.Rows(2).RowHeight = 32
+    ws.Range("B3:M3").Merge
+    ws.Range("B3").Formula = "=""Người xem: Marketing Director · Tháng đang chọn: ""&IFERROR(CUBERANKEDMEMBER(""" & CN & """,Slicer_Thang,1),""?"")&""/2025 · Dữ liệu: Data Model"""
+    ws.Range("B3").Font.Size = 9
+    ws.Range("B3").Font.Color = RGB(88, 88, 88)
+    lab = Array("KHÁCH HOẠT ĐỘNG", "DOANH THU", "GIÁ TRỊ ĐƠN TB (AOV)")
+    fmtV = Array("#,##0", "#,##0.0,"" tr""", "#,##0")
+    For k = 0 To 2
+        c0 = 2 + 4 * k
+        r = 4 + k
+        CardBorder ws.Range(ws.Cells(5, c0), ws.Cells(10, c0 + 3))
+        ws.Range(ws.Cells(5, c0), ws.Cells(5, c0 + 3)).Merge
+        ws.Cells(5, c0).Value = lab(k)
+        ws.Cells(5, c0).Font.Size = 8
+        ws.Cells(5, c0).Font.Bold = True
+        ws.Cells(5, c0).Font.Color = RGB(88, 88, 88)
+        ws.Range(ws.Cells(6, c0), ws.Cells(7, c0 + 3)).Merge
+        ws.Cells(6, c0).Formula = "=Data_Dash!B" & r
+        ws.Cells(6, c0).NumberFormat = fmtV(k)
+        ws.Cells(6, c0).Font.Size = 22
+        ws.Cells(6, c0).Font.Bold = True
+        ws.Cells(6, c0).Font.Color = RGB(32, 56, 100)
+        ws.Range(ws.Cells(8, c0), ws.Cells(8, c0 + 3)).Merge
+        If k = 1 Then
+            ws.Cells(8, c0).Formula = "=""Target ""&TEXT(Data_Dash!C" & r & "/1000000,""#,##0.0"")&"" tr"""
+        Else
+            ws.Cells(8, c0).Formula = "=""Target ""&TEXT(Data_Dash!C" & r & ",""#,##0"")"
+        End If
+        ws.Cells(8, c0).Font.Size = 9
+        ws.Cells(8, c0).Font.Color = RGB(88, 88, 88)
+        ws.Range(ws.Cells(9, c0), ws.Cells(9, c0 + 3)).Merge
+        ws.Cells(9, c0).Formula = "=Data_Dash!D" & r
+        ws.Cells(9, c0).NumberFormat = """Mức đạt ""0.0%"
+        ws.Cells(9, c0).Font.Bold = True
+        ws.Range(ws.Cells(10, c0), ws.Cells(10, c0 + 3)).Merge
+        ws.Cells(10, c0).Formula = "=Data_Dash!E" & r
+        ws.Cells(10, c0).Font.Name = "Segoe UI Symbol"
+        ws.Cells(10, c0).Font.Bold = True
+        ws.Range(ws.Cells(5, c0), ws.Cells(10, c0 + 3)).HorizontalAlignment = xlCenter
+        Set rg = ws.Cells(9, c0)
+        rg.FormatConditions.Delete
+        Set fc = rg.FormatConditions.AddIconSetCondition
+        fc.IconSet = wb.IconSets(xl3Symbols)
+        fc.ShowIconOnly = False
+        fc.IconCriteria(2).Type = xlConditionValueFormula
+        fc.IconCriteria(2).Value = "=Cai_dat!$C$11"
+        fc.IconCriteria(2).Operator = xlGreaterEqual
+        fc.IconCriteria(3).Type = xlConditionValueFormula
+        fc.IconCriteria(3).Value = "=Cai_dat!$C$10"
+        fc.IconCriteria(3).Operator = xlGreaterEqual
+        Chk "icon " & k
+        Set rg = ws.Cells(10, c0)
+        rg.FormatConditions.Delete
+        Set fc = rg.FormatConditions.Add(Type:=xlExpression, Formula1:="=Data_Dash!$D$" & r & ">=Cai_dat!$C$10")
+        fc.Font.Color = RGB(12, 163, 12)
+        Set fc = rg.FormatConditions.Add(Type:=xlExpression, Formula1:="=AND(Data_Dash!$D$" & r & "<Cai_dat!$C$10,Data_Dash!$D$" & r & ">=Cai_dat!$C$11)")
+        fc.Font.Color = RGB(190, 125, 0)
+        Set fc = rg.FormatConditions.Add(Type:=xlExpression, Formula1:="=AND(ISNUMBER(Data_Dash!$D$" & r & "),Data_Dash!$D$" & r & "<Cai_dat!$C$11)")
+        fc.Font.Color = RGB(208, 59, 59)
+        Chk "status cf " & k
+    Next
+    ' ---- 3 chart ----
+    Set shp = ws.Shapes.AddChart2(-1, xlBarClustered, ws.Range("B12").Left, ws.Range("B12").Top, ws.Range("B12:E12").Width, 230)
+    shp.Name = "chtKhachPK"
+    Set ch = shp.Chart
+    ch.SetSourceData Source:=wsP.PivotTables("pvtKhachPK").TableRange1
+    Chk "chart A"
+    ch.HasTitle = True
+    ch.ChartTitle.Text = "Khách hoạt động theo phân khúc"
+    ch.HasLegend = False
+    ch.ShowAllFieldButtons = False
+    ch.Axes(xlValue).MinimumScale = 0
+    ch.SeriesCollection(1).HasDataLabels = True
+    shp.AlternativeText = "Biểu đồ thanh ngang: số khách hoạt động theo phân khúc Thường, Thân thiết, VIP trong tháng đang chọn."
+    Chk "chart A fmt"
+    Set shp = ws.Shapes.AddChart2(-1, xlBarClustered, ws.Range("F12").Left, ws.Range("B12").Top, ws.Range("F12:I12").Width, 230)
+    shp.Name = "chtDoanhThuPK"
+    Set ch = shp.Chart
+    ch.SetSourceData Source:=wsP.PivotTables("pvtDoanhThuPK").TableRange1
+    Chk "chart B"
+    ch.HasTitle = True
+    ch.ChartTitle.Text = "Doanh thu theo phân khúc"
+    ch.HasLegend = False
+    ch.ShowAllFieldButtons = False
+    ch.Axes(xlValue).MinimumScale = 0
+    ch.SeriesCollection(1).HasDataLabels = True
+    shp.AlternativeText = "Biểu đồ thanh ngang: doanh thu theo phân khúc khách hàng trong tháng đang chọn."
+    Chk "chart B fmt"
+    Set shp = ws.Shapes.AddChart2(-1, xlColumnClustered, ws.Range("J12").Left, ws.Range("B12").Top, ws.Range("J12:M12").Width, 230)
+    shp.Name = "chtKhachMien"
+    Set ch = shp.Chart
+    ch.SetSourceData Source:=wsP.PivotTables("pvtKhachMien").TableRange1
+    Chk "chart C"
+    ch.HasTitle = True
+    ch.ChartTitle.Text = "Khách hoạt động theo miền (không cộng lại thành tổng)"
+    ch.HasLegend = False
+    ch.ShowAllFieldButtons = False
+    ch.Axes(xlValue).MinimumScale = 0
+    ch.SeriesCollection(1).HasDataLabels = True
+    shp.AlternativeText = "Biểu đồ cột: số khách hoạt động ở từng miền trong tháng đang chọn. Một khách mua ở nhiều miền được đếm ở mỗi miền nên không cộng thành tổng."
+    Chk "chart C fmt"
+    ws.Range("B28").Value = "Quy tắc RAG: ✔ Đạt khi mức đạt ≥ 100% · ▲ Cảnh báo từ 80% đến dưới 100% · ✘ Không đạt khi dưới 80%. Ngưỡng nằm ở sheet Cai_dat. Slicer Tháng điều khiển thẻ KPI và cả ba biểu đồ."
+    ws.Range("B28").Font.Size = 8
+    ws.Range("B28").Font.Color = RGB(88, 88, 88)
+    L "dashboard new ok"
+End Sub
+
+Private Sub MakeKiemTra()
+    Dim ws As Worksheet, r As Long, i As Long
+    Dim lab, f, ex, tol
+    On Error Resume Next
+    Set ws = GetSheet("Kiem_tra")
+    Title ws, "KIỂM TRA / ĐỐI SOÁT — Bài tập về nhà B6", "Cột C: CUBEVALUE với tháng 4/2025 viết thẳng trong công thức (không phụ thuộc Slicer). Cột D: đáp án."
+    ws.Range("A4:E4").Value = Array("Chỉ tiêu", "", "Kết quả", "Đáp án", "Khớp?")
+    Hdr ws.Range("A4:E4")
+    Dim T4 As String
+    T4 = NAM & ",""[Calendar].[Thang].&[4]"""
+    lab = Array("Khách hoạt động tháng 4/2025", "Khách hoạt động Thường", "Khách hoạt động Thân thiết", "Khách hoạt động VIP", "Doanh thu Thường", "Doanh thu Thân thiết", "Doanh thu VIP", "Doanh thu tháng 4/2025", "Mức đạt khách hoạt động (÷ target 700)", "Cộng khách hoạt động theo ba miền (≠ 670)")
+    ex = Array(670, 360, 251, 59, 138190000#, 119096000#, 39679000#, 296965000#, 670 / 700, 713)
+    tol = Array(0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.0005, 0.5)
+    f = Array( _
+        CVF("Active Customers", T4), _
+        CVF("Active Customers", T4 & ",""[Customer].[Segment].&[Thường]"""), _
+        CVF("Active Customers", T4 & ",""[Customer].[Segment].&[Thân thiết]"""), _
+        CVF("Active Customers", T4 & ",""[Customer].[Segment].&[VIP]"""), _
+        CVF("Total Revenue", T4 & ",""[Customer].[Segment].&[Thường]"""), _
+        CVF("Total Revenue", T4 & ",""[Customer].[Segment].&[Thân thiết]"""), _
+        CVF("Total Revenue", T4 & ",""[Customer].[Segment].&[VIP]"""), _
+        CVF("Total Revenue", T4), _
+        "=C5/Cai_dat!$C$5", _
+        "=" & Mid(CVF("Active Customers", T4 & ",""[Store].[Region].&[Bắc]"""), 2) & "+" & Mid(CVF("Active Customers", T4 & ",""[Store].[Region].&[Trung]"""), 2) & "+" & Mid(CVF("Active Customers", T4 & ",""[Store].[Region].&[Nam]"""), 2))
+    For i = 0 To 9
+        r = 5 + i
+        ws.Cells(r, 1).Value = lab(i)
+        ws.Cells(r, 3).Formula = f(i)
+        ws.Cells(r, 4).Value = ex(i)
+        ws.Cells(r, 5).Formula = "=IF(ISNUMBER(C" & r & "),IF(ABS(C" & r & "-D" & r & ")<=" & Replace(CStr(tol(i)), ",", ".") & ",""✔"",""✘""),""✘"")"
+    Next
+    ws.Range("C5:D14").NumberFormat = "#,##0"
+    ws.Range("C13:D13").NumberFormat = "0.0%"
+    ws.Range("A3").Formula = "=""Số ô khớp: ""&COUNTIF(E5:E14,""✔"")&""/""&COUNTA(A5:A14)"
+    ws.Range("A3").Font.Bold = True
+    ws.Columns("A").ColumnWidth = 50
+    ws.Columns("B").ColumnWidth = 2
+    ws.Columns("C:D").ColumnWidth = 18
+    ws.Columns("E").ColumnWidth = 9
+    ws.Range("E5:E14").HorizontalAlignment = xlCenter
+    ws.Range("E5:E14").Font.Name = "Segoe UI Symbol"
+    Chk "kiem tra"
+    L "kiem_tra ok"
+End Sub
+
+Private Sub Finish()
+    Dim nm, i As Long, ws As Worksheet
+    On Error Resume Next
+    If isAns Then
+        nm = Array("PV_New", "PV_Cu", "Kiem_tra", "Insight_mau", "Cai_dat", "Data_Dash", "Dashboard", "Nhat_ky_doi_soat", "Brief", "Dashboard_Cu", "De_bai")
+    Else
+        nm = Array("PV_Cu", "Insight", "Nhat_ky_doi_soat", "Brief", "Dashboard_Cu", "De_bai")
+    End If
+    For i = 0 To UBound(nm)
+        wb.Worksheets(nm(i)).Move Before:=wb.Worksheets(1)
+        Chk "move " & nm(i)
+    Next
+    Application.Calculation = xlCalculationAutomatic
+    Application.CalculateUntilAsyncQueriesDone
+    Application.CalculateFull
+    Application.CalculateUntilAsyncQueriesDone
+    Chk "calc"
+    For Each ws In wb.Worksheets
+        Select Case ws.Name
+            Case "De_bai", "Dashboard_Cu", "Dashboard", "Brief", "Nhat_ky_doi_soat", "Insight", "Insight_mau", "Cai_dat", "Data_Dash", "Kiem_tra"
+                ws.Activate
+                ActiveWindow.DisplayGridlines = False
+        End Select
+    Next
+    wb.Worksheets("De_bai").Activate
+    wb.Worksheets("De_bai").Range("A1").Select
+    L "Dashboard_Cu J6=" & wb.Worksheets("Dashboard_Cu").Range("J6").Text & " B6=" & wb.Worksheets("Dashboard_Cu").Range("B6").Text
+    If isAns Then
+        L "Kiem_tra A3=" & wb.Worksheets("Kiem_tra").Range("A3").Text
+        Dim j As Long
+        For j = 5 To 14
+            L "  KT row " & j & ": C=" & wb.Worksheets("Kiem_tra").Cells(j, 3).Text & " D=" & wb.Worksheets("Kiem_tra").Cells(j, 4).Text
+        Next
+    End If
+    L "finish ok"
+End Sub

@@ -1,0 +1,8 @@
+﻿countif ST3 in Store!B: 3 ; ST03: 463
+E421 = ST3  validOK=True
+E771 = ST3  validOK=True
+E905 = ST3  validOK=True
+I397 = -1  validOK=False
+I5337 = -2  validOK=False
+
+DONE

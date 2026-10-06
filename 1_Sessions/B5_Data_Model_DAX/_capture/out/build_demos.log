@@ -1,0 +1,18 @@
+Dựng B5_Demo_Model.xlsx (từ đáp án B4, Excel qua COM, vài phút)...
+  · tables=6
+  · start: relationships=0, measures=0
+  · sau khi dung: relationships=0, measures=0
+Dựng B5_Demo_Model_HocVien.xlsx (từ bản giảng viên: Huong_dan lên đầu, tiêu đề VÍ DỤ)...
+  · tables=6
+  · start: relationships=0, measures=0
+  · sau khi dung: relationships=0, measures=0
+Dựng B5_Demo_DAX.xlsx (từ đáp án B4, Excel qua COM, vài phút)...
+  · tables=6
+  · start: relationships=0, measures=0
+  · sau khi dung: relationships=6, measures=0
+Dựng B5_Demo_DAX_HocVien.xlsx (từ bản giảng viên: Huong_dan lên đầu, tiêu đề VÍ DỤ)...
+  · tables=6
+  · start: relationships=6, measures=0
+  · sau khi dung: relationships=6, measures=0
+
+Xong. Chạy lại với --check để in số bảng / relationship / measure / sheet của 4 file.

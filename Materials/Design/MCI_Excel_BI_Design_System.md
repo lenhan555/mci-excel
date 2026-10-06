@@ -66,10 +66,10 @@ Bảng màu categorical 6 slot đã chạy bộ kiểm tra màu (dataviz validat
 | Mức | Điều kiện | Mark / icon | Ô Excel (conditional formatting) |
 |---|---|---|---|
 | Đạt | ≥ 100% target | `status-good` + ✔ | `cell-good-fill` + `cell-good-text` (style *Good* có sẵn của Excel) |
-| Cảnh báo | 80% – < 100% | `status-warning` + ▲ | `cell-warn-fill` + `cell-warn-text` (style *Neutral*) |
-| Không đạt | < 80% | `status-critical` + ✘ | `cell-bad-fill` + `cell-bad-text` (style *Bad*) |
+| Cảnh báo | 90% – < 100% | `status-warning` + ▲ | `cell-warn-fill` + `cell-warn-text` (style *Neutral*) |
+| Không đạt | < 90% | `status-critical` + ✘ | `cell-bad-fill` + `cell-bad-text` (style *Bad*) |
 
-- Ngưỡng 80% và 100% khớp với Warning/Critical trong KPI dictionary của khóa.
+- Ngưỡng 100% (Target) và 90% (Warning) lấy từ KPI dictionary của khóa; mức Critical 80% chỉ ghi trong KPI dictionary, dashboard không có màu riêng cho mức này.
 - Màu trạng thái **dành riêng**, không bao giờ làm màu series.
 - `status-critical` khác `tool-red`: một bên là số liệu xấu, một bên là tên công cụ.
 
@@ -294,7 +294,7 @@ Thẻ KPI ở hàng đầu dashboard: một con số, mốc so sánh và trạng
 
 Chip trạng thái RAG (Đạt / Cảnh báo / Không đạt) cho KPI, bảng đối soát và dashboard.
 
-**Người dựng cung cấp:** mức trạng thái, tính từ % đạt target (≥100% Đạt; 80–<100% Cảnh báo; <80% Không đạt), và nhãn chữ.
+**Người dựng cung cấp:** mức trạng thái, tính từ % đạt target (≥100% Đạt; 90–<100% Cảnh báo; <90% Không đạt), và nhãn chữ.
 
 **Quy tắc:**
 - Chấm màu `status-good` / `status-warning` / `status-critical` **luôn đi kèm icon** (✔ ▲ ✘) **và chữ**. Không bao giờ chỉ dùng màu.

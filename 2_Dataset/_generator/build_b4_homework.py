@@ -77,7 +77,10 @@ for name, folder in FILES:
     day13 = int((raw.Order_Date.str[:2].astype(int) >= 13).sum())
     meta["files"][name] = {"raw": len(raw), "rows": len(c), "revenue": int(c.Revenue.sum()), "ws_store": ws_rows,
                            "dup": len(raw) - len(raw.drop_duplicates()), "day13": day13,
-                           "day_le12": len(raw) - day13, "distinct_store_raw": int(raw.Store_Code.nunique())}
+                           "day_le12": len(raw) - day13,
+                           # ngày ≤ 12 mà ngày = tháng (01/01, 02/02…): đọc kiểu mm/dd vẫn đúng, không bị đảo
+                           "day_le12_same": int(((raw.Order_Date.str[:2].astype(int) <= 12) & (raw.Order_Date.str[:2] == raw.Order_Date.str[3:5])).sum()),
+                           "distinct_store_raw": int(raw.Store_Code.nunique())}
     c["File"] = name
     parts.append(c)
 sales_all = pd.concat(parts, ignore_index=True)

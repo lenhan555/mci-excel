@@ -180,7 +180,7 @@ para(d, "Power Query đọc ngày và số theo định dạng vùng miền (loc
 table(d, [["Đọc cột theo", "Order_Date \"13/01/2025\"", "Order_Date \"02/01/2025\"", "Unit_Price \"19.000\""],
           ["English (United States)", "Error (không có tháng 13)", "01/02/2025 — sai, không báo lỗi", "19 — sai 1.000 lần, không báo lỗi"],
           ["Vietnamese (Vietnam)", "13/01/2025 ✔", "02/01/2025 ✔", "19000 ✔"]], [4.0, 3.8, 4.4, 3.8], first_bold=True)
-para(d, f"Trên file tháng 1: đọc kiểu Mỹ thì {vn(F1['day13'])} / {vn(F1['raw'])} dòng Order_Date báo lỗi, {vn(F1['day_le12'])} dòng còn lại bị đảo ngày–tháng; "
+para(d, f"Trên file tháng 1: đọc kiểu Mỹ thì {vn(F1['day13'])} / {vn(F1['raw'])} dòng Order_Date báo lỗi, {vn(F1['day_le12'])} dòng còn lại không báo lỗi, trong đó {vn(F1['day_le12'] - F1['day_le12_same'])} dòng bị đảo ngày–tháng ({vn(F1['day_le12_same'])} dòng có ngày = tháng như 01/01 vẫn đúng); "
         f"Unit_Price chạy từ {vn(M['jan_price_us_min'])} đến {vn(M['jan_price_us_max'])} thay vì {vn(M['jan_price_min'])} đến {vn(M['jan_price_max'])}.")
 tool(d, "Change Type → Using Locale…", "Đổi kiểu một cột theo locale của dữ liệu nguồn.",
      how=["Xóa bước Changed Type tự động (dấu X), vì bước đó đoán kiểu theo locale máy.",
@@ -190,7 +190,7 @@ tool(d, "Change Type → Using Locale…", "Đổi kiểu một cột theo local
 tool(d, "Locale của cả workbook (Query Options)", "Đặt locale mặc định cho mọi query trong file, thay vì theo máy.",
      how=["Data → Get Data → Query Options → CURRENT WORKBOOK → Regional Settings → Locale: Vietnamese (Vietnam) → OK.",
           "Muốn tái hiện lỗi của máy tiếng Anh trên máy tiếng Việt (để kiểm thử): đặt tạm English (United States)."],
-     shot=("Hộp Query Options, mục Current Workbook → Regional Settings, ô Locale", "Data → Get Data → Query Options (trên B4_<HoTen>.xlsx)", "H02_query_options_locale.png"),
+     shot=("Hộp Query Options, mục Current Workbook → Regional Settings, ô Locale = Vietnamese (Vietnam)", "Data → Get Data → Query Options (trên B4_<HoTen>.xlsx)", "H02_query_options_locale.png"),
      tip="Using Locale trên từng cột vẫn là cách chắc chắn nhất: bước ghi rõ locale, không phụ thuộc thiết lập của workbook hay của máy.")
 tool(d, "Data Type Detection", "Hộp From Text/CSV có ô Data Type Detection: Based on first 200 rows (mặc định) · Based on entire dataset · Do not detect data types.",
      tip="Chọn Do not detect data types thì Power Query không tạo bước Changed Type tự động; bạn tự đổi kiểu bằng Using Locale ngay từ đầu.")
@@ -272,10 +272,11 @@ tool(d, "Transform Sample File", "Query trợ giúp mà Combine tạo ra. Bướ
 d.add_heading("8. PRO TIP: tham số hóa đường dẫn thư mục, Rolling Calendar", level=2)
 tool(d, "Home → Manage Parameters → New Parameter", "Đường dẫn thư mục nằm ở một chỗ duy nhất. Chuyển máy hoặc chuyển thư mục: sửa tham số, không sửa từng query.",
      how=["Manage Parameters → New: Name DataFolder, Type Text, Current Value = đường dẫn thư mục Practice của bạn, có dấu \\ ở cuối → OK.",
-          "Query Sales, bước Source: thay chuỗi đường dẫn bằng tham số như dưới đây.",
+          "Bước Source của CẢ HAI query Sales và Sample File (nhóm Helper Queries): thay chuỗi đường dẫn bằng tham số như dưới đây. Sample File cũng đọc thư mục — sót nó thì sang máy khác vẫn lỗi.",
+          "Danh sách tham số có thêm Parameter1 (kiểu Binary) do Combine tạo: để nguyên.",
           "File đáp án B4 (file khởi đầu Buổi 5) dùng đúng tham số này: mở trên máy mới thì Manage Parameters → sửa DataFolder → Refresh All."],
      m='Source = Folder.Files(DataFolder & "Data_Sales")',
-     shot=("Hộp Manage Parameters: tham số DataFolder, Type Text, Current Value", "Practice/B4_MCI_Mart_Answer.xlsx · Launch Power Query Editor → Manage Parameters", "H08_manage_parameters.png"))
+     shot=("Hộp Manage Parameters: tham số DataFolder (Type Text, Current Value) và Parameter1 do Combine tạo", "Practice/B4_MCI_Mart_Answer.xlsx · Launch Power Query Editor → Manage Parameters", "H08_manage_parameters.png"))
 tool(d, "Rolling Calendar", "Calendar tự kéo dài theo thời gian: điểm cuối là 31/12 của năm hiện tại, lấy từ đồng hồ máy. Không phải sửa tay mỗi năm.",
      m=('let\n    StartDate = #date(2024, 1, 1),\n    EndDate = Date.EndOfYear(Date.From(DateTime.LocalNow())),\n'
         '    Dates = List.Dates(StartDate, Duration.Days(EndDate - StartDate) + 1, #duration(1, 0, 0, 0)),\n'
@@ -301,7 +302,7 @@ rich(d, [("Cách cuối cùng: ", {"bold": True, "color": NAVY}),
           "với dữ liệu khách hàng hoặc nguồn web lạ, đặt privacy level đúng thay vì tắt tường lửa.", {})])
 table(d, [["Lỗi", "Dấu hiệu", "Xử lý"],
           ["Bước Changed Type tự động đoán theo locale máy", "Ngày ≥ 13 thành Error; giá 19.000 thành 19", "Xóa bước đó; Using Locale (mục 2)"],
-          ["Bước gọi đích danh tên cột, file mới đổi tên cột", "The column 'Store_Code' of the table wasn't found", "Rename Columns ngay sau bước gộp; kiểm tra Applied Steps từ trên xuống"],
+          ["File mới thả vào thư mục (From Folder) đổi tên hoặc thêm cột", "Không báo lỗi: cột sai tên để trống ở các dòng của file đó, cột mới bị bỏ; bộ lọc/Pivot có mục (blank)", "Đối soát sau mỗi lần Refresh; nhờ nguồn giữ tên cột, hoặc Transform Sample File → Advanced Editor: Table.RenameColumns(…, {{\"StoreCode\", \"Store_Code\"}}, MissingField.Ignore)"],
           ["Tên cột của từng CSV lọt vào dữ liệu", "Dòng có Order_ID = \"Order_ID\"", "Dùng Combine & Transform; hoặc lọc bỏ dòng đó"],
           ["Khoảng trắng thừa trong mã", "Distinct nhiều hơn thực tế; Merge ra null", "Trim / Clean trước Merge"],
           ["Lookup có khóa trùng", f"Số dòng tăng sau Merge ({vn(M['q_rows'])} → {vn(M['merge_trap_rows'])})", "Remove Duplicates theo cột khóa ở lookup"],

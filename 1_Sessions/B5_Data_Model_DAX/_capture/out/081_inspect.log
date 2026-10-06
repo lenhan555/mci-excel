@@ -1,0 +1,45 @@
+﻿wbs: B5_Chup_Model.xlsx, B5_Chup_Answer.xlsx
+sheets: Sales, Product, Store, KPI_SUMIFS, KPI_Card, Kiem_tra_B4, PV_Refresh, Sales_PQ, PV_MienThang, PV_NganhHang, PV_Thang, PV_Ngay, PV_Thu, PV_CuaHang, ST07_T3_ChiTiet, Kiem_tra, PV_Loc, PV_Target, PV_Target_CuaHang, PV_YoY, PV_GM_Nam, PV_KPI_Thang, PV_DoiSoat_B2, DoiSoat_B2, KPI_Dictionary, Kiem_tra_B5
+Sales pt err
+Product pt err
+Store pt err
+KPI_SUMIFS pt err
+KPI_Card pt err
+Kiem_tra_B4 pt err
+PV_Refresh pt err
+Sales_PQ pt err
+PV_MienThang pt err
+PV_NganhHang pt err
+PV_Thang pt err
+PV_Ngay pt err
+PV_Thu pt err
+PV_CuaHang pt err
+ST07_T3_ChiTiet pt err
+Kiem_tra pt err
+PV_Loc pt err
+PV_Target pt err
+PV_Target_CuaHang pt err
+PV_YoY pt err
+PV_GM_Nam pt err
+PV_KPI_Thang pt err
+PV_DoiSoat_B2 pt err
+DoiSoat_B2 pt err
+KPI_Dictionary pt err
+Kiem_tra_B5 pt err
+rels: 6
+Total Revenue := SUM(Sales[Revenue])
+Total COGS := SUMX(Sales, Sales[Quantity] * RELATED(Product[Unit_Cost]))
+Gross Margin % := DIVIDE([Total Revenue] - [Total COGS], [Total Revenue])
+Revenue All Stores := CALCULATE([Total Revenue], ALL(Store))
+% Revenue Share := DIVIDE([Total Revenue], [Revenue All Stores])
+Total Target := SUM(Target[Target])
+Revenue vs Target % := DIVIDE([Total Revenue], [Total Target])
+Variance := IF(ISBLANK([Total Revenue]), BLANK(), [Total Revenue] - [Total Target])
+Revenue YTD := CALCULATE([Total Revenue], DATESYTD(Calendar[Date]))
+Revenue LY := CALCULATE([Total Revenue], DATEADD(Calendar[Date], -1, YEAR))
+Revenue YoY % := IF(ISBLANK([Total Revenue]), BLANK(), DIVIDE([Total Revenue] - [Revenue LY], [Revenue LY]))
+Total Orders := DISTINCTCOUNT(Sales[Order_ID])
+Avg Order Value := DIVIDE([Total Revenue], [Total Orders])
+Active Customers := DISTINCTCOUNT(Sales[Customer_ID])
+
+DONE

@@ -1,0 +1,9 @@
+﻿ERROR: The property 'Visible' cannot be found on this object. Verify that the property exists and can be set.
+At D:\Onedrive\MCI Excel\1_Sessions\B1_Nen_tang_Excel_Du_lieu\Homework\Cham_bai\_capture\lib2.ps1:6 char:3
++   $x.Visible = $true; $x.DisplayAlerts = $false
++   ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : PropertyNotFound
+ 
+
+DONE

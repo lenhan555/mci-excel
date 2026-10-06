@@ -65,6 +65,18 @@
 
    B4 không có tầng riêng: đó là nền móng giúp các tầng sau đáng tin. B7 đi đủ 5 tầng trên bộ dữ liệu mới.
 10. **Câu chuyện cài sẵn trong dữ liệu.** Dataset MCI Mart có 6 "câu chuyện" (xem `2_Dataset/README.md`). Mỗi buổi mở khóa một phần, và câu insight đóng buổi nên chạm vào câu chuyện đó. Bảng phân bổ: **Phụ lục F**.
+11. **Bài tập về nhà là bước tập dượt cho capstone.** Mỗi bài về nhà là một phần việc của dự án B7, đặt trong một tình huống công việc (một bộ dữ liệu mới, hoặc một báo cáo có vấn đề), có lỗi cài sẵn chỉ lộ ra khi đối soát (D2), và gắn với một hoặc vài tiêu chí của rubric B7. Cách chấm giữ như hiện nay (sheet `Kiem_tra` của file `_Answer`, agent `homework-grader`). Đến cuối B6, học viên đã tự làm đủ chuỗi Brief → Power Query → Data Model → KPI measure → Dashboard → Insight một lần, từng phần, trước khi nhận brief capstone.
+
+   | Bài về nhà | Phần việc của capstone | Tiêu chí rubric B7 |
+   |---|---|---|
+   | B1 | Làm sạch, tidy, Excel Table, Validation | C2 |
+   | B2 | KPI bằng SUMIFS, KPI card | C4 |
+   | B3 | Pivot, PivotChart, Slicer; đối soát với số hệ thống | C4, C5 |
+   | B4 | Pipeline Power Query, đối soát, % target | C2 |
+   | B5 | Kiểm toán và sửa một báo cáo cũ: mô hình ngôi sao, measure, KPI dictionary, câu hỏi đo lường được | C3, C4 (tập trước C1) |
+   | B6 | Brief, dashboard, insight | C1, C5, C6 |
+
+   Bài nào cũng kết thúc bằng một câu insight (C6).
 
 ### Ba chuỗi xương sống *(bản chi tiết có tiên quyết cứng/mềm: Phụ lục A)*
 
@@ -354,7 +366,7 @@ Mỗi buổi để lộ **giới hạn** của công cụ vừa học, và giớ
 
 | Lỗi | Dấu hiệu | Xử lý |
 |---|---|---|
-| Bước "Changed Type" ghi cứng tên cột | Refresh lỗi khi file mới đổi tên hoặc thêm cột | Đặt kiểu dữ liệu sau khi đã chuẩn hóa cột; kiểm tra Applied Steps |
+| Bước "Changed Type" ghi cứng tên cột | Refresh lỗi khi file mới đổi tên hoặc thêm cột (query đọc một file). Với From Folder thì **không báo lỗi**: cột sai tên để trống, cột mới bị bỏ | Đặt kiểu dữ liệu sau khi đã chuẩn hóa cột; kiểm tra Applied Steps; đối soát sau mỗi lần Refresh |
 | Tiêu đề của từng CSV lọt vào dữ liệu khi Append folder | Dòng có giá trị "Date", "Store"… trong cột dữ liệu | Filter bỏ dòng tiêu đề lặp |
 | Ngày dd/mm/yyyy bị hiểu thành mm/dd (locale Việt Nam) | Ngày 13 trở lên thành lỗi; tháng và ngày bị đảo | Change Type → **Using Locale** → Vietnamese |
 | Dấu thập phân phẩy/chấm | Số bị nhân 1.000 hoặc thành text | Using Locale; kiểm tra bằng column profile |
@@ -375,6 +387,7 @@ Mỗi buổi để lộ **giới hạn** của công cụ vừa học, và giớ
 - `1_Sessions/B4_Power_Query/Practice/New_Month/Sales_2025-04.csv`: file tháng 4 để thả vào folder khi demo Refresh.
 - File khởi đầu (đáp án B3): `1_Sessions/B3_PivotTable/Practice/B3_MCI_Mart_Q1_2025_Answer.xlsx`. Không có file `Demo/`: mọi demo chạy trên các file `Practice/` ở trên.
 - Đáp án (file khởi đầu B5): `Practice/B4_MCI_Mart_Answer.xlsx` — tham số `DataFolder`, 6 bảng load riêng, Calendar 01/01/2024–31/12/2025 (731 ngày, phủ trọn hai năm vì Target có đủ 12 tháng 2025), Pivot `PV_Refresh` (Nam × Thang), `Kiem_tra_B4`.
+- File mốc: `Practice/B4_MCI_Mart_Moc_ThucHanh.xlsx` — như đáp án nhưng ở trạng thái cuối slide 27 (trước Thực hành 1, Sales 28.328 dòng), sheet `Huong_dan_Moc` hướng dẫn sửa `DataFolder` và tự kiểm. Phát cho học viên có file lỗi hoặc chưa làm kịp, để ai cũng vào được Thực hành 1.
 - Bài tập về nhà (bắt buộc), nộp trước B5: `Homework/B4_BTVN_MCI_Mart_T4_2025.xlsx` + thư mục `Homework/B4_BTVN_Du_lieu/` (tháng 4/2025, mỗi cửa hàng một file CSV, Store_Code nằm trong tên file; cài sẵn dòng "Tổng cộng", mã sản phẩm sai dạng, dòng trùng, và file ST07 thiếu nửa tháng — phát hiện nhờ đối soát với số liệu hệ thống; % đạt target theo cửa hàng); đáp án và sheet Kiem_tra ở file `_Answer`.
 
 ---
@@ -446,7 +459,10 @@ Mỗi buổi để lộ **giới hạn** của công cụ vừa học, và giớ
 - Ảnh Diagram view là hình ngôi sao.
 - AOV đúng khi lọc một danh mục (tính tay để so).
 
-**Chuẩn bị:** File khởi đầu (đáp án B4, các bảng đã load vào Data Model).
+**Chuẩn bị:**
+- File khởi đầu (đáp án B4): `1_Sessions/B4_Power_Query/Practice/B4_MCI_Mart_Answer.xlsx`, Data Model 6 bảng chưa có relationship. Demo theo mẫu B3: `Demo/B5_Demo_Model.xlsx` (Data Model 6 bảng chưa nối; slide 5–12) và `Demo/B5_Demo_DAX.xlsx` (đã nối 6 relationship, chưa có measure; slide 15–30), mỗi file có bản `_HocVien` và sheet `Huong_dan`; dựng trên Windows (`build_b5_demos.py`). Thực hành Slide 31–32 làm trên file của học viên.
+- Đáp án (file khởi đầu B6): `Practice/B5_MCI_Mart_Answer.xlsx` — 6 relationship (hai fact Sales, Target nối qua Store và Calendar), 14 explicit measure (Total COGS bằng SUMX vì Excel không cho script tạo calculated column), `KPI_Dictionary`, `DoiSoat_B2` (đối soát 64 ô CUBEVALUE với `KPI_SUMIFS`), `Kiem_tra_B5` (24 dòng chấm điểm, trong đó một dòng "64 ô khớp"). Dựng bằng Excel trên Windows.
+- Bài tập về nhà (bắt buộc), nộp trước B6, tập dượt C3 và C4 của capstone (Nguyên tắc 11): `Homework/B5_BTVN_MCI_Mart_KPI_T1_T4_2025.xlsx`. Tình huống: phòng Kinh doanh gửi báo cáo tháng 1–4/2025, số lệch với Tài chính. File có Data Model và sheet báo cáo dựng sẵn với 4 lỗi cài sẵn: Target chưa nối Calendar và báo cáo lấy tháng từ `Sales[Thang]` (% đạt target chỉ còn 6,7–11,6% thay vì 82,5–120,6%); GM% là trung bình biên từng dòng (measure AVERAGEX; Excel không cho script tạo calculated column; lệch 0,1–0,5 điểm); số đơn đếm bằng số dòng (AOV chỉ còn khoảng một nửa). Học viên đối soát với sheet số liệu Tài chính, ghi nhật ký lỗi và nguyên nhân, sửa thành mô hình ngôi sao, viết lại measure (thêm tăng trưởng like-for-like), điền KPI dictionary, viết 3 câu hỏi đo lường được cho Sales Director và 1 câu insight. Đáp án và sheet `Kiem_tra` ở file `_Answer`.
 
 ---
 
@@ -479,6 +495,7 @@ Mỗi buổi để lộ **giới hạn** của công cụ vừa học, và giớ
 - **Nâng cao (PRO TIP):** Form Controls, dynamic ranges, custom number formats (Pro Tips – Visualization/Formatting); **Theme cho dashboard; Conditional Formatting Rules Manager** *(R4: PL-31, MO-19)*; `FORECAST.ETS.SEASONALITY`, `FORECAST.ETS.STAT`, tùy chọn *Data Completion* và *Aggregate Duplicates* của Forecast Sheet; sneak peek Power BI (PQ PDF p111–112).
 - **Handout:** Area, Pie, Bubble, Radar, Surface/Contour, Stock, Funnel, Sunburst, Histogram/Pareto nâng cao (DataViz PDF p7, 9, 12, 16–19).
 - **Brick output:** Dashboard bán hàng 1 trang, refresh được từ nguồn (B4 → B5 → B6), cùng một sheet dự báo 30 ngày tới có dải tin cậy.
+- Bài tập về nhà (bắt buộc), nộp trước B7, tập dượt C5 và C6 của capstone (Nguyên tắc 11): `Homework/B6_BTVN_MCI_Mart_Dashboard_Marketing.xlsx`. Tình huống: Marketing Director gửi một dashboard khách hàng cũ (`Dashboard_Cu`) có 5 lỗi cài sẵn: thẻ Active Customers gõ cứng 713 (cộng tay ba miền, đúng là 670); thẻ KPI không có target và RAG; pie 3D và trục cột miền cắt khúc; Slicer Tháng chỉ nối một Pivot; câu hỏi dạng chủ đề ("Xem khách hàng"). Học viên đối soát và ghi `Nhat_ky_doi_soat`, viết `Brief`, dựng sheet `Dashboard` mới (tối đa 8 visual, thẻ CUBEVALUE có target và RAG, Slicer nối mọi Pivot) và 3 câu `Insight` theo SCR. Đáp án (`Dashboard` đã khóa bằng Protect Sheet, vẫn dùng được Slicer), `Insight_mau` và sheet `Kiem_tra` (10/10) ở file `_Answer`.
 - **Câu chuyện mở khóa (Phụ lục F):** #4 và #2 phải *nhìn thấy được* trên combo Actual vs Target, có chú thích; #6 là lý do ETS chọn seasonality 7; #1 là lý do không tin dự báo tháng Tết.
 
 ### Hướng dẫn giảng dạy B6
@@ -786,7 +803,9 @@ MCI Excel/
 | `1_Sessions/B1_Nen_tang_Excel_Du_lieu/Slide_Script_B1.md` | Kịch bản từng slide của B1 (41 slide): nội dung, ảnh cần chụp, lời giảng, quiz, tài nguyên. Là khuôn mẫu cho B2–B7. |
 | `1_Sessions/B2_Ham_va_KPI/Slide_Script_B2.md` | Kịch bản B2 (41 slide, 150 phút); deck, demo, practice, homework, handout B2 dựng bằng `build_b2.py`, `build_slides_b2.py`, `build_docs_b2.py`. |
 | `1_Sessions/B3_PivotTable/Slide_Script_B3.md` | Kịch bản B3 (42 slide, 150 phút); demo, practice, homework dựng bằng `build_b3.py` (PivotTable, Slicer, Timeline, PivotChart ghi bằng `pivot_xml.py`, rồi mở và lưu bằng Excel); deck, handout bằng `build_slides_b3.py`, `build_docs_b3.py`. |
-| `1_Sessions/B4_Power_Query/Slide_Script_B4.md` | Kịch bản B4 (39 slide, 150 phút), dạy trên file `Practice/` (không có Demo); số liệu, bài về nhà bằng `build_b4_homework.py`; đáp án có Power Query thật bằng `build_b4.py` (chỉ Windows, Excel qua COM); deck, handout bằng `build_slides_b4.py`, `build_docs_b4.py`. |
+| `1_Sessions/B4_Power_Query/Slide_Script_B4.md` | Kịch bản B4 (39 slide, 150 phút), dạy trên file `Practice/` (không có Demo); số liệu, bài về nhà bằng `build_b4_homework.py`; đáp án có Power Query thật bằng `build_b4.py`, file mốc trước Thực hành 1 bằng `build_b4.py --moc` (chỉ Windows, Excel qua COM); deck, handout bằng `build_slides_b4.py`, `build_docs_b4.py`. |
+| `1_Sessions/B5_Data_Model_DAX/Slide_Script_B5.md` | Kịch bản B5 (39 slide, 150 phút), **bản nháp chờ duyệt**; dạy trên file Demo (2 file, theo mẫu B3, dựng 02/10/2026) và file khởi đầu (đáp án B4); số liệu bằng `build_b5_meta.py`. Đáp án có Data Model và measure thật dựng bằng `build_b5.py` (chỉ Windows; đã dựng 02/10/2026). Deck 39 slide không còn khung [CHỤP]; handout docx + pdf dựng 03/10/2026. |
+| `1_Sessions/B6_Dashboard/Slide_Script_B6.md` | Kịch bản B6 (41 slide, 150 phút), **bản nháp chờ duyệt** (03/10/2026); dạy trên file khởi đầu (đáp án B5) và 3 file demo (dựng 03/10/2026 bằng `build_b6_demos.py`); số liệu bằng `build_b6_meta.py`; deck bằng `build_slides_b6.py`. Đã có handout, infographic, brief và dataset capstone, đáp án `Practice/` và bài tập về nhà `Homework/` (đề + `_Answer`, dựng 04/10/2026 bằng macro VBA trong Excel Windows). Đã chụp đủ 23 ảnh (deck và handout) ngày 04/10/2026. |
 | `1_Sessions/B7_Capstone/Rubric_B7_Capstone.md` | Rubric đầy đủ 6 tiêu chí × 4 level, bản học viên, calibration notes. |
 | `2_Dataset/` | Dataset MCI Mart (`MCI_Mart_Master.xlsx`), từ điển dữ liệu và câu chuyện cài sẵn (`README.md`), mã sinh dữ liệu và tài liệu (`_generator/`). |
 | `3_Design_Reviews/Review_01_Knowledge_Architecture.md` | *Lý do* của thứ tự buổi và các chuỗi xương sống. |
@@ -818,14 +837,14 @@ Nguồn: mục "Câu chuyện cài sẵn trong dữ liệu" của `2_Dataset/REA
 ## Việc cần chốt
 
 - [x] Dataset xuyên suốt: MCI Mart (giả lập), đã tạo ở `2_Dataset/MCI_Mart_Master.xlsx`.
-- [ ] Dataset riêng cho capstone (công ty khác).
+- [x] Dataset riêng cho capstone (công ty khác): Hạt Việt Coffee, dựng 04/10/2026 (`gen_capstone.py`); cần giảng viên duyệt thư khách hàng và 4 câu chuyện.
 - [x] Target trong KPI dictionary (Phụ lục C) đã chỉnh theo dataset.
 - [ ] Mỗi buổi có file Excel thực hành (bài tập + đáp án) hay không.
 - [x] Phương án cho học viên dùng Mac: khuyến nghị máy ảo (Parallels Desktop hoặc VMware Fusion); dự phòng là học viên tự mang laptop Windows khác (trung tâm không có phòng lab).
 - [x] Dựng lại deck B1 từ đầu (deck S1 cũ đã xóa), theo mục "Style spec": `Slide_B1.pptx` + bản học viên `Slide_B1_HocVien.pptx`.
 - [ ] Dựng lại `Curriculum_Guide.html` theo plan v3.1 (case MCI Mart, đúng thứ tự buổi), hoặc bỏ file này.
-- [ ] Kiểm tra Forecast Sheet trên bảng Ngày–Doanh thu MCI Mart khi soạn deck B6: seasonality tự phát hiện có ra 7 không, dải tin cậy rộng bao nhiêu.
-- [ ] Mỗi buổi xuất infographic tóm tắt `Handout/B<n>_Infographic_TomTat.png` (nguồn `_generator/infographic_b<n>.html`, dựng bằng `build_infographic.py`). Đã có: B1, B2, B3, B4. Còn: B5–B7.
+- [ ] Kiểm tra Forecast Sheet trên bảng Ngày–Doanh thu MCI Mart: **đã đo bằng hàm trên Excel for Mac (03/10/2026)** — seasonality tự phát hiện ra **121**, không phải 7 (phải đặt tay 7); dải 95% rộng hơn cả giá trị dự báo. Còn lặp lại bằng hộp thoại Forecast Sheet trên Windows.
+- [ ] Mỗi buổi xuất infographic tóm tắt `Handout/B<n>_Infographic_TomTat.png` (nguồn `_generator/infographic_b<n>.html`, dựng bằng `build_infographic.py`). Đã có: B1, B2, B3, B4, B5 (02/10/2026, rà lại khi chốt kịch bản). Còn: B6–B7 (B6: kịch bản và deck đã có 03/10/2026, infographic chưa).
 - [ ] Soạn handout cho mọi mục "Handout" đã liệt kê. Coverage của R4 chỉ được tính khi handout thực sự tồn tại, kèm ảnh minh họa.
 
 ## Changelog v2 (2026-09-23)
@@ -902,6 +921,11 @@ Nguồn: mục "Câu chuyện cài sẵn trong dữ liệu" của `2_Dataset/REA
 | B1: phần Phiên bản & kiểm tra máy 15 → 10 phút (slide 8 chỉ còn xác nhận); Thực hành 30 → 35 phút (Thực hành 1: 15 → 20 phút) | Dồn thời gian cho phần học viên hay chậm nhất |
 | (2026-09-28) Bỏ phiếu ghi nhận kiểm tra máy và danh sách gửi sau B1. Học viên tự chuẩn bị máy; trung tâm không cung cấp phòng lab. Tài liệu không dùng chữ "ban tổ chức" | Đây là lớp học, không phải sự kiện; máy móc là trách nhiệm của học viên |
 | (2026-09-28) B3: soạn đủ tài liệu (kịch bản, deck, demo, đáp án có Pivot/Slicer/Timeline/PivotChart, bài tập về nhà bắt buộc, handout, infographic). Sửa câu chuyện #1: dữ liệu cho thấy Bánh kẹo tăng tỷ trọng quanh Tết, Đồ uống tăng doanh thu nhưng tỷ trọng gần như không đổi | Kiểm tra lại trên dataset khi soạn B3 |
+| (2026-10-01) Nguyên tắc 11: bài tập về nhà là bước tập dượt cho capstone, mỗi bài gắn với tiêu chí rubric B7 | Bài về nhà các buổi phải dẫn tới bài capstone |
+| (2026-10-01) B5: bài tập về nhà bắt buộc — kiểm toán báo cáo cũ của phòng Kinh doanh (4 lỗi cài sẵn), sửa mô hình, viết lại measure, KPI dictionary; tập dượt C3, C4 | Câu hỏi mở B5 "vì sao mỗi báo cáo cũ lại ra một con số khác nhau"; Nguyên tắc 11 |
+| (2026-10-02) B5: có file `Demo/` theo mẫu B3 (2 file: Model, DAX; mỗi file có `_HocVien` và `Huong_dan`) thay cho "dạy trên file khởi đầu, không có Demo" | Giảng viên demo trên file gọn; học viên có hướng dẫn từng slide; thống nhất với B3 |
+| (2026-10-02) B5: dựng xong `Demo/` (Model, DAX + `_HocVien`) và bài tập về nhà (đề + đáp án, `Kiem_tra` 24/24); cột `GM_Dong` của đề thay bằng measure AVERAGEX | Excel không tạo được calculated column bằng script; kết quả giống nhau |
+| (2026-10-03) B5: chụp đủ 19 ảnh deck + 5 ảnh handout, dựng handout (docx + pdf 8 trang), rà soát nhất quán và sửa lỗi: wording hộp Measure (Category Number, Format Percentage), Slide 20 (Pivot bên phải chỉ giữ Sum of Target), Slide 24 (ghi chú dòng Grand Total), Slide 32 (sheet `DoiSoat_B2`), ô Target AOV ở `KPI_Dictionary` (chữ thay vì số) | Đồng bộ kịch bản, deck, demo, đáp án; kịch bản vẫn chờ duyệt |
 
 ## Style spec (trích từ deck S1 trước khi bị xóa)
 

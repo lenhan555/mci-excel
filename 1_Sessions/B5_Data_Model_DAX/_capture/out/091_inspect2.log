@@ -1,0 +1,9 @@
+﻿ERROR: You cannot call a method on a null-valued expression.
+At line:6 char:3
++   "== $n " + $pt.TableRange1.Address($false,$false) + ' page=' + $pt. ...
++   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (:) [], RuntimeException
+    + FullyQualifiedErrorId : InvokeMethodOnNull
+ 
+
+DONE

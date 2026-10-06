@@ -1,0 +1,9 @@
+﻿ERROR: Value does not fall within the expected range.
+At line:9 char:9
++ Retry { $m = $pt.CubeFields.GetMeasure('[Target].[Target]', 1, 'Sum o ...
++         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException
+ 
+
+DONE

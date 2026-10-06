@@ -1,0 +1,11 @@
+  · tables=6
+  · start: relationships=6, measures=14
+  · sau khi dung: relationships=6, measures=14
+Kiem_tra_B5: 24/24 ✔
+
+Bước làm tay sau khi dựng (Excel không có API cho các việc này), trên Windows:
+  1. Mở Practice/B5_MCI_Mart_Answer.xlsx → Data → Manage Data Model.
+  2. Tab Calendar → Design → Mark as Date Table → Date → OK.
+  3. Data View: ẩn khỏi Client Tools — Sales: Nam, Thang, Order_Date, Store_Code, Product_Code, Customer_ID;
+     Target: Store_Code, Thang, Ngay_Dau_Thang (chuột phải tiêu đề cột → Hide from Client Tools).
+  4. Lưu, đóng, rồi: python 2_Dataset\_generator\build_b5.py --check

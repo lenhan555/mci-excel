@@ -10,6 +10,9 @@ MCI Excel/
 ├── CLAUDE.md                          quy tắc cho Claude (file demo, sửa file Excel)
 ├── .claude/agents/consistency-checker.md   agent rà tính nhất quán giữa các tài liệu
 ├── .claude/agents/homework-grader.md       agent chấm bài tập về nhà (đọc Homework/Bai_nop/, ghi Homework/Cham_bai/)
+├── .claude/agents/session-builder.md       agent chạy script dựng một buổi trên Mac: chế độ khung (tạo khung [CHỤP]) và chot (chèn ảnh, _HocVien, PDF, infographic)
+├── .claude/agents/screenshot-capturer.md   agent chụp ảnh Excel 365 trên Windows qua _capture/watcher.ps1, lưu PNG vào Materials/B<n>/Images/
+├── .claude/skills/viet-van-phong-mci/      skill văn phong tiếng Việt dùng chung cho 3 agent: session-builder, consistency-checker, homework-grader (rút từ viet-dieuchinh-vanphong và vietnamizer, MIT)
 ├── Course_Plan.md                     plan tổng thể — tài liệu gốc
 ├── 1_Sessions/
 │   ├── B1_Nen_tang_Excel_Du_lieu/     Slide_Script_B1.md · Slide_B1.pptx (+ _HocVien) · Handout/ · Practice/ · Demo/ · Homework/
@@ -17,13 +20,13 @@ MCI Excel/
 │   ├── B2_Ham_va_KPI/                 Slide_Script_B2.md · Slide_B2.pptx (+ _HocVien) · Handout/ · Practice/ · Demo/ · Homework/
 │   ├── B3_PivotTable/                 Slide_Script_B3.md · Slide_B3.pptx (+ _HocVien) · Handout/ · Practice/ · Demo/ · Homework/
 │   ├── B4_Power_Query/                Slide_Script_B4.md · Slide_B4.pptx (+ _HocVien) · Handout/ · Practice/ (Data_Sales/, New_Month/, lookup, target) · Homework/ (không có Demo/)
-│   ├── B5_Data_Model_DAX/             (chưa có tài liệu)
-│   ├── B6_Dashboard/                  (chưa có tài liệu)
+│   ├── B5_Data_Model_DAX/             Slide_Script_B5.md · Slide_B5.pptx (+ _HocVien, 39 slide, 0 khung [CHỤP]) · Practice/ (đáp án) · Demo/ (2 file + _HocVien) · Homework/ (đề + đáp án) · Handout/ (handout docx + pdf, infographic) — dựng 02–03/10
+│   ├── B6_Dashboard/                  Slide_Script_B6.md · Slide_B6.pptx (+ _HocVien, 41 slide, còn 16 khung [CHỤP]) — dựng 03/10; Demo/ (3 file, 03/10); chưa có Practice/ · Homework/ · Handout/
 │   └── B7_Capstone/                   Rubric_B7_Capstone.md
 ├── 2_Dataset/                         MCI_Mart_Master.xlsx · README.md (từ điển dữ liệu, câu chuyện cài sẵn) · _generator/
 ├── 3_Design_Reviews/                  Review_01, Review_02, Review_04 + Coverage_Audit.csv
 ├── 4_Reference/                       PDF nguồn, bảng tra Excel/Power BI, Curriculum_Guide.html (bản nháp)
-└── Materials/                         Design/ (design system + theme Office) · B1/Images/ … B4/Images/ (ảnh chụp cho deck và handout; danh sách trong _DANH_SACH_ANH.md)
+└── Materials/                         Design/ (design system + theme Office) · B1/Images/ … B6/Images/ (ảnh chụp cho deck và handout; danh sách trong _DANH_SACH_ANH.md)
 ```
 
 ## Quy ước trong mỗi thư mục buổi

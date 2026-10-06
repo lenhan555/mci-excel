@@ -1,0 +1,7 @@
+﻿cust cols: Customer_ID, Full_Name, Gender, Birth_Year, Segment, Join_Date, Home_Store_Code
+ERR We couldn't get data from the Data Model. Here's the error message we got:
+
+Exception of type 'Microsoft.AnalysisServices.BackEnd.StorageException' was thrown.
+count=6
+
+DONE

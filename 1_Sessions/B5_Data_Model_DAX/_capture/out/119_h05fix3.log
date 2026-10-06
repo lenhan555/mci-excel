@@ -1,0 +1,28 @@
+﻿TR: SUM(Sales[Revenue])
+ERR m: We couldn't get data from the Data Model. Here's the error message we got:
+
+MdxScript(Model) (6, 45) The syntax for '=' is incorrect. (----------------------------------------------------------
+-- PowerPivot measures command (do not modify manually) --
+----------------------------------------------------------
+
+
+CREATE MEASURE 'Target'[Stores Duoi Nguong]==VAR t = SELECTEDVALUE(Nguong[Nguong], 0.9) RETURN COUNTROWS(FILTER(VALUES(Store[Store_Code]), NOT ISBLANK([Total Target]) && DIVIDE([Total Revenue], [Total Target]) < t));
+).
+
+ERR o: Invalid index. (Exception from HRESULT: 0x8002000B (DISP_E_BADINDEX))
+Row Labels | 
+1 | 
+2 | 
+3 | 
+4 | 
+5 | 
+6 | 
+7 | 
+8 | 
+9 | 
+10 | 
+11 | 
+12 | 
+Grand Total | 
+
+DONE

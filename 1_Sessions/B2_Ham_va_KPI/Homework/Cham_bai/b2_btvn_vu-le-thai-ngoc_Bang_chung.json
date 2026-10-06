@@ -1,0 +1,456 @@
+{
+ "file": "D:\\Onedrive\\MCI Excel\\1_Sessions\\B2_Ham_va_KPI\\Homework\\Bai_nop\\b2_btvn_vu-le-thai-ngoc.xlsx",
+ "kiem_tra": {
+  "Số dòng dữ liệu": {
+   "hoc_vien": 1919,
+   "dap_an": 1919,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D5"
+  },
+  "Số ô #N/A (Region, Category, Unit_Cost)": {
+   "hoc_vien": 0,
+   "dap_an": 0,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D6"
+  },
+  "Tổng doanh thu (VNĐ)": {
+   "hoc_vien": 296965000,
+   "dap_an": 296965000,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D7"
+  },
+  "Tổng bảng KPI 1 (Miền × Ngành)": {
+   "hoc_vien": 296965000,
+   "dap_an": 296965000,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D8"
+  },
+  "Tổng số đơn": {
+   "hoc_vien": 966,
+   "dap_an": 966,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D9"
+  },
+  "Tổng COGS (VNĐ)": {
+   "hoc_vien": 196595000,
+   "dap_an": 196595000,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D10"
+  },
+  "Gross Margin % tháng 4": {
+   "hoc_vien": 0.33798595794117153,
+   "dap_an": 0.3379859579411715,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D11"
+  },
+  "AOV tháng 4 (VNĐ)": {
+   "hoc_vien": 307417.18426501035,
+   "dap_an": 307417.1842650103,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D12"
+  }
+ },
+ "viec": {
+  "1": [
+   "Đạt",
+   "Sales: 1919 dòng; còn dấu cách=0, lệch tra cứu=0, lỗi/trống=0"
+  ],
+  "2": [
+   "Đạt",
+   "Sales: lệch COGS=0, Gross_Margin=0, Phan_khuc=0; gõ tay={'COGS': 0, 'Gross_Margin': 0, 'Phan_khuc': 0}; nhãn khác nhưng đúng ngưỡng=0"
+  ],
+  "3": [
+   "Một phần",
+   "KPI_SUMIFS!B6: kéo đồng nhất=True; $ hỗn hợp=True; ô lệch=0; tổng H9=296965000"
+  ],
+  "4": [
+   "Một phần",
+   "Đủ COUNTIFS Line_No=1 và tổng chia tổng"
+  ],
+  "5": [
+   "Một phần",
+   "KPI_Card!B13 trống; B9 ghi 1 line_no=1 đơn; B8 nguồn tblSales khác tblSales_T4; B12 chưa định lượng target AOV"
+  ],
+  "6": [
+   "Một phần",
+   "Insight!A3: nguyên nhân đạt; số dẫn 49,9% và 137,2% sai (đúng 49,5% và 137,3%); thiếu hàm ý"
+  ]
+ },
+ "ghi_chu": [
+  "Tên file không đúng B2_BTVN_<HoTen>.xlsx"
+ ],
+ "bang": {
+  "sheet": "Sales",
+  "header_row": 2,
+  "tables": [
+   [
+    "tblSales_T4",
+    "A2:P1921"
+   ]
+  ],
+  "so_dong": 1919,
+  "duplicate_keys": 0,
+  "missing_keys": 0,
+  "extra_keys": 0
+ },
+ "cot": {
+  "loi_trong": {
+   "Region": 0,
+   "Category": 0,
+   "Unit_Cost": 0,
+   "COGS": 0,
+   "Gross_Margin": 0,
+   "Phan_khuc": 0,
+   "Revenue": 0
+  },
+  "so_dong_lech": {
+   "Region": 0,
+   "Category": 0,
+   "Unit_Cost": 0,
+   "COGS": 0,
+   "Gross_Margin": 0,
+   "Phan_khuc": 0,
+   "Revenue": 0
+  },
+  "go_tay": {
+   "Region": {
+    "count": 0,
+    "sample": []
+   },
+   "Category": {
+    "count": 0,
+    "sample": []
+   },
+   "Unit_Cost": {
+    "count": 0,
+    "sample": []
+   },
+   "COGS": {
+    "count": 0,
+    "sample": []
+   },
+   "Gross_Margin": {
+    "count": 0,
+    "sample": []
+   },
+   "Phan_khuc": {
+    "count": 0,
+    "sample": []
+   },
+   "Revenue": {
+    "count": 0,
+    "sample": []
+   }
+  },
+  "boc_loi": {
+   "Region": {
+    "count": 0,
+    "sample": []
+   },
+   "Category": {
+    "count": 0,
+    "sample": []
+   },
+   "Unit_Cost": {
+    "count": 0,
+    "sample": []
+   },
+   "COGS": {
+    "count": 0,
+    "sample": []
+   },
+   "Gross_Margin": {
+    "count": 0,
+    "sample": []
+   },
+   "Phan_khuc": {
+    "count": 0,
+    "sample": []
+   },
+   "Revenue": {
+    "count": 0,
+    "sample": []
+   }
+  },
+  "ham": {
+   "Region": {
+    "XLOOKUP": 1919
+   },
+   "Category": {
+    "XLOOKUP": 1919
+   },
+   "Unit_Cost": {
+    "XLOOKUP": 1919
+   },
+   "COGS": {},
+   "Gross_Margin": {},
+   "Phan_khuc": {
+    "IFS": 1919
+   },
+   "Revenue": {}
+  },
+  "mau_lech": {
+   "Region": [],
+   "Category": [],
+   "Unit_Cost": [],
+   "COGS": [],
+   "Gross_Margin": [],
+   "Phan_khuc": [],
+   "Revenue": []
+  }
+ },
+ "ma_dau_cach": {
+  "con": [],
+  "loi_cai_san": [
+   {
+    "answer_row": 53,
+    "key": [
+     "HD2504-00251",
+     2
+    ],
+    "o": "F54",
+    "got": "P025",
+    "expected": "P025"
+   },
+   {
+    "answer_row": 230,
+    "key": [
+     "HD2504-00118",
+     1
+    ],
+    "o": "F231",
+    "got": "P022",
+    "expected": "P022"
+   },
+   {
+    "answer_row": 1311,
+    "key": [
+     "HD2504-00181",
+     2
+    ],
+    "o": "F1312",
+    "got": "P022",
+    "expected": "P022"
+   },
+   {
+    "answer_row": 1520,
+    "key": [
+     "HD2504-00148",
+     1
+    ],
+    "o": "F1521",
+    "got": "P035",
+    "expected": "P035"
+   }
+  ]
+ },
+ "phan_khuc_khac_nhan_dung_nguong": 0,
+ "du_lieu_tinh_lai": {
+  "Revenue": 296965000,
+  "COGS": 196595000,
+  "Gross_Margin": 100370000,
+  "so_don": 966,
+  "COGS_tu_dau_vao": 196595000
+ },
+ "kpi1": {
+  "sheet": "KPI_SUMIFS",
+  "anchor": "B6",
+  "formula": "=SUMIFS(tblSales_T4[Revenue],tblSales_T4[Region],KPI_SUMIFS!$A6,tblSales_T4[Category],KPI_SUMIFS!B$5)",
+  "pull_same": true,
+  "mixed_refs": true,
+  "sumifs_all": true,
+  "total_cell": "H9",
+  "total": 296965000,
+  "totals_formula": true,
+  "mismatch": []
+ },
+ "kpi2": {
+  "sheet": "KPI_SUMIFS",
+  "so_don": {
+   "values": {
+    "Bắc": 317,
+    "Trung": 202,
+    "Nam": 447
+   },
+   "formulas": {
+    "Bắc": "=COUNTIFS(tblSales_T4[Region],KPI_SUMIFS!$A13,tblSales_T4[Line_No],1)",
+    "Trung": "=COUNTIFS(tblSales_T4[Region],KPI_SUMIFS!$A14,tblSales_T4[Line_No],1)",
+    "Nam": "=COUNTIFS(tblSales_T4[Region],KPI_SUMIFS!$A15,tblSales_T4[Line_No],1)"
+   },
+   "total": 966,
+   "total_cell": "B16",
+   "total_formula": "=SUM(B13:B15)",
+   "mismatch": []
+  },
+  "aov": {
+   "values": {
+    "Bắc": 299804.41640378546,
+    "Trung": 296366.3366336634,
+    "Nam": 317809.84340044745
+   },
+   "formulas": {
+    "Bắc": "=H6/B13",
+    "Trung": "=H7/B14",
+    "Nam": "=H8/B15"
+   },
+   "total": 307417.18426501035,
+   "total_cell": "B23",
+   "total_formula": "=H9/B16",
+   "mismatch": []
+  },
+  "gm_pct": {
+   "values": {
+    "Bắc": 0.3397746164692018,
+    "Trung": 0.33336117328700765,
+    "Nam": 0.33873828848170856
+   },
+   "formulas": {
+    "Bắc": "=B27/H6",
+    "Trung": "=B28/H7",
+    "Nam": "=B29/H8"
+   },
+   "total": 0.33798595794117153,
+   "total_cell": "C30",
+   "total_formula": "=B30/H9",
+   "mismatch": []
+  }
+ },
+ "card": {
+  "sheet": "KPI_Card",
+  "cells": [
+   [
+    "A1",
+    "KPI DEFINITION CARD — KPI of AOV"
+   ],
+   [
+    "A2",
+    "Viết card TRƯỚC khi viết công thức. Mẫu đầy đủ: Handout/B2_KPI_Definition_Card.docx"
+   ],
+   [
+    "A4",
+    "Trường"
+   ],
+   [
+    "B4",
+    "Card 1"
+   ],
+   [
+    "A5",
+    "Tên KPI"
+   ],
+   [
+    "B5",
+    "Avg Order Value (AOV - Giá trị trung bình mỗi đơn)"
+   ],
+   [
+    "A6",
+    "Mục đích (trả lời câu hỏi gì)"
+   ],
+   [
+    "B6",
+    "Biết được giá trị trung bình của mỗi đơn hàng của mỗi vùng trong tháng này là bao nhiêu?"
+   ],
+   [
+    "A7",
+    "Công thức"
+   ],
+   [
+    "B7",
+    "Doanh thu mỗi vùng ÷ Số đơn mỗi vùng"
+   ],
+   [
+    "A8",
+    "Nguồn dữ liệu"
+   ],
+   [
+    "B8",
+    "tblSales (Doanh thu + số lượng đơn của mỗi vùng)"
+   ],
+   [
+    "A9",
+    "Grain"
+   ],
+   [
+    "B9",
+    "Dữ liệu: 1 line_no = 1 đơn hàng. KPI báo cáo theo tháng"
+   ],
+   [
+    "A10",
+    "Dimensions"
+   ],
+   [
+    "B10",
+    "Miền, đơn hàng"
+   ],
+   [
+    "A11",
+    "Owner"
+   ],
+   [
+    "B11",
+    "Giám đốc bán hàng"
+   ],
+   [
+    "A12",
+    "Target"
+   ],
+   [
+    "B12",
+    "Theo bảng Target (Donh thu mỗi miền / Số đơn mỗi miền)"
+   ],
+   [
+    "A13",
+    "Ngưỡng Warning / Critical"
+   ],
+   [
+    "A14",
+    "Ghi chú giới hạn"
+   ],
+   [
+    "B14",
+    "Một đơn có nhiều dòng: đếm dòng Line_No = 1"
+   ],
+   [
+    "A16",
+    "Giá trị tháng 4/2025"
+   ],
+   [
+    "B16",
+    307417.18426501035
+   ]
+  ]
+ },
+ "insight": [
+  {
+   "sheet": "Insight",
+   "o": "A3",
+   "text": "Miền Nam đạt doanh thu cao nhất 142,1 triệu VNĐ, cao hơn miền Bắc 49,9% và miền Trung 137,2%, chủ yếu nhờ số đơn hàng cao nhất (447 đơn) và AOV cũng dẫn đầu (317.810 VNĐ). Tuy nhiên, Gross Margin giữa ba miền khá đồng đều ở mức 33,3%–34,0%, cho thấy hiệu quả biên lợi nhuận không chênh lệch nhiều giữa các vùng."
+  }
+ ],
+ "textbox": [],
+ "core": {
+  "creator": "openpyxl",
+  "lastModifiedBy": "VU Le Thai Ngoc",
+  "created": "2026-09-27T06:05:51Z",
+  "modified": "2026-10-04T05:36:58Z"
+ },
+ "sheet_dap_an": [],
+ "answer_mau": [
+  [
+   "A1",
+   "INSIGHT MẪU (tham khảo khi chấm; học viên viết theo cách của mình)"
+  ],
+  [
+   "A3",
+   "\"Tháng 4/2025 MCI Mart bán 296.965.000 VNĐ qua 966 đơn (AOV 307.417), Gross Margin 33,8%; Miền Nam đóng góp nhiều nhất (47,8% doanh thu). Biên chênh lệch lớn giữa các ngành: Bánh kẹo 39,4% so với Thực phẩm khô 21,8%, nên cơ cấu ngành hàng của từng miền sẽ quyết định biên lợi nhuận — cần xem theo cửa hàng và theo ngày ở Buổi 3.\""
+  ],
+  [
+   "A5",
+   "Chấm: đủ 3 thành phần (con số có so sánh · nguyên nhân khả dĩ · hàm ý) và con số khớp dữ liệu."
+  ]
+ ],
+ "insight_thanh_phan_dat": 1,
+ "ket_qua": "Đạt - cần sửa nhỏ",
+ "muc_D4": "Developing",
+ "ho_ten": "Vũ Lê Thái Ngọc"
+}

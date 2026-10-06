@@ -205,7 +205,7 @@ blocks = re.split(r"^### Slide (\d+) · ", md, flags=re.M)
 NOTES = {}
 
 def clean(t):
-    t = re.sub(r"\*\*(.+?)\*\*", r"\1", t); t = re.sub(r"(?<!\w)\*(.+?)\*(?!\w)", r"\1", t)
+    t = re.sub(r"\*\*(.+?)\*\*", r"\1", t); t = re.sub(r"(?<![\w*])\*(?=\S)(.+?)(?<=\S)\*(?![\w*])", r"\1", t)
     return t.replace("`", "").strip()
 
 def fmt_min(m):
@@ -334,6 +334,11 @@ for sh in s1.shapes:
         p = sh.text_frame.paragraphs[0]
         p.runs[0].text = "Bắt buộc máy Windows có Power Query (Data → Get Data)"
         for r in p.runs[1:]: r.text = ""
+        p2 = copy.deepcopy(p._p); sh.text_frame._txBody.append(p2)
+        p2r = sh.text_frame.paragraphs[-1].runs
+        p2r[0].text = "Mở sẵn: file khởi đầu B3_MCI_Mart_Q1_2025_Answer.xlsx (đáp án Buổi 3)"
+        for r in p2r[1:]: r.text = ""
+        sh.height = Inches(0.9)
     elif sh.has_text_frame and sh.text_frame.text.startswith("Mở sẵn"):
         p = sh.text_frame.paragraphs[0]
         p.runs[0].text = "Mở sẵn: file khởi đầu B3_MCI_Mart_Q1_2025_Answer.xlsx (đáp án Buổi 3)"
@@ -412,7 +417,7 @@ notes(section("2. Get Data & Query Editor: nơi mọi bước làm sạch đư�
 # 9 · Get Data, Query Editor, Applied Steps
 s = content("Get Data · Query Editor · Applied Steps", R2)
 table(s, L, 1.55, [5.0, 6.07], [
-    ["Tên (đỏ)", "Mục đích"],
+    ["Tên", "Mục đích"],
     [[("Data → Get Data → From File → From Text/CSV", {"b": True, "color": RED})], "Kết nối tới một file; bấm Transform Data để mở Query Editor trước khi nạp"],
     [[("Query Editor", {"b": True, "color": RED})], "Bảng xem trước ở giữa, Applied Steps bên phải, 4 tab Home / Transform / Add Column / View"],
     [[("Applied Steps", {"b": True, "color": RED})], "Danh sách các bước đã làm, chạy lại TỰ ĐỘNG mỗi lần Refresh — như một macro"],
@@ -438,7 +443,7 @@ notes(s, 11)
 # 12 · Change Type & Locale
 s = content("Change Type → Using Locale…", R3)
 tool(s, L, 1.55, W, "Change Type → Using Locale…", "Đổi kiểu dữ liệu THEO ĐÚNG định dạng vùng miền của dữ liệu nguồn — không phải định dạng máy đang chạy Excel.", 0.55)
-stat(s, L, 2.7, 3.55, 1.55, "Đọc kiểu Mỹ mm/dd (Order_Date)", "1.735 / 2.726", "dòng Error; 991 dòng đảo ngày–tháng", vcolor=BAD_TXT, vsize=26)
+stat(s, L, 2.7, 3.55, 1.55, "Đọc kiểu Mỹ mm/dd (Order_Date)", "1.735 / 2.726", "dòng Error; 927 dòng đảo ngày–tháng", vcolor=BAD_TXT, vsize=26)
 shot(s, 5.45, 2.7, 3.3, 3.0, "Change Type with Locale: Date, Vietnamese (Vietnam) → Order_Date 100% Valid", "Query Sales_T1", "S12a_locale_date.png")
 shot(s, 8.98, 2.7, 3.76, 3.0, "Unit_Price sau Using Locale → Whole Number, Vietnamese: 19.000 → 19000", "Query Sales_T1", "S12b_locale_price.png")
 tb(s, L, 4.4, 3.55, 1.3, [[("Đọc kiểu Mỹ (Unit_Price)", {"color": INK2, "size": 13})], [("19.000 → 19", {"b": True, "size": 20, "color": BAD_TXT})], "sai 1.000 lần, KHÔNG báo lỗi"], space=4)
@@ -449,22 +454,24 @@ notes(s, 12)
 # 13 · Headers · Trim/Clean · Conditional Column
 s = content("Headers · Trim · Conditional Column", R3)
 table(s, L, 1.55, [3.9, 7.17], [
-    ["Tên (đỏ)", "Mục đích"],
+    ["Tên", "Mục đích"],
     [[("Home → Use First Row as Headers", {"b": True, "color": RED})], "Biến dòng đầu của bảng thành tên cột"],
     [[("Transform → Format → Trim / Clean", {"b": True, "color": RED})], "Xoá khoảng trắng đầu/cuối (Trim) hoặc ký tự ẩn (Clean)"],
     [[("Add Column → Conditional Column", {"b": True, "color": RED})], "Tạo cột mới theo quy tắc IF/THEN, không cần viết hàm"],
 ], size=14, rowh=0.58)
-shot(s, L, 3.95, 5.43, 2.65, "Store_Code sau Trim: còn đúng 12 giá trị (trước là 23)", "Query Sales_T1", "S13a_trim.png")
-shot(s, 7.31, 3.95, 5.43, 2.65, "Add Conditional Column: Nhom_SL — If Quantity > 3 then “Nhiều” else “Ít”", "Query Sales_T1", "S13b_conditional_column.png")
-footnote(s, "Ảnh: query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv) · Trim/Clean có ở cả Transform (sửa cột) và Add Column (tạo cột mới)")
+shot(s, L, 3.95, 5.43, 1.95, "Store_Code sau Trim: còn đúng 12 giá trị (trước là 23)", "Query Sales_T1", "S13a_trim.png")
+shot(s, 7.31, 3.95, 5.43, 1.95, "Add Conditional Column: Nhom_SL — If Quantity > 3 then “Nhiều” else “Ít”", "Query Sales_T1", "S13b_conditional_column.png")
+tip(s, L, 6.0, W, 0.7, "Trim/Clean có ở cả Transform (sửa cột đang có) và Add Column (tạo cột mới): chọn đúng tab theo việc mình muốn.")
+footnote(s, "Ảnh: Query Editor, query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv)")
 notes(s, 13)
 
 # 14 · Remove Duplicates
 s = content("Remove Duplicates", R3)
 tool(s, L, 1.55, W, "Home → Remove Rows → Remove Duplicates", "Xoá các dòng GIỐNG HỆT NHAU trên các cột đang chọn — dùng cho bảng giao dịch (trùng tuyệt đối) lẫn bảng lookup (khoá trùng).", 0.6)
-shot(s, L, 2.8, 5.43, 2.9, "Sales_T1: Remove Duplicates (mọi cột) → Count Rows = 2.725 (trước 2.726)", "Query Sales_T1", "S14a_remove_dup_sales.png")
-shot(s, 7.31, 2.8, 5.43, 2.9, "Product: Remove Duplicates theo Product_Code → Count Rows = 40 (trước 41)", "Query Product (Practice/B4_Lookups.xlsx)", "S14b_remove_dup_product.png")
-tip(s, L, 5.85, W, 0.9, "Chưa bỏ P015 trùng mà Merge Sales × Product: 29.408 dòng thay vì 28.328. Đếm dòng ngay trong PQ: Transform → Count Rows, xem xong xóa bước đếm.")
+shot(s, L, 2.8, 4.7, 2.45, "Sales_T1: Remove Duplicates (mọi cột) → Count Rows = 2.725 (trước 2.726)", "Query Sales_T1", "S14a_remove_dup_sales.png")
+shot(s, 5.49, 2.8, 4.7, 2.45, "Product: Remove Duplicates theo Product_Code → Count Rows = 40 (trước 41)", "Query Product (Practice/B4_Lookups.xlsx)", "S14b_remove_dup_product.png")
+stat(s, 10.34, 2.8, 2.4, 2.45, "Merge khi chưa bỏ P015 trùng", "29.408 dòng", "thay vì 28.328 — 1.080 dòng P015 bị nhân đôi", vsize=24, vcolor=BAD_TXT)
+tip(s, L, 5.4, W, 1.3, "Đếm dòng ngay trong Power Query: Transform → Count Rows, xem số, rồi xóa bước đó. Remove Duplicates chỉ xét các cột đang chọn: chọn cả bảng (Ctrl+A) cho bảng giao dịch, chỉ cột khóa cho bảng lookup.")
 footnote(s, "Ảnh: query Sales_T1 (Practice/Data_Sales/Sales_2025-01.csv) · query Product (Practice/B4_Lookups.xlsx, bảng Product)")
 notes(s, 14)
 
@@ -501,8 +508,8 @@ notes(s, 18)
 s = content("Group By", R4)
 tool(s, L, 1.6, W, "Transform → Group By (Basic / Advanced)", "Tổng hợp dữ liệu LÊN MỨC CHI TIẾT KHÁC — từ dòng giao dịch lên theo cửa hàng, theo tháng — ngay trong Power Query, ra một BẢNG MỚI.", 0.65)
 shot(s, L, 2.9, 6.9, 2.85, "Group By (Advanced): Store_Code; So_dong = Count Rows; Doanh_thu = Sum of Revenue → 12 dòng", "Query DoiSoat_T1 (Reference của Sales_T1)", "S19_group_by.png")
-stat(s, 8.75, 2.9, 3.99, 1.35, "Target tháng 1 (Group By Thang)", "353 tr", "thực tế 425,85 tr · 120,6%", vsize=24)
-stat(s, 8.75, 4.4, 3.99, 1.35, "Target tháng 2", "298 tr", "thực tế 246,0 tr · 82,5%", vsize=24, vcolor=BAD_TXT)
+stat(s, 8.75, 2.9, 3.99, 1.35, "Target tháng 1 (Group By Thang)", "353.000.000", "thực tế 425.850.000 · 120,6%", vsize=24)
+stat(s, 8.75, 4.4, 3.99, 1.35, "Target tháng 2", "298.000.000", "thực tế 245.996.000 · 82,5%", vsize=24, vcolor=BAD_TXT)
 tip(s, L, 5.9, W, 0.85, "Reference: query mới đọc kết quả của query gốc, gốc đổi thì đổi theo. Duplicate: chép rời mọi bước. Bảng đối soát, bảng tổng hợp → dùng Reference.", pro=True)
 footnote(s, "Ảnh: query DoiSoat_T1 (Reference của Sales_T1, Practice/Data_Sales/Sales_2025-01.csv)")
 notes(s, 19)
@@ -513,7 +520,7 @@ notes(section("5. Append & Merge: nối dọc và nối ngang"), 20)
 # 21 · From Folder · Append
 s = content("From Folder · Append Queries", R5)
 table(s, L, 1.55, [5.5, 5.57], [
-    ["Tên (đỏ)", "Mục đích"],
+    ["Tên", "Mục đích"],
     [[("Data → Get Data → From File → From Folder", {"b": True, "color": RED})], "Đọc và nối MỌI FILE cùng cấu trúc trong một thư mục; file mới thả vào tự được đọc khi Refresh"],
     [[("Home → Append Queries", {"b": True, "color": RED})], "Nối dọc hai (hoặc nhiều) query có CÙNG TÊN CỘT"],
 ], size=14, rowh=0.55)
@@ -571,7 +578,7 @@ shot(s, L, 2.85, 6.9, 2.8, "Queries & Connections: 6 query + nhóm trợ giúp c
 table(s, 8.75, 2.85, [2.2, 1.79], [["Bảng", "Số dòng"], ["Sales", "28.328"], ["Product", "40"], ["Store", "12"], ["Customer", "1.500"], ["Target", "144"], ["Calendar", "731"]],
       size=13, rowh=0.4, name="Row counts")
 tip(s, L, 5.8, W, 0.95, "Sales → Table + Data Model. Product/Store/Customer/Target/Calendar → Only Create Connection + Data Model, KHÔNG Merge vào Sales. Sales → Properties → bỏ tick Enable background refresh.")
-footnote(s, "Ảnh: B4_<HoTen>.xlsx, Data → Queries & Connections · Pivot PV_Refresh (Nam × Thang) phải ra 28.328 dòng, 4.139.884.500")
+footnote(s, "Ảnh: B4_<HoTen>.xlsx, Data → Queries & Connections")
 notes(s, 27)
 
 # 28 · Thực hành 1
@@ -586,7 +593,7 @@ tb(s, L, 2.2, 6.9, 4.5, [
 box(s, 8.87, 1.6, 3.87, 5.0, fill=ALT, shape=MSO_SHAPE.ROUNDED_RECTANGLE, radius=0.03, name="Check box")
 tb(s, 9.07, 1.75, 3.47, 4.7, [[("Kiểm tra sau Refresh", {"b": True, "color": NAVY, "size": 16})], [("30.247 dòng", {"b": True, "color": NAVY, "size": 26})],
                               [("4.436.849.500", {"b": True, "color": NAVY, "size": 20})], "Dòng 2025 · 4: 1.919 dòng · 296.965.000", "Đây là khoảnh khắc D3 của khóa học"], size=15, space=8)
-footnote(s, "File tháng 4: Practice/New_Month/Sales_2025-04.csv (1.920 dòng thô)")
+footnote(s, "File tháng 4: Practice/New_Month/Sales_2025-04.csv")
 notes(s, 28)
 
 # 29 · Thực hành 2
@@ -618,9 +625,9 @@ quiz(34, "Unpivot", "Bảng Target_2025 có các cột Tháng 1 … Tháng 12. M
      {"A": "Pivot Column", "B": "Unpivot Columns", "C": "Transpose", "D": "Group By"}, "B")
 quiz(35, "Append vs Merge", "Bốn file CSV theo tháng, cùng 8 cột, muốn gộp thành một bảng dài hơn. Nên dùng công cụ nào?",
      {"A": "Append Queries (hoặc From Folder)", "B": "Merge Queries", "C": "Group By", "D": "Unpivot"}, "A")
-quiz(36, "Tình huống — Refresh lỗi", "File CSV mới đổi tên cột Store_Code thành StoreCode. Refresh báo lỗi ở bước Trim cột Store_Code. Nguyên nhân?",
-     {"A": "File bị hỏng", "B": "Do chưa Remove Duplicates",
-      "C": "Do thiếu Using Locale", "D": "Bước Trim gọi đích danh tên cột Store_Code, cột đó không còn tồn tại với tên mới"}, "D", qsize=20, osize=14)
+quiz(36, "Tình huống — Lỗi ngầm", "File CSV tháng mới đổi tên cột Store_Code thành StoreCode. Refresh All không báo lỗi, nhưng bộ lọc Store_Code của Pivot có thêm mục (blank). Nguyên nhân?",
+     {"A": "File mới bị hỏng", "B": "Do chưa Remove Duplicates",
+      "C": "Do thiếu Using Locale", "D": "Combine lấy tên cột theo file mẫu: file mới thiếu cột Store_Code nên để trống, cột StoreCode bị bỏ"}, "D", qsize=18, osize=13)
 quiz(37, "Tình huống — Chọn công cụ", "Nghi ngờ vài dòng Sales ghi Product_Code sai chính tả, không khớp Product nào. Cách kiểm tra nhanh nhất?",
      {"A": "Đọc từng dòng bằng mắt", "B": "Group By theo Product_Code",
       "C": "Merge Sales với Product, Join Kind = Left Anti, xem có dòng nào không", "D": "Xoá cột Product_Code"}, "C", osize=15)

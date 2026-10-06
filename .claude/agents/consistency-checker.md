@@ -102,6 +102,16 @@ Các mục A–I so tài liệu với nhau. Nhưng một câu sai trong kịch b
   Khi có ảnh, ưu tiên xem ảnh để xác nhận. Không có ảnh và không chắc thì ghi "chưa kiểm chứng" kèm lý do.
 - **Mức lỗi:** sai lệch khiến giảng viên nói hoặc chỉ vào điều không có trên màn hình (sai số dòng, vùng không được tô màu như lời giảng) là **Nghiêm trọng**. Chỉ lệch ở mô tả danh sách ảnh hay chú thích khung (không hiện trên slide) là **Cần sửa**. Nguồn cần sửa là kịch bản; sau đó sửa `_DANH_SACH_ANH.md` và script `_generator/…` cho khớp.
 
+### K. Văn phong tiếng Việt
+
+Đọc `.claude/skills/viet-van-phong-mci/SKILL.md` và `references/` (chế độ **Kiểm**). Chỉ đọc và báo, không sửa.
+- **Phạm vi:** chữ do tác giả viết trong kịch bản (lời giảng, phần "Trên slide"), speaker notes, `Slide_B<n>_HocVien.pptx`, handout, `Huong_dan` và câu chỉ dẫn trong demo/homework, infographic. Bỏ qua `_capture/`, `Bai_nop/`, `Cham_bai/`.
+- **Quét bằng regex** ở `references/quy-tac-chung.md` (gạch dài, `…`, ngoặc cong, số kiểu Mỹ, từ nối dịch, khung đối lập giả, câu trợ lý còn sót, "tay nghề"). Mỗi kết quả xét theo vùng không đụng trước khi báo: công thức, tên hàm, địa chỉ ô, tên file/sheet, mã dữ liệu, nhãn `[CHỤP]`/`[VẼ]`, ký hiệu `→` và `·` theo quy ước CLAUDE.md, `✔` ở `Kiem_tra`.
+- **Đọc lượt hai:** luật ma sát, lỗi dùng từ (V1-V25 chọn lọc), từ vựng khóa. Chỉ báo chỗ có lỗi thật; câu đã tự nhiên thì để yên.
+- **Mức lỗi:** **Nhỏ** hoặc **Cần sửa**. Chỉ **Nghiêm trọng** khi câu khiến người đọc hiểu sai thao tác hoặc số liệu.
+- **Ghi lỗi:** vị trí, trích nguyên văn ngắn, luật vi phạm, câu thay đề xuất. Gộp theo luật, tối đa 3 ví dụ mỗi luật, kèm tổng số chỗ.
+- Nguồn cần sửa là kịch bản (rồi dựng lại deck, `_HocVien`, handout), hoặc script `_generator/…` nếu chữ sinh từ script. Báo cáo thể hiện văn phong của bản thân agent cũng theo skill, sắc thái nội bộ.
+
 ## Báo cáo
 
 Kết thúc bằng một báo cáo duy nhất:
@@ -113,6 +123,7 @@ Kết thúc bằng một báo cáo duy nhất:
    - **Nhỏ**: câu chữ, định dạng, design system.
 
    Mỗi lỗi ghi: vị trí cụ thể (`file:dòng`, "slide n – notes", "sheet X ô Y"), nội dung ở mỗi bên (trích nguyên văn ngắn), bên nào đúng theo thứ tự ưu tiên ở trên, và cách sửa đề xuất (sửa ở đâu: Course_Plan, kịch bản, script `_generator/…`, hay deck).
+   Mục K (văn phong): thống kê số chỗ theo luật, đặt sau các lỗi nội dung.
 3. **Đã khớp**: liệt kê ngắn các nhóm kiểm tra không có lỗi, để người dùng biết đã được rà.
 
 Chỉ báo điều đã kiểm chứng bằng cách đọc file hoặc tính lại. Điều nghi ngờ nhưng chưa kiểm chứng được thì ghi rõ "chưa kiểm chứng" và lý do.

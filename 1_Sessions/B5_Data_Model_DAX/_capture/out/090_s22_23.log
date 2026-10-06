@@ -1,0 +1,25 @@
+﻿S22 range A8:C12
+Region | Total Revenue | Revenue Mien Nam
+Bắc | 323978000 | 427663000
+Nam | 427663000 | 427663000
+Trung | 189813000 | 427663000
+Grand Total | 941454000 | 427663000
+placed 'B5_Chup_Answer - Excel' -> 0,0,1300,800
+front 'B5_Chup_Answer - Excel'
+snap D:\Onedrive\MCI Excel\1_Sessions\B5_Data_Model_DAX\_capture\out\S22_1.png 1920x1200
+snap D:\Onedrive\MCI Excel\1_Sessions\B5_Data_Model_DAX\_capture\out\S22_2.png 1920x1200
+S23 range A8:D12
+
+Region | Total Revenue | Revenue All Stores | % Revenue Share
+
+Bắc | 323978000 | 941454000 | 0.344125151096071
+
+Nam | 427663000 | 941454000 | 0.454257988175737
+
+Trung | 189813000 | 941454000 | 0.201616860728193
+
+Grand Total | 941454000 | 941454000 | 1
+snap D:\Onedrive\MCI Excel\1_Sessions\B5_Data_Model_DAX\_capture\out\S23_1.png 1920x1200
+snap D:\Onedrive\MCI Excel\1_Sessions\B5_Data_Model_DAX\_capture\out\S23_2.png 1920x1200
+
+DONE

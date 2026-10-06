@@ -1,0 +1,7 @@
+﻿Sales: Order_ID,Line_No,Order_Date,Store_Code,Customer_ID,Product_Code,Quantity,Unit_Price,Revenue,Nam,Thang
+Product: Product_Code,Product_Name,Category,Unit_Price,Unit_Cost
+Store: Store_Code,Store_Name,City,Region,Store_Type,Open_Date
+Customer: Customer_ID,Full_Name,Gender,Birth_Year,Segment,Join_Date,Home_Store_Code
+Target: Store_Code,Thang,Target,Ngay_Dau_Thang
+Calendar: Date,Nam,Thang,Quy,Thu
+rels: 0

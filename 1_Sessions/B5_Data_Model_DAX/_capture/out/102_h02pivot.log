@@ -1,0 +1,3 @@
+﻿fields: [Calendar].[Cay_Thoi_Gian].[Nam]; [Calendar].[Cay_Thoi_Gian].[Quy]; [Calendar].[Cay_Thoi_Gian].[Thang]; [Calendar].[Cay_Thoi_Gian].[Date]; [Measures].[Total Revenue]
+
+DONE

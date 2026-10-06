@@ -1,0 +1,9 @@
+﻿ERROR: Exception from HRESULT: 0x800A01A8
+At line:23 char:12
++ if ($sc) { [void]$sc.Slicers.Add($ws, [Type]::Missing, 'Muc', 'Nguong ...
++            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], COMException
+    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException
+ 
+
+DONE

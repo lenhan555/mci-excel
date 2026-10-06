@@ -8,6 +8,7 @@
    "dup": 0,
    "day13": 13411,
    "day_le12": 8730,
+   "day_le12_same": 737,
    "distinct_store_raw": 12
   },
   "Sales_2025-01.csv": {
@@ -18,6 +19,7 @@
    "dup": 1,
    "day13": 1735,
    "day_le12": 991,
+   "day_le12_same": 64,
    "distinct_store_raw": 23
   },
   "Sales_2025-02.csv": {
@@ -28,6 +30,7 @@
    "dup": 1,
    "day13": 970,
    "day_le12": 626,
+   "day_le12_same": 22,
    "distinct_store_raw": 22
   },
   "Sales_2025-03.csv": {
@@ -38,6 +41,7 @@
    "dup": 1,
    "day13": 1185,
    "day_le12": 683,
+   "day_le12_same": 33,
    "distinct_store_raw": 21
   },
   "Sales_2025-04.csv": {
@@ -48,6 +52,7 @@
    "dup": 1,
    "day13": 1178,
    "day_le12": 742,
+   "day_le12_same": 49,
    "distinct_store_raw": 22
   }
  },

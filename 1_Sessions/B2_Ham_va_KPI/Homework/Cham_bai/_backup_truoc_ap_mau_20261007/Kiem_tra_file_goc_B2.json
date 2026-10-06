@@ -1,0 +1,17 @@
+{
+ "sha256_before": {
+  "b2-le-lam-tuyen.xlsx": "d48709477ab279317cd1d84664d46374583cd3eb439413c1d7665acc70754267",
+  "b2_btvn_to-thu_lan2.xlsx": "799feada6f4dde15c0eda0f66f149533cafa095d01424e2c519bb519be3e266e",
+  "b2_btvn_to-thuXRBUKA.xlsx": "c8d35bf08f37ba9882ebdc0a4c3724d8699946e03594d8103b79461422e72942",
+  "b2_btvn_vu-le-thai-ngoc.xlsx": "53d76345947b0d36a9fd3630f389f376db29964721393b8757f3c7c944bc2f97",
+  "b2_btvn_xlsx_Pham Nhu Tam.xlsx": "d6910ac9021754b32f17517b7ca1435a3a2fd2206ddabe972ca6c830bb633328"
+ },
+ "sha256_after": {
+  "b2-le-lam-tuyen.xlsx": "d48709477ab279317cd1d84664d46374583cd3eb439413c1d7665acc70754267",
+  "b2_btvn_to-thu_lan2.xlsx": "799feada6f4dde15c0eda0f66f149533cafa095d01424e2c519bb519be3e266e",
+  "b2_btvn_to-thuXRBUKA.xlsx": "c8d35bf08f37ba9882ebdc0a4c3724d8699946e03594d8103b79461422e72942",
+  "b2_btvn_vu-le-thai-ngoc.xlsx": "53d76345947b0d36a9fd3630f389f376db29964721393b8757f3c7c944bc2f97",
+  "b2_btvn_xlsx_Pham Nhu Tam.xlsx": "d6910ac9021754b32f17517b7ca1435a3a2fd2206ddabe972ca6c830bb633328"
+ },
+ "unchanged": true
+}

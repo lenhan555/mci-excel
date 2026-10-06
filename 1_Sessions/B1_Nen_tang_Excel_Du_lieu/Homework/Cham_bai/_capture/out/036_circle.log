@@ -1,0 +1,9 @@
+﻿ERROR: Value does not fall within the expected range.
+At line:5 char:1
++ $xl.CommandBars.ExecuteMso('DataValidationClearCircles')
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException
+ 
+
+DONE

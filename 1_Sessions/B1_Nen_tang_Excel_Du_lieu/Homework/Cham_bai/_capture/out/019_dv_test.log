@@ -1,0 +1,9 @@
+﻿ERROR: Call was rejected by callee. (Exception from HRESULT: 0x80010001 (RPC_E_CALL_REJECTED))
+At D:\Onedrive\MCI Excel\1_Sessions\B1_Nen_tang_Excel_Du_lieu\Homework\Cham_bai\_capture\lib2.ps1:9 char:3
++   $x.Visible = $true; $x.DisplayAlerts = $false
++   ~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : OperationStopped: (:) [], COMException
+    + FullyQualifiedErrorId : System.Runtime.InteropServices.COMException
+ 
+
+DONE

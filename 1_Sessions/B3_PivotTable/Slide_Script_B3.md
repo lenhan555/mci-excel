@@ -37,7 +37,7 @@ Loại slide và nguồn ảnh giống `Slide_Script_B2.md`: BÌA · CHIA PHẦN
 | `Demo/B3_Demo_Loi_Du_lieu.xlsx` | tblSalesLoi: cột Revenue có 2 ô chữ + 1 ô trống, cột Order_Date có 3 ô ngày dạng chữ | 19, 23 |
 | `Practice/B3_MCI_Mart_Q1_2025_Answer.xlsx` | Đáp án B3: tblSales thêm So_don; 6 sheet Pivot (PV_…), Slicer Store_Code nối 3 Pivot, Timeline, 3 PivotChart, ST07_T3_ChiTiet, Kiem_tra (14/14 ✔). **File khởi đầu B4** | 32 |
 | `Homework/B3_BTVN_MCI_Mart_T1_T4_2025.xlsx` | Bài tập về nhà bắt buộc (đề): tháng 1–4/2025, 8.106 dòng, cài sẵn 6 ô Quantity dạng chữ; sheet So_lieu_he_thong để đối soát | 42 |
-| `Homework/B3_BTVN_MCI_Mart_T1_T4_2025_Answer.xlsx` | Đáp án bài về nhà (Pivot dựng sẵn, Kiem_tra 9/9 ✔, Dap_an_loi, Insight_mau). Chỉ giảng viên / trợ giảng | — |
+| `Homework/B3_BTVN_MCI_Mart_T1_T4_2025_Answer.xlsx` | Đáp án bài về nhà: Pivot dựng sẵn, Kiem_tra 17 chỉ tiêu số liệu, CT_ST07_T3/T4, So_sanh (ST07, AOV, tỷ trọng), Huong_dan_cham đủ Câu 1–7, Dap_an_loi, Insight_mau. Chỉ giảng viên / trợ giảng | — |
 | `Handout/B3_Handout.docx` / `.pdf` | Handout tự học (Show Values As mở rộng, Calculated Item, Report Filter Pages, Subtotal, PRO TIP, bài về nhà, checklist trước B4) | 42 |
 | `Handout/B3_Infographic_TomTat.png` | Infographic tóm tắt buổi, phát riêng (không chèn vào handout); sửa ở `2_Dataset/_generator/infographic_b3.html` rồi chạy `build_infographic.py B3` | 42 |
 

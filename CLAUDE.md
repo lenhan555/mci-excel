@@ -21,6 +21,7 @@ Cấu trúc thư mục và quy ước chung: xem `README.md`. Tài liệu gốc:
   - **Practice:** không cần bản riêng; file đề (Dirty) và đáp án (Answer) đã tách sẵn.
 - Bản giảng viên của file demo mở ra ở sheet làm việc, sheet `Huong_dan` để cuối, để khi chiếu lên màn hình học viên không thấy hướng dẫn.
 - Bài tập về nhà là **bắt buộc** (không dùng chữ "tự luyện"); mỗi bài có file đề trong `Homework/` và file `_Answer` có sheet `Kiem_tra` để chấm.
+- Bài tập về nhà là **bước tập dượt cho capstone B7** (`Course_Plan.md`, Nguyên tắc 11): đặt trong một tình huống công việc, có lỗi cài sẵn chỉ lộ ra khi đối soát, gắn với tiêu chí rubric B7 (`1_Sessions/B7_Capstone/Rubric_B7_Capstone.md`). Khi soạn bài mới, ghi rõ bài tập dượt tiêu chí nào.
 - Trước khi sửa `.pptx`, kiểm tra PowerPoint không đang mở file đó; nếu đang mở, nhờ người dùng lưu và đóng trước, tránh bị ghi đè.
 
 ## Ảnh minh họa: ưu tiên ảnh chụp thật
@@ -56,9 +57,32 @@ Cấu trúc thư mục và quy ước chung: xem `README.md`. Tài liệu gốc:
 
 File đã được mở và lưu bằng Excel (ví dụ file Answer) có Data Validation trỏ sang sheet khác, lưu trong `extLst`. openpyxl sẽ **xóa** phần này khi ghi lại. Muốn sửa thì dùng chính Excel (AppleScript), hoặc dựng lại file bằng script trong `_generator/`.
 
+## Dựng tài liệu một buổi (Mac ↔ Windows)
+
+Mac chạy mọi script dựng; Windows chỉ chụp ảnh (và chạy lệnh ghi "CHỈ WINDOWS" trong `2_Dataset/README.md`, ví dụ `build_b4.py`). Ảnh vào khung bằng cách chạy lại script dựng, không dán tay. Phiên chính điều phối các agent theo thứ tự:
+
+1. `session-builder` chế độ `khung` (`.claude/agents/session-builder.md`): dựng dữ liệu, deck, handout; trả về danh sách khung [CHỤP] còn thiếu, nhóm theo file nguồn.
+2. `screenshot-capturer` (`.claude/agents/screenshot-capturer.md`): người dùng bật `_capture/watcher.ps1` trên Windows trước; agent chụp, cắt, tự kiểm, lưu PNG vào `Materials/B<n>/Images/`. Ảnh cần mở hộp thoại hay Query Editor thì agent trả hướng dẫn để người dùng dựng trạng thái, rồi gọi lại agent để chụp.
+3. `session-builder` chế độ `chot`: sao lưu, dựng lại deck → `_HocVien`, handout → PDF, infographic; kiểm tra không còn [CHỤP].
+4. `consistency-checker` (mục dưới).
+
+Bước 2 và 3 làm được theo từng đợt ảnh. Trước khi agent ghi `.pptx` / `.docx`, hỏi người dùng đã đóng các file đó trên cả Mac và Windows chưa.
+
 ## Chấm bài tập về nhà
 
 Bài học viên nộp tải về `1_Sessions/B<n>_…/Homework/Bai_nop/`, rồi gọi agent `homework-grader` (`.claude/agents/homework-grader.md`). Agent chấm theo De_bai và file `_Answer` bằng script `2_Dataset/_generator/grade_b<n>.py`, ghi nhận xét từng học viên, `Tong_hop_B<n>.csv` và `Bao_cao_lop_B<n>.md` vào `Homework/Cham_bai/`. Không sửa file học viên nộp.
+- **Điểm số làm tròn thành số nguyên** (integer) ở mọi nơi: nhận xét, `Tong_hop_B<n>.csv`, báo cáo lớp.
+
+- **Khuyến khích chấm bằng Claude Cowork.** Học viên viết insight trong text box (shape nổi trên sheet), mà script Python (openpyxl) chỉ đọc được ô, không đọc được text box, nên phần insight bị bỏ sót. Cowork đọc được cả text box. Nên để Cowork chấm cả bài (số liệu lẫn insight), đối chiếu với De_bai và file `_Answer`; không chấm riêng bằng script.
+
+## Văn phong tiếng Việt
+
+Skill dùng chung: `.claude/skills/viet-van-phong-mci/SKILL.md` (kèm `references/`). Ba agent đọc nó trước khi viết hoặc kiểm chữ:
+- `homework-grader` viết nhận xét học viên (sắc thái đào tạo, xưng "bạn") và báo cáo lớp (nội bộ, khách quan), hai lượt.
+- `consistency-checker` kiểm văn phong ở mục K, chỉ báo cáo.
+- `session-builder` viết báo cáo cuối theo skill và quét tell trên deck `_HocVien` và PDF vừa dựng, chỉ báo.
+
+Quy ước đã chốt: giữ ký hiệu `→` trong `(→ demo …)` và `·` trong chân slide, không coi là tell; không đụng công thức, tên hàm, địa chỉ ô, tên file/sheet, mã dữ liệu; không dùng "tay nghề" (dùng "cách làm", "tư duy làm"). Sửa văn phong trong kịch bản thì dựng lại deck → `_HocVien` → handout theo quy trình ở mục trên.
 
 ## Rà soát tính nhất quán
 

@@ -1,0 +1,19 @@
+﻿cf found: [Measures].[Stores Duoi Nguong]
+ERR: Exception from HRESULT: 0x800A03EC
+cubefields: [Measures].[Total Revenue]; [Measures].[Total COGS]; [Measures].[Gross Margin %]; [Measures].[Revenue All Stores]; [Measures].[% Revenue Share]; [Measures].[Total Target]; [Measures].[Revenue vs Target %]; [Measures].[Variance]; [Measures].[Revenue YTD]; [Measures].[Revenue LY]; [Measures].[Revenue YoY %]; [Measures].[Total Orders]; [Measures].[Avg Order Value]; [Measures].[Active Customers]; [Measures].[Revenue Mien Nam]; [Measures].[Stores Duoi Nguong]; [Measures].[__XL_Count Product]; [Measures].[__XL_Count Store]; [Measures].[__XL_Count Customer]; [Measures].[__XL_Count Target]; [Measures].[__XL_Count Calendar]; [Measures].[__XL_Count Sales]; [Measures].[__XL_Count Nguong]; [Measures].[__No measures defined]
+Row Labels | 
+1 | 
+2 | 
+3 | 
+4 | 
+5 | 
+6 | 
+7 | 
+8 | 
+9 | 
+10 | 
+11 | 
+12 | 
+Grand Total | 
+
+DONE

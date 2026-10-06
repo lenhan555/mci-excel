@@ -1,0 +1,6 @@
+﻿shapes: 1; used: $A$1
+SHAPE TextBox type=17 at $A$2 : 
+"File case có 1919 dòng, tôi tìm thấy 3 loại lỗi dữ liệu. Lỗi nguy hiểm nhất là định dạng số liệu không thống nhất ở cột cửa hàng, sản phẩm, ngày đặt hàng, và số lượng, nên nếu không sửa hay định dạng đúng ngay từ đầu dẫn đến dữ liệu nhập sai và dữ liệu không đúng.
+
+
+DONE

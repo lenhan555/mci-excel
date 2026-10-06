@@ -1,0 +1,30 @@
+{
+  "description": "MCI Excel: bổ sung ngữ cảnh, chỉ đọc, không cấp quyền.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "^(startup|resume|clear|compact)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:/Python314/python.exe\" \"D:/Onedrive/MCI Excel/.codex/hooks/workspace_context.py\"",
+            "timeout": 10,
+            "additionalContextLimit": 1500
+          }
+        ]
+      }
+    ],
+    "SubagentStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"C:/Python314/python.exe\" \"D:/Onedrive/MCI Excel/.codex/hooks/workspace_context.py\"",
+            "timeout": 10,
+            "additionalContextLimit": 1500
+          }
+        ]
+      }
+    ]
+  }
+}

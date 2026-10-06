@@ -1,0 +1,456 @@
+{
+ "file": "D:\\Onedrive\\MCI Excel\\1_Sessions\\B2_Ham_va_KPI\\Homework\\Bai_nop\\b2_btvn_to-thuXRBUKA.xlsx",
+ "kiem_tra": {
+  "Số dòng dữ liệu": {
+   "hoc_vien": 1919,
+   "dap_an": 1919,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D5"
+  },
+  "Số ô #N/A (Region, Category, Unit_Cost)": {
+   "hoc_vien": 0,
+   "dap_an": 0,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D6"
+  },
+  "Tổng doanh thu (VNĐ)": {
+   "hoc_vien": 296965000,
+   "dap_an": 296965000,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D7"
+  },
+  "Tổng bảng KPI 1 (Miền × Ngành)": {
+   "hoc_vien": 296965000,
+   "dap_an": 296965000,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D8"
+  },
+  "Tổng số đơn": {
+   "hoc_vien": null,
+   "dap_an": 966,
+   "khop": false,
+   "answer_cell": "Kiem_tra!D9"
+  },
+  "Tổng COGS (VNĐ)": {
+   "hoc_vien": 196595000,
+   "dap_an": 196595000,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D10"
+  },
+  "Gross Margin % tháng 4": {
+   "hoc_vien": 0.33798595794117153,
+   "dap_an": 0.3379859579411715,
+   "khop": true,
+   "answer_cell": "Kiem_tra!D11"
+  },
+  "AOV tháng 4 (VNĐ)": {
+   "hoc_vien": null,
+   "dap_an": 307417.1842650103,
+   "khop": false,
+   "answer_cell": "Kiem_tra!D12"
+  }
+ },
+ "viec": {
+  "1": [
+   "Đạt",
+   "Sales: 1919 dòng; còn dấu cách=0, lệch tra cứu=0, lỗi/trống=0"
+  ],
+  "2": [
+   "Một phần",
+   "Sales: lệch COGS=0, Gross_Margin=0, Phan_khuc=0; gõ tay={'COGS': 0, 'Gross_Margin': 0, 'Phan_khuc': 0}; nhãn khác nhưng đúng ngưỡng=910"
+  ],
+  "3": [
+   "Đạt",
+   "KPI!B2: kéo đồng nhất=True; $ hỗn hợp=True; ô lệch=0; tổng H5=296965000"
+  ],
+  "4": [
+   "Chưa đạt",
+   "thiếu so_don hoặc dòng Tổng; thiếu aov hoặc dòng Tổng"
+  ],
+  "5": [
+   "Một phần",
+   "KPI_Card!B4:B13 đủ 10 trường; B6 công thức khác phạm vi tử/mẫu; B7 tên bảng/cột sai; B9 chiều Category/Phan_khuc không thống nhất grain đơn"
+  ],
+  "6": [
+   "Đạt",
+   "Câu insight có số so sánh khớp dữ liệu, nguyên nhân khả dĩ và hàm ý"
+  ]
+ },
+ "ghi_chu": [
+  "Tên file không đúng B2_BTVN_<HoTen>.xlsx",
+  "Hai lần nộp cùng học viên; insight và KPI card giống nhau. Tổng hợp ưu tiên lan2. Không tính là dấu hiệu giữa hai học viên."
+ ],
+ "bang": {
+  "sheet": "Sales",
+  "header_row": 1,
+  "tables": [
+   [
+    "tblSales_T4",
+    "A1:P1920"
+   ]
+  ],
+  "so_dong": 1919,
+  "duplicate_keys": 0,
+  "missing_keys": 0,
+  "extra_keys": 0
+ },
+ "cot": {
+  "loi_trong": {
+   "Region": 0,
+   "Category": 0,
+   "Unit_Cost": 0,
+   "COGS": 0,
+   "Gross_Margin": 0,
+   "Phan_khuc": 0,
+   "Revenue": 0
+  },
+  "so_dong_lech": {
+   "Region": 0,
+   "Category": 0,
+   "Unit_Cost": 0,
+   "COGS": 0,
+   "Gross_Margin": 0,
+   "Phan_khuc": 0,
+   "Revenue": 0
+  },
+  "go_tay": {
+   "Region": {
+    "count": 0,
+    "sample": []
+   },
+   "Category": {
+    "count": 0,
+    "sample": []
+   },
+   "Unit_Cost": {
+    "count": 0,
+    "sample": []
+   },
+   "COGS": {
+    "count": 0,
+    "sample": []
+   },
+   "Gross_Margin": {
+    "count": 0,
+    "sample": []
+   },
+   "Phan_khuc": {
+    "count": 0,
+    "sample": []
+   },
+   "Revenue": {
+    "count": 0,
+    "sample": []
+   }
+  },
+  "boc_loi": {
+   "Region": {
+    "count": 0,
+    "sample": []
+   },
+   "Category": {
+    "count": 0,
+    "sample": []
+   },
+   "Unit_Cost": {
+    "count": 0,
+    "sample": []
+   },
+   "COGS": {
+    "count": 0,
+    "sample": []
+   },
+   "Gross_Margin": {
+    "count": 0,
+    "sample": []
+   },
+   "Phan_khuc": {
+    "count": 0,
+    "sample": []
+   },
+   "Revenue": {
+    "count": 0,
+    "sample": []
+   }
+  },
+  "ham": {
+   "Region": {
+    "XLOOKUP": 1919
+   },
+   "Category": {
+    "XLOOKUP": 1919
+   },
+   "Unit_Cost": {
+    "XLOOKUP": 1919
+   },
+   "COGS": {},
+   "Gross_Margin": {},
+   "Phan_khuc": {
+    "IFS": 1919
+   },
+   "Revenue": {}
+  },
+  "mau_lech": {
+   "Region": [],
+   "Category": [],
+   "Unit_Cost": [],
+   "COGS": [],
+   "Gross_Margin": [],
+   "Phan_khuc": [],
+   "Revenue": []
+  }
+ },
+ "ma_dau_cach": {
+  "con": [],
+  "loi_cai_san": [
+   {
+    "answer_row": 53,
+    "key": [
+     "HD2504-00251",
+     2
+    ],
+    "o": "F53",
+    "got": "P025",
+    "expected": "P025"
+   },
+   {
+    "answer_row": 230,
+    "key": [
+     "HD2504-00118",
+     1
+    ],
+    "o": "F230",
+    "got": "P022",
+    "expected": "P022"
+   },
+   {
+    "answer_row": 1311,
+    "key": [
+     "HD2504-00181",
+     2
+    ],
+    "o": "F1311",
+    "got": "P022",
+    "expected": "P022"
+   },
+   {
+    "answer_row": 1520,
+    "key": [
+     "HD2504-00148",
+     1
+    ],
+    "o": "F1520",
+    "got": "P035",
+    "expected": "P035"
+   }
+  ]
+ },
+ "phan_khuc_khac_nhan_dung_nguong": 910,
+ "du_lieu_tinh_lai": {
+  "Revenue": 296965000,
+  "COGS": 196595000,
+  "Gross_Margin": 100370000,
+  "so_don": 966,
+  "COGS_tu_dau_vao": 196595000
+ },
+ "kpi1": {
+  "sheet": "KPI",
+  "anchor": "B2",
+  "formula": "=SUMIFS(Sales!$J:$J,Sales!$K:$K,KPI!$A2,Sales!$L:$L,KPI!B$1)",
+  "pull_same": true,
+  "mixed_refs": true,
+  "sumifs_all": true,
+  "total_cell": "H5",
+  "total": 296965000,
+  "totals_formula": true,
+  "mismatch": []
+ },
+ "kpi2": {
+  "sheet": "KPI",
+  "so_don": {
+   "values": {
+    "Bắc": 317,
+    "Trung": 202,
+    "Nam": 447
+   },
+   "formulas": {
+    "Bắc": "=COUNTIFS(Sales!$K:$K,KPI!A2,Sales!$B:$B,1)",
+    "Trung": "=COUNTIFS(Sales!$K:$K,KPI!A3,Sales!$B:$B,1)",
+    "Nam": "=COUNTIFS(Sales!$K:$K,KPI!A4,Sales!$B:$B,1)"
+   },
+   "total": null,
+   "total_cell": "I5",
+   "total_formula": null,
+   "mismatch": []
+  },
+  "aov": {
+   "values": {
+    "Bắc": 299804.41640378546,
+    "Trung": 296366.3366336634,
+    "Nam": 317809.84340044745
+   },
+   "formulas": {
+    "Bắc": "=H2/I2",
+    "Trung": "=H3/I3",
+    "Nam": "=H4/I4"
+   },
+   "total": null,
+   "total_cell": "J5",
+   "total_formula": null,
+   "mismatch": []
+  },
+  "gm_pct": {
+   "values": {
+    "Bắc": 0.3397746164692018,
+    "Trung": 0.33336117328700765,
+    "Nam": 0.33873828848170856
+   },
+   "formulas": {
+    "Bắc": "=K2/H2",
+    "Trung": "=K3/H3",
+    "Nam": "=K4/H4"
+   },
+   "total": 0.33798595794117153,
+   "total_cell": "L5",
+   "total_formula": "=K5/H5",
+   "mismatch": []
+  }
+ },
+ "card": {
+  "sheet": "KPI_Card",
+  "cells": [
+   [
+    "A1",
+    "KPI DEFINITION CARD: AVERAGE ORDER VALUE (AOV)"
+   ],
+   [
+    "A3",
+    "Trường"
+   ],
+   [
+    "B3",
+    "Nội dung"
+   ],
+   [
+    "A4",
+    "Tên KPI"
+   ],
+   [
+    "B4",
+    "Average Order Value (AOV) — Giá trị đơn hàng trung bình."
+   ],
+   [
+    "A5",
+    "Mục đích (trả lời câu hỏi gì, cho ai)"
+   ],
+   [
+    "B5",
+    "Trả lời câu hỏi: \"Trung bình một đơn hàng chốt thành công, khách hàng chi trả bao nhiêu tiền?\nCho ai: Giám đốc Kinh doanh (Sales Director), Quản lý Marketing, Quản lý Cửa hàng."
+   ],
+   [
+    "A6",
+    "Công thức (khái niệm, rồi công thức Excel)"
+   ],
+   [
+    "B6",
+    "Khái niệm: Tổng doanh thu thu về chia cho tổng số đơn hàng phát sinh trong cùng một khoảng thời gian.\n- Công thức Excel =SUM(tblSales[Revenue]) /COUNTIFS(Sales!$K:$K,KPI!A2,Sales!$B:$B,1)"
+   ],
+   [
+    "A7",
+    "Nguồn dữ liệu (bảng, cột)"
+   ],
+   [
+    "B7",
+    "Bảng: tblSales \nCột: Revenue (Doanh thu), Order_ID_line "
+   ],
+   [
+    "A8",
+    "Grain (mỗi dòng dữ liệu là gì - KPI báo cáo theo mức nào)"
+   ],
+   [
+    "B8",
+    "Mỗi dòng dữ liệu là: 1 sản phẩm được mua trong 1 đơn hàng.\nKPI báo cáo theo mức: Tổng hợp theo Đơn hàng "
+   ],
+   [
+    "A9",
+    "Dimensions (xem theo chiều nào; chiều nào KHÔNG xem được)"
+   ],
+   [
+    "B9",
+    "Xem được theo chiều:Region, Store_Code, Thang, Category, Phan_khuc \nKHÔNG xem được theo chiều: Từng SKU/Sản phẩm riêng lẻ (vì AOV là chỉ số tính trên tổng giỏ hàng, không tính cho riêng một mặt hàng)."
+   ],
+   [
+    "A10",
+    "Owner (ai chịu trách nhiệm)"
+   ],
+   [
+    "B10",
+    "Giám đốc Bán hàng "
+   ],
+   [
+    "A11",
+    "Target (con số hoặc bảng Target)"
+   ],
+   [
+    "B11",
+    "304,000 VND / đơn hàng"
+   ],
+   [
+    "A12",
+    "Ngưỡng Warning / Critical"
+   ],
+   [
+    "B12",
+    "Warning: 90 %   -   Critical: 80 %"
+   ],
+   [
+    "A13",
+    "Ghi chú giới hạn (giả định, dữ liệu còn thiếu)"
+   ],
+   [
+    "B13",
+    "Số liệu tính toán dựa trên các đơn hàng đã thanh toán và giao thành công.\nGiới hạn: Chưa trừ đi giá trị của các đơn hàng bị khách hàng hoàn trả hoặc hủy sau khi đã tính vào báo cáo"
+   ]
+  ]
+ },
+ "insight": [
+  {
+   "sheet": "insight",
+   "o": "A1",
+   "text": "Doanh thu tháng 4/2025 là 296,965,000 VNĐ (với khu vực miền Nam dẫn đầu hệ thống đạt 142,061,000 VNĐ,\n chiếm gần 48% tổng doanh số), vì giá trị đơn hàng trung bình (AOV) tại miền Nam ở mức cao nhất toàn quốc\n (317,810 VNĐ/đơn) nhờ sức mua vượt trội ở hai ngành hàng chủ lực là Bánh kẹo và Gia dụng, nên phòng Marketing cần tiếp tục tập trung ngân sách tối ưu hóa các chiến dịch bán kèm combo sản phẩm tại khu vực miền Nam để giữ vững đà tăng trưởng dòng tiền."
+  }
+ ],
+ "textbox": [],
+ "core": {
+  "title": null,
+  "subject": null,
+  "creator": "openpyxl",
+  "keywords": null,
+  "description": null,
+  "lastModifiedBy": "Lam Ngoc Tran",
+  "revision": null,
+  "created": "2026-09-27T06:05:51Z",
+  "modified": "2026-10-02T13:12:33Z",
+  "category": null,
+  "contentStatus": null
+ },
+ "sheet_dap_an": [],
+ "answer_mau": [
+  [
+   "A1",
+   "INSIGHT MẪU (tham khảo khi chấm; học viên viết theo cách của mình)"
+  ],
+  [
+   "A3",
+   "\"Tháng 4/2025 MCI Mart bán 296.965.000 VNĐ qua 966 đơn (AOV 307.417), Gross Margin 33,8%; Miền Nam đóng góp nhiều nhất (47,8% doanh thu). Biên chênh lệch lớn giữa các ngành: Bánh kẹo 39,4% so với Thực phẩm khô 21,8%, nên cơ cấu ngành hàng của từng miền sẽ quyết định biên lợi nhuận — cần xem theo cửa hàng và theo ngày ở Buổi 3.\""
+  ],
+  [
+   "A5",
+   "Chấm: đủ 3 thành phần (con số có so sánh · nguyên nhân khả dĩ · hàm ý) và con số khớp dữ liệu."
+  ]
+ ],
+ "insight_thanh_phan_dat": 3,
+ "ket_qua": "Chưa đạt - nộp lại",
+ "muc_D4": "Competent",
+ "ho_ten": "Tô Thu"
+}

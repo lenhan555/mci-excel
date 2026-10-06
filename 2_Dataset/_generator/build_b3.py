@@ -37,6 +37,14 @@ PRACTICE, DEMO, HW = f"{B3}/Practice", f"{B3}/Demo", f"{B3}/Homework"
 for d in (PRACTICE, DEMO, HW): os.makedirs(d, exist_ok=True)
 USE_EXCEL = "--no-excel" not in sys.argv
 
+# Check supplemental authoring dependencies before overwriting any B3 outputs.
+from pathlib import Path
+_artifact_runtime = Path.home() / '.cache/codex-runtimes/codex-primary-runtime/dependencies'
+_artifact_node = Path(os.environ.get('MCI_ARTIFACT_NODE', str(_artifact_runtime / 'node/bin/node')))
+_artifact_modules = Path(os.environ.get('MCI_ARTIFACT_MODULES', str(_artifact_runtime / 'node/node_modules')))
+if not _artifact_node.exists() or not _artifact_modules.exists():
+    sys.exit('Cần runtime Artifact Tool cho Homework B3: đặt MCI_ARTIFACT_NODE và MCI_ARTIFACT_MODULES; xem 2_Dataset/README.md.')
+
 def _locked(p):
     """Windows khóa file đang mở trong Excel: phát hiện trước để không dựng dở dang (file này mới, file kia cũ)."""
     try:
@@ -686,34 +694,9 @@ wb = Workbook(); hw_sales(wb, dirty=True)
 control_sheet(wb)
 s_ = wb.create_sheet("Store"); table_df(s_, stores, "tblStore", {"Open_Date": DATE_FMT}, [11, 24, 13, 9, 11, 12])
 de = wb.create_sheet("De_bai", 0)
-tasks = [
-    ("1", "Đối soát trước khi phân tích", "Dựng Pivot: Thang vào Rows; Revenue, So_don, Quantity vào Values (Sum). So từng tháng với sheet So_lieu_he_thong. "
-     "Có cột nào lệch? Tìm nguyên nhân trong dữ liệu, sửa ở tblSales4T, Refresh cho đến khi khớp. Ghi lại lỗi đã sửa vào sheet Insight."),
-    ("2", "Miền nào tăng mạnh nhất?", "Pivot Region × Thang, Revenue. Thêm Revenue lần hai, Show Values As → % Difference From (Thang, previous). "
-     "Trả lời: miền nào tăng mạnh nhất tháng 4 so với tháng 3?"),
-    ("3", "Cơ cấu ngành hàng", "Pivot Category × Thang, Show Values As → % of Column Total. Tỷ trọng Bánh kẹo thay đổi thế nào từ tháng 1 đến tháng 4?"),
-    ("4", "ST07 đã hồi phục chưa?", "Pivot Store_Code × Thang. Thêm cột % so với tháng trước. Double-click ô ST07 × 4 và ST07 × 3 để so số đơn, số ngày có bán."),
-    ("5", "AOV bằng Calculated Field", "Pivot theo Thang: Calculated Field AOV = Revenue / So_don. So AOV tháng 4 với Quý 1."),
-    ("6", "PivotChart + Slicer", "Mỗi câu 2–4 có một PivotChart, tiêu đề là câu kết luận. Chèn Slicer Region, nối (Report Connections) với các Pivot của câu 2–4."),
-    ("7", "Viết insight", "Sheet Insight: 1 câu có đủ con số (có so sánh), nguyên nhân khả dĩ, hàm ý."),
-]
-de["A1"] = "BÀI TẬP VỀ NHÀ BUỔI 3 (BẮT BUỘC) — BÁO CÁO PIVOT 4 THÁNG ĐẦU NĂM 2025"; de["A1"].font = TITLE
-de["A2"] = ("Nộp trước Buổi 4. Đặt tên file: B3_BTVN_<HoTen>.xlsx. Dữ liệu tháng 1–4/2025 đã làm giàu (tblSales4T, "
-            f"{vn(NH)} dòng). Phòng IT vừa ghép thêm tháng 4 vào, hãy kiểm tra trước khi tin các con số.")
-de["A2"].font = NOTE
-de["A3"] = "Nộp bài tại https://hocvien.mcivietnam.com/auth#/ — Tài khoản: email bạn đăng ký tại MCI · Mật khẩu: hv12345678"; de["A3"].font = BOLD
-header(de, 5, ["#", "Việc cần làm", "Yêu cầu"])
-for i, row in enumerate(tasks, start=6):
-    for j, val in enumerate(row, start=1):
-        c = de.cell(row=i, column=j, value=val); c.font = BODY; c.alignment = Alignment(wrap_text=True, vertical="top")
-kr = 6 + len(tasks) + 1
-de.cell(row=kr, column=1, value="Tự kiểm tra trước khi nộp").font = BOLD
-for i, tx in enumerate([f"Pivot theo tháng khớp So_lieu_he_thong ở cả 3 cột Revenue, So_don, Quantity (tổng Quantity tháng 4 = {vn(mh['by_month'][4]['qty'])})",
-                        f"Tổng doanh thu 4 tháng = {vn(mh['revenue'])} VNĐ; tháng 4 = {vn(mh['by_month'][4]['rev'])} VNĐ",
-                        f"Tháng 4 so với tháng 3: {spct(mh['mom4'])}",
-                        "Mỗi PivotChart có tiêu đề là câu kết luận; Slicer Region lọc được các Pivot của câu 2–4"], start=kr + 1):
-    de.cell(row=i, column=2, value="☐ " + tx).font = BODY
-set_widths(de, [5, 34, 100])
+from b3_debai import fill_de_bai
+fill_de_bai(de, {"rows": vn(NH), "qty4": vn(mh["by_month"][4]["qty"]), "rev": vn(mh["revenue"]),
+                 "rev4": vn(mh["by_month"][4]["rev"]), "mom4": spct(mh["mom4"])})
 wb.active = 0
 for w_ in wb.worksheets: w_.sheet_view.tabSelected = w_.title == "De_bai"
 HW_DE = f"{HW}/B3_BTVN_MCI_Mart_T1_T4_2025.xlsx"
@@ -793,7 +776,7 @@ c_hw = Cache("hw", "tblSales4T", HW_COLS, calc_fields={"AOV": "=Revenue/So_don"}
              items={"Region": REGIONS, "Thang": [1, 2, 3, 4], "Category": CATS_Q1, "Store_Code": STORES})
 HW_PIVOTS = [
     Pivot("PV_DoiSoat", "A4", "pvtDoiSoat", "hw", rows=["Thang"], values=[Value("Revenue", "Doanh thu"), Value("So_don", "Số đơn"), Value("Quantity", "Tổng Quantity")]),
-    Pivot("PV_Mien", "A4", "pvtMien", "hw", rows=["Region"], cols=["Thang"], values=[Value("Revenue", "% so tháng trước", fmt="0.0%", show_as="pct_diff", base_field="Thang")], total_col=False),
+    Pivot("PV_Mien", "A4", "pvtMienPct", "hw", rows=["Region"], cols=["Thang"], values=[Value("Revenue", "% so tháng trước", fmt="0.0%", show_as="pct_diff", base_field="Thang")], total_col=False),
     Pivot("PV_Mien", "A12", "pvtMienDT", "hw", rows=["Region"], cols=["Thang"], values=[Value("Revenue", "Doanh thu")]),
     Pivot("PV_Nganh", "A4", "pvtNganh", "hw", rows=["Category"], cols=["Thang"], values=[Value("Revenue", "Tỷ trọng", fmt="0.0%", show_as="pct_col")]),
     Pivot("PV_CuaHang", "A4", "pvtCuaHangDT", "hw", rows=["Store_Code"], cols=["Thang"], values=[Value("Revenue", "Doanh thu")]),
@@ -801,7 +784,7 @@ HW_PIVOTS = [
     Pivot("PV_AOV", "A4", "pvtAOV", "hw", rows=["Thang"], values=[Value("Revenue", "Doanh thu"), Value("So_don", "Số đơn"), Value("AOV", "AOV (VNĐ/đơn)")]),
 ]
 best = mh["best_region"]
-HW_SLICERS = [Slicer("PV_Mien", "Region", ["pvtMien", "pvtMienDT", "pvtNganh", "pvtCuaHangDT", "pvtCuaHangPct"], "H4", "J11")]
+HW_SLICERS = [Slicer("PV_Mien", "Region", ["pvtMienPct", "pvtMienDT", "pvtNganh", "pvtCuaHangDT", "pvtCuaHangPct"], "H4", "J11")]
 HW_CHARTS = [
     Chart("PV_Mien", "pvtMienDT", "col", f"Tháng 4: Miền {best} tăng mạnh nhất ({spct(mh['reg_mom4'][best])} so với tháng 3)", "H13", "R31",
           "PV_Mien!$A$14:$A$16", [(f"PV_Mien!${c}$13", f"PV_Mien!${c}$14:${c}$16") for c in "BCDE"], legend=True),
@@ -833,6 +816,10 @@ meta["info"] = {"bac_t3": m["grid"]["Bắc-3"], "bac_t3_lines": m["grid"]["bac_t
 JS = lambda o: o.item() if hasattr(o, "item") else str(o)
 with open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_b3_meta.json"), "w", encoding="utf-8", newline="\n") as f_:
     json.dump(meta, f_, ensure_ascii=False, indent=1, default=JS)
+
+from complete_b3_homework import main as complete_homework
+complete_homework()
+HW_KT_ROWS = (5, 21)
 
 if USE_EXCEL:
     def check(path, sheet, rows):
