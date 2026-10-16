@@ -172,8 +172,8 @@ code { font-family: Consolas, Menlo, "Courier New", monospace; font-size: 0.93em
     </div>
     <div class="qbox">
       <div class="lbl">Câu hỏi mở buổi</div>
-      <div class="q">“Doanh thu tháng này đạt bao nhiêu % mục tiêu, và vì sao mỗi báo cáo cũ lại ra một con số khác nhau?”</div>
-      <span class="chip-tier">Tầng 3 — Diagnostic</span>
+      <div class="q">"Doanh thu tháng này đạt bao nhiêu % mục tiêu, và vì sao mỗi báo cáo cũ lại ra một con số khác nhau?"</div>
+      <span class="chip-tier">Tầng 3: Diagnostic</span>
     </div>
   </header>
   <div class="wrap">
@@ -238,7 +238,7 @@ code { font-family: Consolas, Menlo, "Courier New", monospace; font-size: 0.93em
         <div class="take">Mỗi ô bị lọc bởi hàng, cột, slicer; CALCULATE đổi bộ lọc đó.</div>
         <div class="anat">% Share := DIVIDE([Total Revenue],<br>&nbsp;&nbsp;<span class="s">CALCULATE</span>([Total Revenue], <span class="c">ALL(Store)</span>))</div>
         <ul>
-          <li>Quý 1 theo miền: Bắc {{share_q1.Bắc|pct}} · Trung {{share_q1.Trung|pct}} · Nam {{share_q1.Nam|pct}}</li>
+          <li>Quý 1 theo miền: Bắc {{share_q1.Bắc|pct}} · Nam {{share_q1.Nam|pct}} · Trung {{share_q1.Trung|pct}}</li>
           <li>Active Customers không cộng dồn: {{cust_sum_regions_q1|n}} ≠ {{info.q1_cust|n}}</li>
         </ul>
       </section>
@@ -279,7 +279,7 @@ code { font-family: Consolas, Menlo, "Courier New", monospace; font-size: 0.93em
       <div>
         <div class="sec-title">Câu insight cuối buổi</div>
         <div class="insight">
-          <p class="s">“<span class="blank" style="min-width:110px"></span> đạt <span class="blank" style="min-width:90px"></span> target, nguyên nhân khả dĩ <span class="blank" style="min-width:120px"></span>, nên <span class="blank" style="min-width:110px"></span>.”</p>
+          <p class="s">"<span class="blank" style="min-width:110px"></span> đạt <span class="blank" style="min-width:90px"></span> target, nguyên nhân khả dĩ <span class="blank" style="min-width:120px"></span>, nên <span class="blank" style="min-width:110px"></span>."</p>
           <div class="stories">
             <div><b>Tết</b>T1 {{info.t1_pct|pct}}, T2 {{info.t2_pct|pct}}: target theo tháng dương lịch</div>
             <div><b>ST07</b>T3 chỉ {{info.st07_t3_pct|pct}} target</div>
@@ -301,7 +301,7 @@ code { font-family: Consolas, Menlo, "Courier New", monospace; font-size: 0.93em
     </div>
     <div>
       <h4>Buổi 6 sẽ trả lời</h4>
-      <p class="bq">“Giám đốc bán hàng có 5 giây. Họ cần thấy gì đầu tiên?”</p>
+      <p class="bq">"Giám đốc bán hàng có 5 giây. Họ cần thấy gì đầu tiên?"</p>
       <p class="tools">Nguyên liệu: measure đã đối soát · Công cụ: Dashboard, slicer, CUBEVALUE</p>
     </div>
   </footer>

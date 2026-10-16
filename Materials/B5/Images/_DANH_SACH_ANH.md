@@ -18,7 +18,7 @@ Bảng này trùng với bảng "Danh sách ảnh cần chụp" trong `Slide_Scr
 
 | Tên file | Nội dung cần chụp | File · sheet · vùng | Slide |
 |---|---|---|---|
-| S05a_data_view.png | Cửa sổ Power Pivot, Data View, tab Sales; thấy 6 tab bảng ở dưới và dòng Record 1 of 30,247 | `Demo/B5_Demo_Model_HocVien.xlsx` → Data → Manage Data Model | 5 |
+| S05a_data_view.png | Cửa sổ Power Pivot, Data View, tab Sales; thấy 6 tab bảng ở dưới (Product, Store, Customer, Target, Calendar, Sales) và dòng Record 1 of 30,247 | `Demo/B5_Demo_Model_HocVien.xlsx` → Data → Manage Data Model | 5 |
 | S05b_diagram_roi.png | Diagram View: 6 hộp Sales, Product, Store, Customer, Target, Calendar, **chưa có đường nối** | Như trên, Home → Diagram View (trước Slide 10) | 5 |
 | S10a_create_relationship.png | Hộp Create Relationship: Sales / Order_Date ↔ Calendar / Date | Power Pivot → Design → Create Relationship | 10 |
 | S10b_diagram_sales.png | Diagram View: Sales ở giữa, 4 đường nối tới Product, Store, Customer, Calendar; ký hiệu 1 và * trên đường nối | Sau khi tạo 4 relationship của Sales | 10 |
@@ -30,13 +30,13 @@ Bảng này trùng với bảng "Danh sách ảnh cần chụp" trong `Slide_Scr
 | S19_pivot_mien_thang.png | Pivot Rows Region, Columns Thang (1–3), Filters Nam = 2025 và Quy = 1, Values Total Revenue; ô Bắc × 3 = 90.210.000 đang chọn | Sheet `PV_Loc` | 19 |
 | S20_lookup_vs_fact.png | Hai Pivot cạnh nhau: trái Rows Calendar[Thang] (T5–T12 chỉ có target); phải Rows Sales[Thang], chỉ còn cột Sum of Target = 3.665.000.000 ở mọi dòng | Sheet `PV_Lookup_vs_Fact`, trước khi ẩn cột | 20 |
 | S22_calculate.png | Pivot Rows Region (Quý 1): Total Revenue và Revenue Mien Nam = 427.663.000 ở cả 3 dòng | Sheet `PV_Loc` | 22 |
-| S23_pct_of_total.png | Pivot Rows Region (Quý 1): Total Revenue, Revenue All Stores = 941.454.000 mọi dòng, % Revenue Share 34,4% · 20,2% · 45,4% | Sheet `PV_Loc` | 23 |
+| S23_pct_of_total.png | Pivot Rows Region (Quý 1): Total Revenue, Revenue All Stores = 941.454.000 mọi dòng, % Revenue Share Bắc 34,4% · Nam 45,4% · Trung 20,2% | Sheet `PV_Loc` | 23 |
 | S24_target_thang.png | Pivot Filters Nam = 2025, Rows Calendar[Thang]: Total Revenue, Total Target, Revenue vs Target %, Variance; T1 120,6%, T5–T12 chỉ có target | Sheet `PV_Target` (Variance đã chặn ô trống) | 24 |
-| S25_store_thang.png | Pivot Rows Store_Code, Columns Thang 1–4, Values Revenue vs Target %; ô ST07 × 3 = 44,9% đang chọn | Sheet `PV_Target_CuaHang` | 25 |
+| S25_store_thang.png | Pivot Rows Store_Code, Columns Thang 1–4, Values Revenue vs Target %; ô ST07 × 3 = 44,9% đang chọn | Sheet `PV_Target` theo lời giảng (ảnh hiện có: bản sao `Practice/B5_MCI_Mart_Answer.xlsx`, sheet `PV_Target_CuaHang`) | 25 |
 | S27a_mark_date_table.png | Hộp Mark as Date Table, Date column = Date | Power Pivot, tab Calendar → Design → Mark as Date Table | 27 |
 | S27b_yoy_ytd.png | Pivot Filters Nam = 2025, Rows Thang 1–4: Total Revenue, Revenue LY, Revenue YTD, Revenue YoY %; T4 YTD 1.238.419.000 | Sheet `PV_YoY` | 27 |
 | S28_yoy_cua_hang.png | Pivot Rows Store_Code, Filters Nam = 2025 và Thang 1–4: Total Revenue, Revenue LY, Revenue YoY %; dòng ST12 hai ô trống | Sheet `PV_YoY` | 28 |
-| S30_gm_theo_nam.png | Pivot Rows Calendar[Nam], không lọc, Values Gross Margin %: 2024 31,2% · 2025 34,1% | Sheet `PV_YoY` | 30 |
+| S30_gm_theo_nam.png | Pivot Rows Calendar[Nam], không lọc, Values Gross Margin %: 2024 31,2% · 2025 34,1% | Sheet `PV_YoY` theo lời giảng (ảnh hiện có: bản sao `Practice/B5_MCI_Mart_Answer.xlsx`, sheet `PV_GM_Nam`) | 30 |
 
 ## Handout `B5_Handout.docx` (H = thứ tự ảnh)
 
@@ -48,11 +48,11 @@ Theo dàn ý handout ở Phụ lục kịch bản B5. Tên và vùng chốt khi 
 | H02_hierarchy.png | Diagram View: bảng Calendar có hierarchy Nam → Quy → Thang → Date; bên cạnh Pivot dùng hierarchy, nút +/− drill | `Practice/B5_MCI_Mart_Answer.xlsx` · Diagram View (Create Hierarchy) | 2. Hierarchy |
 | H03_lookup_to_lookup.png | Diagram View: quan hệ `Customer[Home_Store_Code]` → `Store[Store_Code]` hiện nét đứt (inactive) | Bản sao `Practice/B5_MCI_Mart_Answer.xlsx` · Diagram View | 3. Lookup-to-lookup, active / inactive |
 | H04_bad_cardinality.png | Thông báo lỗi khi tạo quan hệ thẳng `Sales[Store_Code]` – `Target[Store_Code]` (cả hai cột có giá trị trùng) | Bản sao `Practice/B5_MCI_Mart_Answer.xlsx` · Design → Create Relationship | 4. Bad cardinality |
-| H05_disconnected_slicer.png | Slicer bảng ngưỡng (80% / 90% / 100%) và Pivot đếm số cửa hàng dưới ngưỡng theo tháng | `Practice/B5_MCI_Mart_Answer.xlsx` (sheet minh họa sẽ thêm khi dựng handout) | 8. Disconnected slicer |
+| H05_disconnected_slicer.png | Slicer bảng ngưỡng (80% / 90% / 100%) và Pivot đếm số cửa hàng dưới ngưỡng theo tháng | Bản sao `Practice/B5_MCI_Mart_Answer.xlsx` · sheet `PV_Nguong` (dựng theo các bước ở mục 8 handout; không có sẵn trong file Practice) | 8. Disconnected slicer |
 
 Ảnh chưa có thì deck và handout giữ khung "[CHỤP] …" (viền nét đứt). Trước khi phát tài liệu cho học viên, không còn khung nào.
 
-**Trạng thái (03/10/2026):** đã chụp đủ 24/24 ảnh (19 ảnh deck S-series + 5 ảnh handout H01–H05), chụp trên bản sao trong `1_Sessions/B5_Data_Model_DAX/_capture/` (file gốc Demo/Practice không bị sửa). Ghi chú: số liệu trong ảnh theo định dạng en-US (dấu phẩy ngăn nghìn, dấu chấm thập phân); H02 gồm cửa sổ Power Pivot + Pivot hierarchy; H03 dùng bản sao Answer có thêm quan hệ inactive Customer[Home_Store_Code]→Store; H05 dựng trên bản sao Demo (bảng `Muc` 80/90/100% không nối relationship, measure `Stores Duoi Nguong`, slicer chọn 90% → tháng 1–4 = 0 · 8 · 6 · 4, tổng 12 cửa hàng) – sheet minh họa này chưa có trong file Practice, cần dựng khi viết handout/bài tập.
+**Trạng thái (03/10/2026):** đã chụp đủ 24/24 ảnh (19 ảnh deck S-series + 5 ảnh handout H01–H05), chụp trên bản sao trong `1_Sessions/B5_Data_Model_DAX/_capture/` (file gốc Demo/Practice không bị sửa). Ghi chú: số liệu trong ảnh theo định dạng en-US (dấu phẩy ngăn nghìn, dấu chấm thập phân); H02 gồm cửa sổ Power Pivot + Pivot hierarchy; H03 dùng bản sao Answer có thêm quan hệ inactive Customer[Home_Store_Code]→Store; H05 dựng trên bản sao Demo (bảng `Muc` 80/90/100% không nối relationship, measure `Stores Duoi Nguong`, slicer chọn 90% → tháng 1–4 = 0 · 8 · 6 · 4, tổng 12 cửa hàng); sheet `PV_Nguong` không có trong file Practice, học viên tự dựng theo mục 8 handout. Ảnh S19, S22–S25, S27b, S28, S30 chụp trên bản sao file đáp án Practice (sheet `PV_Loc`, `PV_Target`, `PV_Target_CuaHang`, `PV_YoY`, `PV_GM_Nam`); S16 trên bản sao `Demo/B5_Demo_DAX.xlsx` (sheet `PV_Loc`, Pivot ở ô A3); chân slide ghi đúng nguồn này (sửa 13/10/2026).
 
 
 **03/10/2026:** đã chạy lại `build_slides_b5.py` → `build_student_slides.py B5` (deck 39 slide, đủ ảnh) và viết + chạy `build_docs_b5.py` (handout 9 mục, 5/5 ảnh, không còn [CHỤP]). Mục 8 handout hướng dẫn học viên dựng sheet `PV_Nguong` (bảng `Muc`, measure `Stores Duoi Nguong`, slicer) trên bản sao file đáp án; sheet này chưa nằm trong `Practice/`. Grand Total = 12 trong ảnh H05 là so doanh thu T1–T4 với target cả năm, không phải tổng các tháng. `B5_Handout.pdf` đã xuất bằng Word (8 trang).

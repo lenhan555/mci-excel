@@ -141,9 +141,10 @@ n80 = {m: len(RAG[m]["duoi_80"]) for m in "1234"}
 # =====================================================================
 d = base_doc()
 para(d, "MCI – MAGIC CODE INSTITUTE", bold=True, color=GREY, size=9)
-d.add_heading("Handout Buổi 5 — Data Model và DAX", level=1)
-para(d, "Tài liệu tự học đi kèm Buổi 5. Phần Tóm tắt nhắc lại mô hình và 14 measure đã dựng trên lớp; mục 1–8 là công cụ KHÔNG giảng chi tiết trên lớp, "
-        "đọc sau buổi học rồi làm bài tập về nhà (bắt buộc) ở mục 9. Ví dụ viết trên file đáp án Practice/B5_MCI_Mart_Answer.xlsx. "
+d.add_heading("Handout Buổi 5: Data Model và DAX", level=1)
+para(d, "Tài liệu tự học đi kèm Buổi 5. Phần Tóm tắt nhắc lại mô hình và 14 measure đã dựng trên lớp; mục 1 mở rộng phần Hide from Client Tools đã làm ở Slide 20, "
+        "mục 2–8 là công cụ KHÔNG giảng chi tiết trên lớp. Đọc sau buổi học rồi làm bài tập về nhà (bắt buộc) ở mục 9. "
+        "Ví dụ làm trên BẢN SAO của file đáp án Practice/B5_MCI_Mart_Answer.xlsx (file đáp án là file khởi đầu Buổi 6, giữ nguyên bản gốc). "
         "Tên lệnh giữ tiếng Anh như trên Ribbon. Số trong ảnh chụp theo định dạng en-US: dấu phẩy ngăn nghìn, dấu chấm thập phân "
         "(425,850,000 trong ảnh là 425.850.000 trong bảng).", italic=True, color=GREY)
 
@@ -175,13 +176,15 @@ table(d, [["Measure", "Công thức DAX", "Ý nghĩa"],
           ["Avg Order Value", "DIVIDE([Total Revenue], [Total Orders])", "Giá trị đơn trung bình"],
           ["Active Customers", "DISTINCTCOUNT(Sales[Customer_ID])", "Số khách có mua"]],
       [3.6, 9.2, 3.2], size=8.5, first_bold=True)
+para(d, "Lưu ý Total COGS: file đáp án viết bằng SUMX (mục 5); trên lớp, Total COGS = SUM(Sales[COGS]) trên cột COGS đã tạo ở Slide 15. Hai cách cùng ra 619.663.000.", size=9)
 para(d, f"Số tự đối chiếu: Quý 1/2025 doanh thu {vn(I['q1_rev'])}, {vn(I['q1_orders'])} đơn, AOV {vn(I['q1_aov'])}, GM {pct(I['q1_gm'])}; "
         f"% đạt target tháng 1–4: {pm('t1_pct')} · {pm('t2_pct')} · {pm('t3_pct')} · {pm('t4_pct')}; YTD đến tháng 4 {vn(I['ytd_t4'])}, YoY {pct(I['ytd_yoy_t4'])}.",
      italic=True, color=GREY)
 
 # 1 Hide
 d.add_heading("1. Ẩn cột khỏi Client Tools, bỏ cột thừa, giảm granularity", level=2)
-para(d, "Pivot liệt kê mọi cột của mọi bảng. Cột khóa và cột ngày của bảng fact (Store_Code, Order_Date…) rất dễ bị kéo nhầm vào hàng hoặc cột: "
+para(d, "Slide 20 đã ẩn 9 cột khóa và cột ngày của Sales và Target; mục này nhắc lại cách làm và thêm hai việc chưa làm trên lớp: bỏ cột thừa, giảm granularity. "
+        "Pivot liệt kê mọi cột của mọi bảng. Cột khóa và cột ngày của bảng fact (Store_Code, Order_Date…) rất dễ bị kéo nhầm vào hàng hoặc cột: "
         "Pivot vẫn chạy nhưng cho số sai (Target lặp lại, YTD / YoY trống). Giấu chúng đi để chỉ còn cột của bảng lookup trong danh sách.")
 tool(d, "Hide from Client Tools", "Giấu cột (hoặc cả bảng) khỏi PivotTable Fields. Cột vẫn còn trong mô hình: relationship và công thức DAX vẫn dùng được.",
      how=["Cửa sổ Power Pivot → Data View → chọn bảng Sales → giữ Ctrl chọn tiêu đề các cột Nam, Thang, Order_Date, Store_Code, Product_Code, Customer_ID → chuột phải → Hide from Client Tools.",
@@ -205,7 +208,7 @@ tool(d, "Create Hierarchy", "Tạo cây thời gian trên bảng Calendar.",
           "Kéo lần lượt vào hierarchy: Nam, Quy, Thang, Date (thứ tự này).",
           "Trong Pivot (From Data Model), kéo Cay_Thoi_Gian vào Rows: bấm ⊞ để mở Năm → Quý → Tháng → Ngày."],
      shot=("Diagram View: bảng Calendar có hierarchy Cay_Thoi_Gian (Nam, Quy, Thang, Date); bên phải Pivot Rows = Cay_Thoi_Gian, Values = Total Revenue",
-           "Practice/B5_MCI_Mart_Answer.xlsx · Diagram View (Create Hierarchy) và sheet PV_Hier", "H02_hierarchy.png"),
+           "Bản sao Practice/B5_MCI_Mart_Answer.xlsx · Diagram View (Create Hierarchy) và sheet PV_Hier (tự tạo)", "H02_hierarchy.png"),
      tip=f"Pivot trong ảnh: 2024 = 3.198.430.500; 2025 mở ra Quý 1 gồm tháng 1 = 425.850.000 · tháng 2 = 245.996.000 · tháng 3 = 269.608.000; Quý 2 chỉ có tháng 4 = 296.965.000. "
          f"Grand Total = {vn(M['source']['revenue'])}.",
      protip="Mỗi mức của hierarchy vẫn là cột riêng của Calendar: có thể kéo Quy hoặc Thang riêng ra Columns. Hierarchy chỉ tiện khi cần drill từ năm xuống ngày.")
@@ -228,7 +231,7 @@ tool(d, "USERELATIONSHIP", "Bật một quan hệ inactive cho riêng một meas
 # 4 Bad cardinality
 d.add_heading("4. Bad cardinality: vì sao không nối thẳng Sales với Target", level=2)
 para(d, "Data Model chỉ nhận quan hệ một–nhiều (1–*): một đầu là khóa duy nhất (bảng lookup), đầu kia lặp lại (bảng fact). "
-        "Cả Sales[Store_Code] và Target[Store_Code] đều lặp lại (mỗi cửa hàng có nhiều dòng bán hàng và 12 dòng target) nên không nối được với nhau — đó là quan hệ nhiều–nhiều (many-to-many).")
+        "Cả Sales[Store_Code] và Target[Store_Code] đều lặp lại (mỗi cửa hàng có nhiều dòng bán hàng và 12 dòng target) nên không nối được với nhau, đó là quan hệ nhiều–nhiều (many-to-many).")
 tool(d, "Thử nối thẳng Sales[Store_Code] với Target[Store_Code]", "Chạy thử để nhận ra thông báo và biết hướng sửa.",
      how=["Design → Create Relationship → bảng trên: Sales, cột Store_Code; bảng dưới: Target, cột Store_Code. Hộp thoại hiện cảnh báo vàng và nút OK bị khóa (xám).",
           "Cách sửa: không nối hai bảng fact với nhau. Nối từng bảng fact vào bảng lookup chung (Store, Calendar). Store và Calendar lúc đó lọc cả Sales lẫn Target, và measure Revenue vs Target % đặt hai fact cạnh nhau theo cửa hàng, theo tháng."],
@@ -285,7 +288,7 @@ tool(d, "Dựng bảng ngưỡng, measure và slicer", "Làm trên bản sao c�
 table(d, [["Ngưỡng chọn trên slicer", "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4"],
           ["80% (cửa hàng dưới 80% target)", n80["1"], n80["2"], n80["3"], n80["4"]],
           ["90% (cửa hàng dưới 90% target)", n90["1"], n90["2"], n90["3"], n90["4"]]], [6.0, 2.5, 2.5, 2.5, 2.5], first_bold=True)
-para(d, "Cửa hàng dưới 80%: tháng 2 — " + ", ".join(RAG["2"]["duoi_80"]) + "; tháng 3 — " + ", ".join(RAG["3"]["duoi_80"]) + "; tháng 4 — " + ", ".join(RAG["4"]["duoi_80"]) +
+para(d, "Cửa hàng dưới 80%: tháng 2: " + ", ".join(RAG["2"]["duoi_80"]) + "; tháng 3: " + ", ".join(RAG["3"]["duoi_80"]) + "; tháng 4: " + ", ".join(RAG["4"]["duoi_80"]) +
      ". Ở ngưỡng 90% thêm các cửa hàng nằm giữa 80% và 90%.", italic=True, color=GREY)
 rich(d, [("Đọc dòng Grand Total: ", {"bold": True, "color": NAVY}),
          ("ở ngưỡng 90% dòng Grand Total ra 12, KHÔNG phải tổng 0 + 8 + 6 + 4. Dòng này so doanh thu tháng 1–4 với target cả năm 2025 "
@@ -301,12 +304,13 @@ d.add_heading("9. Bài tập về nhà (bắt buộc) và checklist trước Bu�
 rich(d, [("Tình huống: ", {"bold": True}), ("Phòng Kinh doanh gửi Sales Director báo cáo tháng 1–4/2025; Phòng Tài chính báo số khác. Bạn là BI analyst được giao kiểm tra số nào đúng, "
                                               "vì sao lệch và sửa để hai phòng dùng chung một định nghĩa.", {})])
 rich(d, [("File đề: ", {"bold": True}), ("Homework/B5_BTVN_MCI_Mart_KPI_T1_T4_2025.xlsx. Làm ngay trên file đề, nộp trước Buổi 6, tên file B5_BTVN_<HoTen>.xlsx. Sheet De_bai ghi đủ yêu cầu.", {})])
-rich(d, [("Nộp bài: ", {"bold": True, "color": NAVY}), ("https://hocvien.mcivietnam.com/auth#/ — tài khoản như Buổi 4.", {})])
-for s in ["Đối soát báo cáo của Kinh doanh với sheet So_lieu_Tai_chinh; ghi sheet Nhat_ky_doi_soat đủ 4 lỗi: chỉ tiêu, số hai bên, nguyên nhân, cách sửa.",
-          "Sửa mô hình thành hình ngôi sao: nối Target vào Calendar, ẩn cột kỹ thuật của hai bảng fact (mục 1), Mark as Date Table, xóa 6 measure KD …; dán ảnh Diagram View vào Brief_Insight.",
-          "Viết lại KPI bằng explicit measure theo tầng (measure cơ sở → measure dẫn xuất); thêm like-for-like: Revenue LFL, Revenue LFL LY, YoY LFL %. Dựng lại BaoCao_KinhDoanh từ các measure này.",
+rich(d, [("Nộp bài: ", {"bold": True, "color": NAVY}), ("https://hocvien.mcivietnam.com/auth#/ (tài khoản như Buổi 4).", {})])
+for s in ["Đối soát: so BaoCao_KinhDoanh với So_lieu_Tai_chinh; ghi Nhat_ky_doi_soat đủ 4 lỗi gốc, mỗi lỗi một dòng: chỉ tiêu, số hai bên, nguyên nhân, cách sửa.",
+          "Sửa mô hình thành hình ngôi sao: nối Target vào Calendar, ẩn cột kỹ thuật của hai bảng fact (mục 1), Mark as Date Table; dán ảnh Diagram View vào Brief_Insight.",
+          "Viết lại KPI bằng explicit measure theo tầng (measure cơ sở → measure dẫn xuất); thêm like-for-like: Revenue LFL, Revenue LFL LY, YoY LFL %; xóa 6 measure KD.",
+          "Dựng lại BaoCao_KinhDoanh từ measure của bạn (tháng lấy từ Calendar[Thang]); tạo sheet BaoCao_LFL; đối soát lại với So_lieu_Tai_chinh, chênh lệch phải bằng 0.",
           "KPI_Dictionary: một dòng cho mỗi measure, đủ DAX, grain, dimensions, owner, target và giới hạn của chỉ số.",
-          "Brief_Insight: 3 câu hỏi đo lường được cho Sales Director (chỉ số, chiều, thời gian, mốc so sánh), mỗi câu trả lời bằng một Pivot từ measure; 1 câu insight (con số – nguyên nhân khả dĩ – hàm ý)."]:
+          "Brief_Insight: 3 câu hỏi đo lường được cho Sales Director (chỉ số, chiều, thời gian, mốc so sánh), mỗi câu trả lời bằng một Pivot từ measure; 1 câu insight (con số, nguyên nhân khả dĩ, hàm ý)."]:
     bullet(d, s)
 rich(d, [("Tự kiểm tra trước khi nộp: ", {"bold": True, "color": NAVY}),
          (f"tháng 4 doanh thu {vn(H['months']['4']['tc_rev'])}, {vn(H['months']['4']['tc_orders'])} đơn, AOV {vn(H['months']['4']['tc_aov'])}, GM {pct(H['months']['4']['tc_gm'])}, đạt {pct(H['months']['4']['tc_vs_target'])} target; "

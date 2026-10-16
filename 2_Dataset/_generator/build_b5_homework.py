@@ -109,7 +109,7 @@ tc_rows = []
 for m in M14:
     d = MON[m]
     tc_rows.append((int(m), d["tc_rev"], d["tc_orders"], round(d["tc_aov"]), d["tc_gm"], d["tc_target"], d["tc_vs_target"]))
-tc_items = [("A1", "SỐ LIỆU CHÍNH THỨC CỦA PHÒNG TÀI CHÍNH — THÁNG 1–4/2025"),
+tc_items = [("A1", 'SỐ LIỆU CHÍNH THỨC CỦA PHÒNG TÀI CHÍNH, THÁNG 1–4/2025'),
             ("A2", "Báo cáo của bạn phải khớp các con số này. Số nào lệch: ghi vào Nhat_ky_doi_soat và tìm nguyên nhân.")]
 it, last, _ = block("So_lieu_Tai_chinh", 4, ["Tháng", "Doanh thu (VNĐ)", "Số đơn", "AOV (VNĐ)", "Gross Margin %", "Target (VNĐ)", "% đạt target"], tc_rows)
 tc_items += it
@@ -118,24 +118,12 @@ tc_sheet = cells("So_lieu_Tai_chinh", tc_items, {"A": 8, "B": 17, "C": 10, "D": 
                  numfmt={f"B5:D{last}": "#,##0", f"F5:F{last}": "#,##0", f"E5:E{last}": "0.00%", f"G5:G{last}": "0.0%"})
 
 # ---------------------------------------------------------------- De_bai
-TASKS = [
-    ("1", "Đối soát", "So BaoCao_KinhDoanh với So_lieu_Tai_chinh, từng chỉ tiêu, từng tháng (doanh thu, số đơn, AOV, GM%, % đạt target). "
-     "Ghi vào Nhat_ky_doi_soat mọi chỉ tiêu lệch: số báo cáo cũ, số Tài chính, chênh lệch, nguyên nhân, cách sửa. Có 4 lỗi gốc; "
-     "một lỗi gốc ghi một dòng, nêu cả các chỉ tiêu bị ảnh hưởng. (D2: số trông hợp lý chưa chắc đúng — lỗi nhỏ nhất chỉ lệch dưới nửa điểm phần trăm.)"),
-    ("2", "Sửa mô hình thành hình ngôi sao", "Power Pivot → Diagram View. Nối Target với Calendar (Target[Ngay_Dau_Thang] → Calendar[Date]). Ẩn khỏi Client Tools "
-     "các cột khóa và cột ngày của hai bảng fact (Sales: Nam, Thang, Order_Date, Store_Code, Product_Code, Customer_ID; Target: Store_Code, Thang, Ngay_Dau_Thang). "
-     "Mark as Date Table cho Calendar. Chụp ảnh Diagram View dán vào sheet Brief_Insight. (C3 Mô hình)"),
-    ("3", "Viết lại KPI bằng explicit measure", "Viết measure đúng theo tầng (measure cơ sở → measure dẫn xuất): Total Revenue, Total Orders (đếm Order_ID không trùng), "
-     "Avg Order Value, Gross Margin % (tổng ÷ tổng), Active Customers, Revenue YoY %, Total Target, Revenue vs Target %, Variance. "
-     "Thêm like-for-like (chỉ cửa hàng mở trước 01/01/2024): Revenue LFL = CALCULATE([Total Revenue], Store[Open_Date] < DATE(2024, 1, 1)), Revenue LFL LY, YoY LFL %. "
-     "Xóa 6 measure KD. (C4 KPI)"),
-    ("4", "Dựng lại báo cáo", "Sheet BaoCao_KinhDoanh: xóa Pivot cũ, dựng lại từ measure của bạn, tháng lấy từ Calendar[Thang], Filters Nam = 2025, tháng 1–4. "
-     "Sheet mới BaoCao_LFL: YoY cả chuỗi và YoY like-for-like theo tháng. Đối soát lại với So_lieu_Tai_chinh: chênh lệch phải bằng 0."),
-    ("5", "KPI_Dictionary", "Điền một dòng cho mỗi measure ở việc 3: định nghĩa, công thức DAX, grain, dimensions, owner, target, ngưỡng cảnh báo và **giới hạn** "
-     "(Revenue vs Target % không theo ngành hàng; Gross Margin % dùng một bảng giá vốn cho mọi năm; YoY cả chuỗi gồm ST12 chưa có kỳ gốc). (C4 KPI)"),
-    ("6", "Brief_Insight", "Viết 3 câu hỏi đo lường được cho Sales Director (chỉ số · chiều · thời gian · mốc so sánh), mỗi câu trả lời bằng một Pivot dựng từ measure của bạn; "
-     "và 1 câu insight: con số có so sánh · nguyên nhân khả dĩ · hàm ý. (tập dượt C1, C6)"),
-]
+TASKS = [('1', 'Đối soát', 'So từng chỉ tiêu, từng tháng của BaoCao_KinhDoanh với So_lieu_Tai_chinh: doanh thu, số đơn, AOV, GM%, % đạt target. Mỗi lỗi gốc ghi một dòng vào Nhat_ky_doi_soat: chỉ tiêu, số báo cáo cũ, số Tài chính, chênh lệch, nguyên nhân, cách sửa. Chỉ tiêu bị kéo theo (ví dụ AOV kéo theo số đơn) ghi chung dòng với lỗi gốc.', 'Nhat_ky_doi_soat có đúng 4 dòng, mỗi dòng một lỗi gốc và nêu các chỉ tiêu bị ảnh hưởng. Doanh thu khớp Tài chính ở cả 4 tháng. Lỗi nhỏ nhất chỉ lệch dưới nửa điểm phần trăm, nên phải so từng ô mới thấy.', 'Tháng 4: báo cáo cũ ghi đạt 8,1% target, Tài chính ghi 103,1%. Doanh thu cả 4 tháng không lệch.'),
+    ('2', 'Sửa mô hình thành hình ngôi sao', 'Power Pivot → Diagram View. Kéo Target[Ngay_Dau_Thang] thả lên Calendar[Date]. Ẩn khỏi Client Tools các cột khóa và cột ngày của hai bảng fact (Sales: Nam, Thang, Order_Date, Store_Code, Product_Code, Customer_ID; Target: Store_Code, Thang, Ngay_Dau_Thang). Calendar → Design → Mark as Date Table, chọn cột Date. Chụp Diagram View, dán vào sheet Brief_Insight (bên dưới dòng 3).', 'Diagram View là hình ngôi sao: hai bảng fact Sales và Target cùng nối Store và Calendar. Danh sách trường của Pivot không còn các cột đã ẩn.', '6 bảng, 6 relationship. Calendar hiện biểu tượng bảng ngày. Ảnh Diagram View nằm trên sheet Brief_Insight.'),
+    ('3', 'Viết lại KPI bằng explicit measure', 'Viết measure theo tầng (measure cơ sở → measure dẫn xuất): Total Revenue, Total Orders (DISTINCTCOUNT của Order_ID, không đếm dòng), Avg Order Value, Gross Margin % (tổng ÷ tổng, dùng Total COGS đã làm ở Slide 15 và 17), Active Customers, Revenue YoY %, Total Target, Revenue vs Target %, Variance. Thêm like-for-like (chỉ cửa hàng mở trước 01/01/2024): Revenue LFL = CALCULATE([Total Revenue], Store[Open_Date] < DATE(2024, 1, 1)), Revenue LFL LY, YoY LFL %. Cuối cùng xóa 6 measure KD.', 'Mô hình có đủ 12 measure nêu ở cột Yêu cầu và không còn measure KD. Mỗi measure dẫn xuất gọi measure cơ sở bằng [tên], không gõ lại công thức.', 'Tháng 4/2025: Total Orders = 966, Gross Margin % = 33,8%, Revenue LFL = 280.658.000.'),
+    ('4', 'Dựng lại báo cáo', 'Sheet BaoCao_KinhDoanh: xóa Pivot cũ, dựng Pivot mới từ measure của bạn. Rows = Calendar[Thang], Filters = Calendar[Nam] chọn 2025, tháng 1–4. Cột: Total Revenue, Total Target, Revenue vs Target %, Total Orders, Avg Order Value, Gross Margin %. Thêm một Pivot cửa hàng × tháng cho Revenue vs Target % (bên dưới Pivot chính) để tìm cửa hàng dưới 80% target. Tạo sheet mới BaoCao_LFL: Revenue YoY % và YoY LFL % theo tháng. Đối soát lại với So_lieu_Tai_chinh.', 'BaoCao_KinhDoanh khớp So_lieu_Tai_chinh ở 4 tháng × 5 chỉ tiêu, chênh lệch bằng 0. BaoCao_LFL có 4 dòng tháng và dòng Grand Total.', 'BaoCao_LFL, Grand Total: YoY cả chuỗi +21,0%, like-for-like +13,3%. Cửa hàng dưới 80% target: T2 có 5, T3 có 5, T4 có 2.'),
+    ('5', 'KPI_Dictionary', 'Mỗi measure ở việc 3 một dòng: định nghĩa, công thức DAX, grain, dimensions, owner, target, ngưỡng Warning / Critical và cột Giới hạn. Cột Giới hạn nói rõ khi nào KPI dễ hiểu sai: Revenue vs Target % không theo ngành hàng; Gross Margin % dùng một bảng giá vốn cho mọi năm; YoY cả chuỗi gồm ST12 chưa có kỳ gốc.', 'KPI_Dictionary có 12 dòng, không ô nào trống ở cột DAX và Giới hạn. Giới hạn của ba KPI nêu trên viết bằng lời của bạn.', 'Công thức DAX trong từ điển giống hệt measure trong mô hình.'),
+    ('6', 'Brief_Insight', 'Viết 3 câu hỏi đo lường được cho Sales Director. Mỗi câu có đủ chỉ số · chiều · thời gian · mốc so sánh và ghi tên sheet chứa Pivot trả lời. Ví dụ: "Doanh thu theo vùng, tháng 4/2025, vùng nào tăng dưới 10% so với tháng 4/2024?". Sau đó viết 1 câu insight gồm con số có so sánh · nguyên nhân khả dĩ · hàm ý.', 'Brief_Insight có 3 câu hỏi, mỗi câu đủ 4 thành phần và ghi tên sheet Pivot; 1 câu insight đủ 3 phần; con số trong insight khớp Pivot.', 'Insight có đủ ba vế (so sánh, nguyên nhân, hàm ý), không dừng ở việc đọc lại con số.')]
 SELF = [
     f"Tháng 4/2025: doanh thu {n(MON['4']['tc_rev'])} VNĐ · {n(MON['4']['tc_orders'])} đơn · AOV {n(MON['4']['tc_aov'])} · GM {p(MON['4']['tc_gm'])} · đạt {p(MON['4']['tc_vs_target'])} target",
     f"% đạt target tháng 1–4: {' · '.join(p(MON[m]['tc_vs_target']) for m in M14)}",
@@ -144,32 +132,30 @@ SELF = [
     "Cửa hàng đạt dưới 80% target: " + " · ".join(f"T{m}: {', '.join(H['below80'][m]) if H['below80'][m] else 'không có'}" for m in M14),
     "Diagram View là hình ngôi sao: 6 bảng, 6 relationship, hai bảng fact (Sales, Target) cùng nối Store và Calendar",
 ]
-de_items = [("A1", "BÀI TẬP VỀ NHÀ BUỔI 5 (BẮT BUỘC) — KIỂM TOÁN BÁO CÁO CỦA PHÒNG KINH DOANH"),
-            ("A2", "Nộp trước Buổi 6. Đặt tên file: B5_BTVN_<HoTen>.xlsx (làm ngay trên file này). Tình huống: phòng Kinh doanh gửi Sales Director báo cáo tháng 1–4/2025 (sheet BaoCao_KinhDoanh); "
-                   "phòng Tài chính báo số khác (sheet So_lieu_Tai_chinh). Bạn là BI analyst được giao kiểm tra: số nào đúng, vì sao lệch, và sửa để từ nay hai phòng dùng chung một định nghĩa. "
-                   "Bài tập dượt cho bài capstone: tiêu chí C3 (Mô hình dữ liệu) và C4 (KPI)."),
-            ("A3", "Nộp bài tại cổng học viên MCI (hocvien.mcivietnam.com). Không bấm Refresh All trong file này: dữ liệu đã nằm sẵn trong Data Model. "
-                   "Chỉ dùng 6 bảng của Data Model (không kéo trường của tblSales, tblProduct, tblStore nếu thấy trong tab All).")]
-it, last, _ = block("De_bai", 5, ["#", "Việc cần làm", "Yêu cầu"], TASKS)
+de_items = [("A1", 'BÀI TẬP VỀ NHÀ BUỔI 5 (BẮT BUỘC): KIỂM TOÁN BÁO CÁO CỦA PHÒNG KINH DOANH'),
+            ("A2", 'Nộp trước Buổi 6. Đặt tên file: B5_BTVN_<HoTen>.xlsx (làm ngay trên file này). Tình huống: phòng Kinh doanh gửi Sales Director báo cáo tháng 1–4/2025 (sheet BaoCao_KinhDoanh), còn phòng Tài chính báo số khác (sheet So_lieu_Tai_chinh). Bạn là BI analyst được giao kiểm tra: số nào đúng, vì sao lệch, và sửa thế nào để hai phòng dùng chung một định nghĩa. Bài tập dượt capstone B7: tiêu chí C3 (Mô hình dữ liệu) và C4 (KPI); việc 6 dượt thêm C1 (Câu hỏi) và C6 (Insight).'),
+            ("A3", 'Nộp bài tại https://hocvien.mcivietnam.com/auth#/ — Tài khoản: email bạn đăng ký tại MCI · Mật khẩu: hv12345678'),
+            ("A4", 'Không bấm Refresh All trong file này: dữ liệu đã nằm sẵn trong Data Model (6 bảng: Sales, Product, Store, Customer, Calendar, Target). Chỉ dựng Pivot từ 6 bảng này, không kéo trường từ các bảng khác nếu thấy trong tab All.')]
+it, last, _ = block("De_bai", 5, ['#', 'Việc cần làm', 'Yêu cầu', 'Kết quả kỳ vọng', 'Tự kiểm tra nhanh'], TASKS)
 de_items += it
 kr = last + 2
 de_items.append((f"A{kr}", "Tự kiểm tra trước khi nộp"))
 for i, tx in enumerate(SELF, start=kr + 1):
     de_items.append((f"B{i}", "☐ " + tx))
-de_items.append((f"A{kr + len(SELF) + 2}", "Gợi ý: xem handout B5 (phần bài tập về nhà) và KPI Definition Card của Buổi 2."))
-de_sheet = cells("De_bai", de_items, {"A": 5, "B": 30, "C": 120}, bold=["A5:C5", f"A{kr}"], fill={"A5:C5": NAVY},
-                 font_color={"A5:C5": "FFFFFF"}, wrap=[f"A6:C{last}", "A2:C3"])
+de_items.append((f"A{kr + len(SELF) + 2}", 'Gợi ý: xem handout B5, mục 9 (bài tập về nhà) và KPI Definition Card của Buổi 2.'))
+de_sheet = cells("De_bai", de_items, {"A": 5, "B": 30, "C": 75, "D": 55, "E": 42}, bold=["A5:E5", f"A{kr}"], fill={"A5:E5": NAVY},
+                 font_color={"A5:E5": "FFFFFF"}, wrap=[f"A6:E{last}", "A2:E3"])
 
 # ---------------------------------------------------------------- Nhat_ky_doi_soat / KPI_Dictionary / Brief_Insight (mẫu trống cho học viên)
 nk_head = ["Chỉ tiêu", "Số báo cáo cũ", "Số Tài chính", "Chênh lệch", "Nguyên nhân", "Cách sửa"]
-nk_items = [("A1", "NHẬT KÝ ĐỐI SOÁT — BÁO CÁO KINH DOANH ↔ SỐ TÀI CHÍNH"),
-            ("A2", "Mỗi lỗi gốc một dòng (có thể nêu nhiều chỉ tiêu bị ảnh hưởng). Ghi cả tháng bạn so sánh.")]
+nk_items = [("A1", 'NHẬT KÝ ĐỐI SOÁT: BÁO CÁO KINH DOANH ↔ SỐ TÀI CHÍNH'),
+            ("A2", 'Mỗi lỗi gốc một dòng; chỉ tiêu bị kéo theo ghi chung dòng với lỗi gốc. Ghi cả tháng bạn so sánh.')]
 it, last, _ = block("Nhat_ky_doi_soat", 4, nk_head, [()] * 8)
 nk_items += it
 nk_sheet = cells("Nhat_ky_doi_soat", nk_items, {"A": 28, "B": 18, "C": 16, "D": 14, "E": 55, "F": 55},
                  bold=["A4:F4"], fill={"A4:F4": NAVY}, font_color={"A4:F4": "FFFFFF"})
 kd_head = ["KPI", "Measure", "DAX", "Định dạng", "Grain", "Dimensions", "Owner", "Target", "Warning / Critical", "Giới hạn / ghi chú"]
-kd_items = [("A1", "KPI DICTIONARY — MCI Mart"),
+kd_items = [("A1", 'KPI DICTIONARY: MCI Mart'),
             ("A2", "Một dòng cho mỗi measure đã viết ở việc 3. Cột Giới hạn: nói rõ khi nào KPI này không được dùng hoặc dễ hiểu sai.")]
 it, last, _ = block("KPI_Dictionary", 4, kd_head, [()] * 12)
 kd_items += it
@@ -177,7 +163,7 @@ kd_sheet = cells("KPI_Dictionary", kd_items, {"A": 20, "B": 20, "C": 52, "D": 10
                  bold=["A4:J4"], fill={"A4:J4": NAVY}, font_color={"A4:J4": "FFFFFF"})
 bi_items = [("A1", "BRIEF CHO SALES DIRECTOR"),
             ("A3", "Ảnh Diagram View của bạn (dán dưới đây, bên dưới dòng này):"),
-            ("A22", "3 câu hỏi đo lường được (chỉ số · chiều · thời gian · mốc so sánh) — mỗi câu có một Pivot trả lời, ghi tên sheet:"),
+            ("A22", '3 câu hỏi đo lường được (chỉ số · chiều · thời gian · mốc so sánh), mỗi câu ghi tên sheet có Pivot trả lời:'),
             ("A23", "1."), ("A25", "2."), ("A27", "3."),
             ("A30", "Câu insight (con số có so sánh · nguyên nhân khả dĩ · hàm ý):")]
 bi_sheet = cells("Brief_Insight", bi_items, {"A": 130}, bold=["A3", "A22", "A30"])
@@ -255,7 +241,7 @@ errs = [("#", "Lỗi cài sẵn", "Báo cáo cũ (T1 · T2 · T3 · T4) và số
          "Rows = Calendar[Thang], Filters = Calendar[Nam]. Ẩn Sales[Nam], Sales[Thang] khỏi Client Tools.", "C3"),
         ("3", "GM% = trung bình biên từng dòng (AVERAGEX)",
          f"{' · '.join(p(MON[m]['cu_gm_avg'], 2) for m in M14)}. Tài chính: {' · '.join(p(MON[m]['tc_gm'], 2) for m in M14)} (lệch 0,1–0,5 điểm). Khó thấy nhất.",
-         "Trung bình của tỷ lệ: dòng hộp kẹo mười nghìn có trọng số ngang dòng bộ nồi sáu trăm nghìn.",
+         "Trung bình của tỷ lệ: dòng chai trà xanh mười nghìn đồng có trọng số ngang dòng hộp quà Tết sáu trăm năm mươi nghìn đồng.",
          "Measure tổng ÷ tổng: DIVIDE([Total Revenue] - [Total COGS], [Total Revenue]).", "C4"),
         ("4", "Số đơn = đếm dòng (COUNTROWS)",
          f"{' · '.join(n(MON[m]['cu_orders_rows']) for m in M14)} đơn → AOV {' · '.join(n(MON[m]['cu_aov_rows']) for m in M14)}. "
@@ -294,16 +280,23 @@ ins_sheet = cells("Insight_mau", ins_items, {"A": 130}, wrap=["A3", "A5"])
 # Nhat_ky mẫu (điền sẵn)
 nk_rows = [
     ("% đạt target (T1–T4)", " · ".join(p(MON[m]["cu_vs_target"]) for m in M14), " · ".join(p(MON[m]["tc_vs_target"]) for m in M14), "Lệch hàng chục điểm",
-     "Target chưa nối Calendar: mọi tháng lấy target cả năm; báo cáo lấy tháng từ Sales[Thang]", "Nối Target[Ngay_Dau_Thang] → Calendar[Date]; Rows = Calendar[Thang]"),
+     "Lỗi 1: Target chỉ nối Store, chưa nối Calendar, nên mọi tháng lấy target cả năm (3.665.000.000)",
+     "Diagram View: kéo Target[Ngay_Dau_Thang] thả lên Calendar[Date]"),
+    ("% đạt target (T1–T4), cùng triệu chứng với dòng trên", " · ".join(p(MON[m]["cu_vs_target"]) for m in M14), " · ".join(p(MON[m]["tc_vs_target"]) for m in M14), "Lệch hàng chục điểm",
+     "Lỗi 2: Pivot lấy tháng từ Sales[Thang] (cột của bảng fact), không lọc được Target; sửa lỗi 1 mà chưa sửa lỗi này thì Target vẫn lặp",
+     "Rows = Calendar[Thang], Filters = Calendar[Nam]; ẩn Sales[Nam], Sales[Thang] khỏi Client Tools"),
     ("Gross Margin % (T1–T4)", " · ".join(p(MON[m]["cu_gm_avg"], 2) for m in M14), " · ".join(p(MON[m]["tc_gm"], 2) for m in M14), "−0,1 đến −0,5 điểm",
-     "Trung bình biên từng dòng", "Measure tổng ÷ tổng"),
-    ("Số đơn (T1–T4)", " · ".join(n(MON[m]["cu_orders_rows"]) for m in M14), " · ".join(n(MON[m]["tc_orders"]) for m in M14), "Gần gấp đôi",
-     "Đếm dòng thay vì đếm đơn", "DISTINCTCOUNT(Sales[Order_ID])"),
-    ("AOV (T1–T4)", " · ".join(n(MON[m]["cu_aov_rows"]) for m in M14), " · ".join(n(MON[m]["tc_aov"]) for m in M14), "Khoảng một nửa",
-     "Hệ quả của lỗi số đơn", "Sửa số đơn thì AOV đúng"),
+     "Lỗi 3: trung bình biên từng dòng, dòng hàng rẻ có trọng số ngang dòng hàng đắt",
+     "Measure tổng ÷ tổng: DIVIDE([Total Revenue] - [Total COGS], [Total Revenue])"),
+    ("Số đơn và AOV (T1–T4)",
+     "Số đơn: " + " · ".join(n(MON[m]["cu_orders_rows"]) for m in M14) + ". AOV: " + " · ".join(n(MON[m]["cu_aov_rows"]) for m in M14),
+     "Số đơn: " + " · ".join(n(MON[m]["tc_orders"]) for m in M14) + ". AOV: " + " · ".join(n(MON[m]["tc_aov"]) for m in M14),
+     "Số đơn gần gấp đôi, AOV khoảng một nửa",
+     "Lỗi 4: đếm dòng thay vì đếm đơn (một đơn có nhiều dòng Line_No); AOV sai theo vì lấy doanh thu chia số đơn đã phồng",
+     "Total Orders := DISTINCTCOUNT(Sales[Order_ID]); AOV = DIVIDE([Total Revenue], [Total Orders])"),
 ]
-nk_ans_items = [("A1", "NHẬT KÝ ĐỐI SOÁT — BÁO CÁO KINH DOANH ↔ SỐ TÀI CHÍNH (bài làm mẫu)"),
-                ("A2", "Mỗi lỗi gốc một dòng; lỗi 1 và 2 (Target chưa nối Calendar, tháng lấy từ Sales[Thang]) cùng triệu chứng ở dòng đầu.")]
+nk_ans_items = [("A1", "NHẬT KÝ ĐỐI SOÁT: BÁO CÁO KINH DOANH ↔ SỐ TÀI CHÍNH (bài làm mẫu)"),
+                ("A2", "Mỗi lỗi gốc một dòng; chỉ tiêu bị kéo theo ghi chung dòng với lỗi gốc. Lỗi 1 và 2 cùng triệu chứng (% đạt target) nên tách thành hai dòng theo nguyên nhân.")]
 it, last, _ = block("Nhat_ky_doi_soat", 4, nk_head, nk_rows)
 nk_ans_items += it
 nk_ans = cells("Nhat_ky_doi_soat", nk_ans_items, {"A": 28, "B": 40, "C": 40, "D": 22, "E": 55, "F": 55},
